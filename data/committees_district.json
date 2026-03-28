@@ -1,0 +1,72 @@
+[
+  {
+    "name": "ועדה מחוזית צפון",
+    "description": "מחוז צפון משתרע על שטח של 4,640 קמ\"ר וקיימים בו 35 מרחבי תכנון. המחוז מתאפיין בגיוון של אוכלוסיות ותרבויות.",
+    "url": "https://www.gov.il/he/departments/topics/district_committee_north/govil-landing-page",
+    "planning_bureau": "https://www.gov.il/he/departments/guides/planning_bureau_north",
+    "committee_members": "https://www.gov.il/he/departments/general/office_north",
+    "policy_docs": "https://www.gov.il/he/Departments/General/policy_documents_north",
+    "master_plans": "https://www.gov.il/he/departments/guides/tamam_north",
+    "contact": "https://www.gov.il/he/departments/general/contact_north"
+  },
+  {
+    "name": "ועדה מחוזית תל אביב",
+    "description": "סוגית הליבה של המחוז היא קידום איכות חיים עירונית בת קיימא. האמצעים המרכזיים להשגת המטרה הם התחדשות עירונית, ציפוף המרחב, עירוב שימושים וקידום תחבורה ציבורית.",
+    "url": "https://www.gov.il/he/departments/topics/district_committee_telaviv/govil-landing-page",
+    "planning_bureau": "https://www.gov.il/he/Departments/Guides/planning_bureau_tlv",
+    "committee_members": "https://www.gov.il/he/Departments/General/tlv_district_committee",
+    "policy_docs": "https://www.gov.il/he/Departments/General/policy_documents_telaviv",
+    "master_plans": "https://www.gov.il/he/departments/guides/tamam_teaviv",
+    "contact": "https://www.gov.il/he/departments/general/contact_telaviv"
+  },
+  {
+    "name": "ועדה מחוזית חיפה",
+    "description": "מחוז חיפה משתרע מחדרה ועד קרית מוצקין, מהים במערב ועד עירון במזרח. במחוז מגוון רחב של נופים ויישובים עירוניים, והוא משופע בתשתיות לאומיות.",
+    "url": "https://www.gov.il/he/departments/topics/district_committee_haifa/govil-landing-page",
+    "planning_bureau": "https://www.gov.il/he/Departments/Guides/planning_bureau-haifa",
+    "committee_members": "https://www.gov.il/he/departments/general/composition_committee_haifa",
+    "policy_docs": "https://www.gov.il/he/departments/general/policy_documents_haifa",
+    "master_plans": "https://www.gov.il/he/departments/guides/tamam_haifa",
+    "contact": "https://www.gov.il/he/departments/general/contact_haifa"
+  },
+  {
+    "name": "ועדה מחוזית מרכז",
+    "description": "מחוז מרכז מקיף 52 רשויות מקומיות, עם כ-2.3 מיליון תושבים, ובתחומו פועלות 36 ועדות מקומיות. המחוז מהווה מרחב מחבר בין מחוזות ירושלים, חיפה, דרום ויו\"ש למחוז תל אביב.",
+    "url": "https://www.gov.il/he/departments/topics/district_committee_center/govil-landing-page",
+    "planning_bureau": "https://www.gov.il/he/departments/guides/planning_bureau_central",
+    "committee_members": "https://www.gov.il/he/departments/general/composition_committee_central",
+    "policy_docs": "https://www.gov.il/he/Departments/General/policy_docs_center",
+    "master_plans": "https://www.gov.il/he/departments/guides/tamam_center",
+    "contact": "https://www.gov.il/he/Departments/General/contact-center"
+  },
+  {
+    "name": "ועדה מחוזית דרום",
+    "description": "שטחו של מחוז דרום מהווה כ-2/3 משטחה של מדינת ישראל, בין אשדוד בצפון ועד אילת בדרום. הוועדה מקדמת תכניות להקמת ישובים חדשים, מתקני אנרגיה מתחדשת ובסיסי צה\"ל.",
+    "url": "https://www.gov.il/he/departments/topics/southern_district_committee/govil-landing-page",
+    "planning_bureau": "https://www.gov.il/he/departments/guides/south_office",
+    "committee_members": "https://www.gov.il/he/departments/general/south_committee",
+    "policy_docs": "https://www.gov.il/he/Departments/General/policy_docs_south",
+    "master_plans": "https://www.gov.il/he/departments/guides/tamam_south",
+    "contact": "https://www.gov.il/he/departments/general/contact_south"
+  },
+  {
+    "name": "ועדה מחוזית ירושלים",
+    "description": "במחוז ירושלים ארבעה מוקדים: ירושלים, בית שמש, מבשרת ציון ומטה יהודה. ירושלים בירת ישראל והעיר הגדולה ביותר, מאופיינת באוכלוסייה הטרוגנית.",
+    "url": "https://www.gov.il/he/departments/topics/district_committee_jerusalem/govil-landing-page",
+    "planning_bureau": "https://www.gov.il/he/Departments/Guides/planning_bureau_jerusalem",
+    "committee_members": "https://www.gov.il/he/Departments/General/composition_committee_jlm",
+    "policy_docs": "https://www.gov.il/he/Departments/General/policy_docs_jerusalem",
+    "master_plans": "",
+    "contact": "https://www.gov.il/he/departments/general/contact_jerusalem"
+  },
+  {
+    "name": "ועדה מחוזית יהודה ושומרון",
+    "description": "לשכת התכנון של המנהל האזרחי ביהודה ושומרון אחראית על תכנון ובנייה באזור.",
+    "url": "https://www.gov.il/he/departments/topics/planning-subject/govil-landing-page",
+    "planning_bureau": "https://www.gov.il/he/Departments/General/about-planning-office",
+    "committee_members": "",
+    "policy_docs": "https://www.gov.il/he/Departments/policies/policies-plans",
+    "master_plans": "https://www.gov.il/he/Departments/publications/reports/building-plans",
+    "contact": "https://www.gov.il/he/Departments/General/contact-planning-office"
+  }
+]

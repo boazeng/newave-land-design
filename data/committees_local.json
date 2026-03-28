@@ -1,0 +1,923 @@
+[
+  {
+    "district": "צפון",
+    "name": "אצבע הגליל",
+    "type": "מרחבית",
+    "settlements": "מטולה, יסוד המעלה, ראש פינה, חצור הגלילית, טובא-זנגרייה",
+    "url": "http://e-galil.bartech-net.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "בית שאן",
+    "type": "מקומית",
+    "settlements": "בית שאן",
+    "url": "http://beit-shean.complot.co.il/Pages/default.aspx"
+  },
+  {
+    "district": "צפון",
+    "name": "בקעת בית הכרם",
+    "type": "מרחבית",
+    "settlements": "ראמה, סאג'ור, נחף, בענה, דיר אל-אסד, מג'ד אל-כרום",
+    "url": "https://www.bethakerem.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "גבעות אלונים",
+    "type": "מרחבית",
+    "settlements": "אעבלין, ביר אל-מכסור, שפרעם, כפר מנדא, כאוכב אבו אל-היג'א, שפרעם",
+    "url": "https://aloneem.complot.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "גולן",
+    "type": "מקומית",
+    "settlements": "גולן",
+    "url": "http://golan.bartech-net.co.il/default.aspx"
+  },
+  {
+    "district": "צפון",
+    "name": "גליל מזרחי",
+    "type": "מרחבית",
+    "settlements": "שבלי - אום אל-גנם, בועיינה-נוג'ידאת, דבורייה, טורעאן, יבנאל, כפר תבור, מגדל, כפר כמא, מע'אר, עיילבון, בוסתן אל-מרג', אל-בטוף",
+    "url": "https://www.vgm.co.il/Pages/default.aspx"
+  },
+  {
+    "district": "צפון",
+    "name": "הגלבוע",
+    "type": "מקומית",
+    "settlements": "הגלבוע",
+    "url": "https://hagilboa.complot.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "הגליל המרכזי",
+    "type": "מרחבית",
+    "settlements": "אבו סנאן, ג'וליס, ירכא, כפר יאסיף, ג'דיידה מכר",
+    "url": "https://www.galil-merkazi.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "הגליל העליון",
+    "type": "מרחבית",
+    "settlements": "הגליל העליון, מבואות החרמון",
+    "url": "http://gel.bartech-net.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "הגליל תחתון",
+    "type": "מקומית",
+    "settlements": "הגליל תחתון",
+    "url": "https://glt.complot.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "חבל אשר",
+    "type": "מרחבית",
+    "settlements": "מטה אשר, מזרעה",
+    "url": "http://www.eilot.org.il/vaada/"
+  },
+  {
+    "district": "צפון",
+    "name": "טבריה",
+    "type": "מקומית",
+    "settlements": "טבריה",
+    "url": "http://tiberias.complot.co.il/Pages/default.aspx"
+  },
+  {
+    "district": "צפון",
+    "name": "יזרעאלים",
+    "type": "מרחבית",
+    "settlements": "מגידו, זרזיר, כעביה-טבאש-חג'אג'רה, העמק יזרעאל",
+    "url": "http://www.yizraelim.org.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "יקנעם עילית",
+    "type": "מקומית",
+    "settlements": "יקנעם עילית",
+    "url": "http://vaada.yoqneam.org.il/Pages/default.aspx",
+    "protocols_from": "01/2020",
+    "protocols_to": "03/2026",
+    "last_sync": "2026-03-28",
+    "protocol_count": 368
+  },
+  {
+    "district": "צפון",
+    "name": "כרמיאל",
+    "type": "מקומית",
+    "settlements": "כרמיאל",
+    "url": "http://crm.bartech-net.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "לב הגליל",
+    "type": "מרחבית",
+    "settlements": "דיר חנא, עראבה, סח'נין",
+    "url": "http://www.lev-hagalil.org.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "מבוא העמקים",
+    "type": "מרחבית",
+    "settlements": "בסמת טבעון, אכסאל, יפיע, עילוט, כפר כנא, משהד, עין מאהל, ריינה, רמת ישי",
+    "url": "http://www.mavo.co.il/amakim/"
+  },
+  {
+    "district": "צפון",
+    "name": "מגדל העמק",
+    "type": "מקומית",
+    "settlements": "מגדל העמק",
+    "url": "http://www.migdal-haemeq.muni.il/MunicipalUnits/Engineering/Pages/VadaIr.aspx"
+  },
+  {
+    "district": "צפון",
+    "name": "מעלה הגליל",
+    "type": "מרחבית",
+    "settlements": "מעלה יוסף, כפר ורדים, שלומי, יאנוח ג'ת, כסרא-סמיע, מגדל תפן (תעשייתית)",
+    "url": "http://www.ma-galil.org.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "מעלה חרמון",
+    "type": "מרחבית",
+    "settlements": "מג'דל שמס, עין קנייא, מסעדה, בוקעאתא",
+    "url": "http://www.mali-hermon.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "מעלה נפתלי",
+    "type": "מרחבית",
+    "settlements": "מעיליא, בית ג'ן, ג'ש (גוש חלב), חורפיש, פסוטה, פקיעין",
+    "url": "http://www.mnf.org.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "מעלות תרשיחא",
+    "type": "מקומית",
+    "settlements": "מעלות תרשיחא",
+    "url": "http://www.vaadamt.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "מרום הגליל",
+    "type": "מקומית",
+    "settlements": "מרום הגליל",
+    "url": "http://mrg.bartech-net.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "משגב",
+    "type": "מקומית",
+    "settlements": "משגב",
+    "url": "http://www.vaada-misgav.org.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "נהריה",
+    "type": "מקומית",
+    "settlements": "נהריה",
+    "url": "http://nahariya.complot.co.il/Pages/default.aspx"
+  },
+  {
+    "district": "צפון",
+    "name": "נצרת",
+    "type": "מקומית",
+    "settlements": "נצרת",
+    "url": "http://www.nazareth.muni.il/Pages/default.aspx"
+  },
+  {
+    "district": "צפון",
+    "name": "נוף הגליל",
+    "type": "מקומית",
+    "settlements": "נוף הגליל",
+    "url": "http://nzr.bartech-net.co.il/default.aspx"
+  },
+  {
+    "district": "צפון",
+    "name": "עכו",
+    "type": "מקומית",
+    "settlements": "עכו",
+    "url": "http://akko.bartech-net.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "עמק הירדן",
+    "type": "מקומית",
+    "settlements": "עמק הירדן",
+    "url": "https://myarden.complot.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "עמק המעיינות",
+    "type": "מקומית",
+    "settlements": "עמק המעיינות, מנחמיה",
+    "url": "http://emy.bartech-net.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "עפולה",
+    "type": "מקומית",
+    "settlements": "עפולה",
+    "url": "http://handasa.afula.muni.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "צפת",
+    "type": "מקומית",
+    "settlements": "צפת",
+    "url": "https://zefat.complot.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "קצרין",
+    "type": "מקומית",
+    "settlements": "קצרין",
+    "url": "https://qatzrin.erpgis.co.il/pub/#/rtl/HomePage"
+  },
+  {
+    "district": "צפון",
+    "name": "קרית שמונה",
+    "type": "מקומית",
+    "settlements": "קרית שמונה",
+    "url": "https://k-shmona.bartech-net.co.il/"
+  },
+  {
+    "district": "צפון",
+    "name": "שפלת הגליל",
+    "type": "מרחבית",
+    "settlements": "שעב, כאבול, טמרה",
+    "url": "http://shfelat-hagalil.complot.co.il/"
+  },
+  {
+    "district": "חיפה",
+    "name": "זבולון",
+    "type": "מקומית",
+    "settlements": "זבולון",
+    "url": "http://zvulun.bartech-net.co.il/"
+  },
+  {
+    "district": "חיפה",
+    "name": "חוף הכרמל",
+    "type": "מקומית",
+    "settlements": "חוף הכרמל",
+    "url": "http://hof.bartech-net.co.il/"
+  },
+  {
+    "district": "חיפה",
+    "name": "חדרה",
+    "type": "מקומית",
+    "settlements": "חדרה",
+    "url": "http://hadera.bartech-net.co.il/"
+  },
+  {
+    "district": "חיפה",
+    "name": "חיפה",
+    "type": "מקומית",
+    "settlements": "חיפה",
+    "url": "http://haifa.complot.co.il/Pages/default.aspx"
+  },
+  {
+    "district": "חיפה",
+    "name": "חריש",
+    "type": "מקומית",
+    "settlements": "חריש",
+    "url": "https://www.harishpl.org/"
+  },
+  {
+    "district": "חיפה",
+    "name": "מורדות הכרמל",
+    "type": "מרחבית",
+    "settlements": "רכסים, טירת הכרמל, נשר",
+    "url": "http://www.mordotcarmel.org/Pages/default.aspx"
+  },
+  {
+    "district": "חיפה",
+    "name": "מנשה אלונה",
+    "type": "מרחבית",
+    "settlements": "אלונה, מנשה",
+    "url": "http://www.menashe.co.il/"
+  },
+  {
+    "district": "חיפה",
+    "name": "עירון",
+    "type": "מרחבית",
+    "settlements": "ערערה, כפר קרע, ג'ת, בסמ\"ה, מעלה עירון, אום אל-פחם, באקה אל-גרביה",
+    "url": "http://www.wadi-ara.co.il/"
+  },
+  {
+    "district": "חיפה",
+    "name": "פרדס חנה-כרכור",
+    "type": "מקומית",
+    "settlements": "פרדס חנה-כרכור",
+    "url": "http://vaada.phk.org.il/"
+  },
+  {
+    "district": "חיפה",
+    "name": "קריות",
+    "type": "מרחבית",
+    "settlements": "קרית מוצקין, קרית ביאליק, קרית ים",
+    "url": "http://www.vkrayot.co.il/"
+  },
+  {
+    "district": "חיפה",
+    "name": "קרית אתא",
+    "type": "מקומית",
+    "settlements": "קרית אתא",
+    "url": "https://www.kiryat-ata.org.il/"
+  },
+  {
+    "district": "חיפה",
+    "name": "קרית טבעון",
+    "type": "מקומית",
+    "settlements": "קרית טבעון",
+    "url": "http://tivon.bartech-net.co.il/"
+  },
+  {
+    "district": "חיפה",
+    "name": "רכס הכרמל",
+    "type": "מרחבית",
+    "settlements": "דאלית אל-כרמל, עספיא",
+    "url": "http://rechescarmel.complot.co.il/"
+  },
+  {
+    "district": "חיפה",
+    "name": "שומרון",
+    "type": "מרחבית",
+    "settlements": "אור עקיבא, בנימינה-גבעת עדה, זכרון יעקב, פוריידיס, ג'סר א-זרקא",
+    "url": "http://www.vaada-shomron.org.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "אלעד",
+    "type": "מקומית",
+    "settlements": "אלעד",
+    "url": "http://elad.bartech-net.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "גבעת שמואל",
+    "type": "מקומית",
+    "settlements": "גבעת שמואל",
+    "url": "http://gsm.bartech-net.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "גזר",
+    "type": "מקומית",
+    "settlements": "גזר",
+    "url": "http://www.gezer-region.muni.il/page_34794"
+  },
+  {
+    "district": "מרכז",
+    "name": "גדרה",
+    "type": "מקומית",
+    "settlements": "גדרה",
+    "url": "https://gedera.bartech-net.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "גני תקווה",
+    "type": "מקומית",
+    "settlements": "גני תקווה",
+    "url": "http://handasa.ganeytikva.org.il/Pages/default.aspx"
+  },
+  {
+    "district": "מרכז",
+    "name": "גן יבנה",
+    "type": "מקומית",
+    "settlements": "גן יבנה",
+    "url": "https://g-yavne.bartech-net.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "דרום השרון",
+    "type": "מקומית",
+    "settlements": "דרום השרון",
+    "url": "http://drs.bartech-net.co.il/default.aspx"
+  },
+  {
+    "district": "מרכז",
+    "name": "הוד השרון",
+    "type": "מקומית",
+    "settlements": "הוד השרון",
+    "url": "http://hodhasharon.complot.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "זמורה",
+    "type": "מרחבית",
+    "settlements": "מזכרת בתיה, קרית עקרון, בני עי\"ש",
+    "url": "http://www.zmora.org.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "חבל מודיעין",
+    "type": "מקומית",
+    "settlements": "חבל מודיעין",
+    "url": "http://hmd.bartech-net.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "חוף השרון",
+    "type": "מקומית",
+    "settlements": "חוף השרון",
+    "url": "http://vaada.hof-hasharon.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "טייבה",
+    "type": "מקומית",
+    "settlements": "טייבה",
+    "url": "http://taibeh.complot.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "טירה",
+    "type": "מקומית",
+    "settlements": "טירה",
+    "url": "http://www.tira.muni.il/Pages/default.aspx"
+  },
+  {
+    "district": "מרכז",
+    "name": "יבנה",
+    "type": "מקומית",
+    "settlements": "יבנה",
+    "url": "http://yavne.complot.co.il/Pages/default.aspx"
+  },
+  {
+    "district": "מרכז",
+    "name": "יהוד",
+    "type": "מקומית",
+    "settlements": "יהוד",
+    "url": "http://yhd.bartech-net.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "כפר יונה",
+    "type": "מקומית",
+    "settlements": "כפר יונה",
+    "url": "http://kfar-yona.complot.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "כפר סבא",
+    "type": "מקומית",
+    "settlements": "כפר סבא",
+    "url": "http://www.kfar-saba.muni.il/?CategoryID=433&ArticleID=175&sng=1"
+  },
+  {
+    "district": "מרכז",
+    "name": "לב השרון",
+    "type": "מקומית",
+    "settlements": "לב השרון",
+    "url": "http://www.vaada.lev-hasharon.com/Pages/default.aspx"
+  },
+  {
+    "district": "מרכז",
+    "name": "לוד",
+    "type": "מקומית",
+    "settlements": "לוד",
+    "url": "http://lod.bartech-net.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "מודיעין-מכבים-רעות",
+    "type": "מקומית",
+    "settlements": "מודיעין-מכבים-רעות",
+    "url": "http://www.modiin.muni.il/ModiinWebSite/ChannelArticle.aspx?PageID=7_351"
+  },
+  {
+    "district": "מרכז",
+    "name": "מזרח השרון",
+    "type": "מרחבית",
+    "settlements": "קלנסווה, זמר",
+    "url": "http://mz-hasharon.complot.co.il/Pages/default.aspx"
+  },
+  {
+    "district": "מרכז",
+    "name": "מצפה אפק",
+    "type": "מרחבית",
+    "settlements": "באר יעקב, בית דגן, סביון, כוכב יאיר",
+    "url": "http://www.vmm.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "נס ציונה",
+    "type": "מקומית",
+    "settlements": "נס ציונה",
+    "url": "http://nes.bartech-net.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "נתניה",
+    "type": "מקומית",
+    "settlements": "נתניה",
+    "url": "http://vaada.netanyagis.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "עמק חפר",
+    "type": "מקומית",
+    "settlements": "עמק חפר",
+    "url": "http://handasa.hefer.org.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "עמק לוד",
+    "type": "מקומית",
+    "settlements": "עמק לוד",
+    "url": "http://emek-lod.org.il/27/"
+  },
+  {
+    "district": "מרכז",
+    "name": "פתח תקוה",
+    "type": "מקומית",
+    "settlements": "פתח תקוה",
+    "url": "https://www.petah-tikva.muni.il/Engineering/Pages/default.aspx"
+  },
+  {
+    "district": "מרכז",
+    "name": "קסם",
+    "type": "מרחבית",
+    "settlements": "כפר קאסם, כפר ברא, ג'לג'וליה",
+    "url": "https://www.kessem03.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "ראש העין",
+    "type": "מקומית",
+    "settlements": "ראש העין",
+    "url": "http://rin.bartech-net.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "ראשון לציון",
+    "type": "מקומית",
+    "settlements": "ראשון לציון",
+    "url": "https://rishonlezion.complot.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "רחובות",
+    "type": "מקומית",
+    "settlements": "רחובות",
+    "url": "http://rechovot.complot.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "רמלה",
+    "type": "מקומית",
+    "settlements": "רמלה",
+    "url": "http://handasa.ramla.muni.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "רעננה",
+    "type": "מקומית",
+    "settlements": "רעננה",
+    "url": "http://www.raanana.muni.il/Engineering/Pages/default.aspx"
+  },
+  {
+    "district": "מרכז",
+    "name": "שוהם",
+    "type": "מקומית",
+    "settlements": "שוהם",
+    "url": "http://shm.bartech-net.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "שורקות",
+    "type": "מרחבית",
+    "settlements": "ברנר, גדרות, חבל יבנה, נחל שורק, גן רווה",
+    "url": "http://srk.bartech-net.co.il/"
+  },
+  {
+    "district": "מרכז",
+    "name": "שרונים",
+    "type": "מרחבית",
+    "settlements": "אבן יהודה, פרדסיה, קדימה-צורן, תל מונד, אליכין",
+    "url": "http://www.sharonim.co.il/"
+  },
+  {
+    "district": "תל אביב",
+    "name": "אור יהודה",
+    "type": "מקומית",
+    "settlements": "אור יהודה",
+    "url": "http://or-yehuda.complot.co.il/"
+  },
+  {
+    "district": "תל אביב",
+    "name": "אזור",
+    "type": "מקומית",
+    "settlements": "אזור",
+    "url": "https://azor.muni.il/"
+  },
+  {
+    "district": "תל אביב",
+    "name": "בני ברק",
+    "type": "מקומית",
+    "settlements": "בני ברק",
+    "url": "http://www.bnei-brak.muni.il/Service/eng/Pages/default.aspx"
+  },
+  {
+    "district": "תל אביב",
+    "name": "בת ים",
+    "type": "מקומית",
+    "settlements": "בת ים",
+    "url": "http://batyam.complot.co.il/Pages/default.aspx"
+  },
+  {
+    "district": "תל אביב",
+    "name": "גבעתיים",
+    "type": "מקומית",
+    "settlements": "גבעתיים",
+    "url": "http://www.givatayim.muni.il/80/"
+  },
+  {
+    "district": "תל אביב",
+    "name": "הרצליה",
+    "type": "מרחבית",
+    "settlements": "כפר שמריהו, הרצליה",
+    "url": "http://www.herzliya.muni.il/?CategoryID=378&ArticleID=136"
+  },
+  {
+    "district": "תל אביב",
+    "name": "חולון",
+    "type": "מקומית",
+    "settlements": "חולון",
+    "url": "https://www.holon.muni.il/Residents/Engineering/Pages/default.aspx"
+  },
+  {
+    "district": "תל אביב",
+    "name": "קרית אונו",
+    "type": "מקומית",
+    "settlements": "קרית אונו",
+    "url": "http://ono.bartech-net.co.il/"
+  },
+  {
+    "district": "תל אביב",
+    "name": "רמת גן",
+    "type": "מקומית",
+    "settlements": "רמת גן",
+    "url": "http://handasa.ramat-gan.muni.il/Pages/default.aspx"
+  },
+  {
+    "district": "תל אביב",
+    "name": "רמת השרון",
+    "type": "מרחבית",
+    "settlements": "רמת השרון",
+    "url": "https://ramat-hasharon.muni.il/ועדה-לתכנון-ובנייה"
+  },
+  {
+    "district": "תל אביב",
+    "name": "תל אביב - יפו",
+    "type": "מקומית",
+    "settlements": "תל אביב - יפו",
+    "url": "http://www.tel-aviv.gov.il/Residents/Development/Pages/default.aspx"
+  },
+  {
+    "district": "ירושלים",
+    "name": "בית שמש",
+    "type": "מקומית",
+    "settlements": "בית שמש",
+    "url": "http://www.handasabs.org.il/"
+  },
+  {
+    "district": "ירושלים",
+    "name": "הראל",
+    "type": "מרחבית",
+    "settlements": "מבשרת ציון, אבו גוש, קרית יערים",
+    "url": "http://www.v-harel.co.il/"
+  },
+  {
+    "district": "ירושלים",
+    "name": "ירושלים",
+    "type": "מקומית",
+    "settlements": "ירושלים",
+    "url": "http://www.jerusalem.muni.il/Residents/PlanningandBuilding/Pages/default.aspx"
+  },
+  {
+    "district": "ירושלים",
+    "name": "מטה יהודה",
+    "type": "מקומית",
+    "settlements": "מטה יהודה",
+    "url": "http://mty.bartech-net.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "אבו בסמה",
+    "type": "מרחבית",
+    "settlements": "נווה מדבר, אל-קסום",
+    "url": "http://www.abubasma.org.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "אופקים",
+    "type": "מקומית",
+    "settlements": "אופקים",
+    "url": "http://ofaqim.complot.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "אילת",
+    "type": "מקומית",
+    "settlements": "אילת",
+    "url": "http://www.eilat.muni.il/?CategoryID=1273"
+  },
+  {
+    "district": "דרום",
+    "name": "אשדוד",
+    "type": "מקומית",
+    "settlements": "אשדוד",
+    "url": "https://www.ashdod.muni.il/he-il/אתר-העיר/הנדסה/איתור-מידע-הנדסי"
+  },
+  {
+    "district": "דרום",
+    "name": "אשקלון",
+    "type": "מקומית",
+    "settlements": "אשקלון",
+    "url": "http://hoa.bartech-net.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "באר טוביה",
+    "type": "מקומית",
+    "settlements": "באר טוביה",
+    "url": "http://btv.bartech-net.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "באר שבע",
+    "type": "מקומית",
+    "settlements": "באר שבע",
+    "url": "http://www.beer-sheva.muni.il/Residents/Engineer/Pages/default.aspx"
+  },
+  {
+    "district": "דרום",
+    "name": "בני שמעון",
+    "type": "מקומית",
+    "settlements": "בני שמעון",
+    "url": "http://bns.bartech-net.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "דימונה",
+    "type": "מקומית",
+    "settlements": "דימונה",
+    "url": "https://www.dimona.muni.il/תכנון-ובניה"
+  },
+  {
+    "district": "דרום",
+    "name": "חבל אילות",
+    "type": "מקומית",
+    "settlements": "חבל אילות",
+    "url": "http://www.eilot.org.il/vaada/"
+  },
+  {
+    "district": "דרום",
+    "name": "חוף אשקלון",
+    "type": "מקומית",
+    "settlements": "חוף אשקלון",
+    "url": "http://hoa.bartech-net.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "יואב",
+    "type": "מקומית",
+    "settlements": "יואב",
+    "url": "http://yov.bartech-net.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "ירוחם",
+    "type": "מקומית",
+    "settlements": "ירוחם",
+    "url": "http://www.yeroham.muni.il/Planning/Planning_information/Pages/default.aspx"
+  },
+  {
+    "district": "דרום",
+    "name": "להבים",
+    "type": "מקומית",
+    "settlements": "להבים",
+    "url": "http://lehavim.bartech-net.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "לכיש",
+    "type": "מקומית",
+    "settlements": "לכיש",
+    "url": "http://vaada-lachish.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "מיתר",
+    "type": "מקומית",
+    "settlements": "מיתר",
+    "url": "http://handasa.complot.co.il/metar/"
+  },
+  {
+    "district": "דרום",
+    "name": "מצפה רמון",
+    "type": "מקומית",
+    "settlements": "מצפה רמון",
+    "url": "https://mitzpe-ramon.muni.il/department/הוועדה-המקומית-לתכנון-ובניה"
+  },
+  {
+    "district": "דרום",
+    "name": "נאות חובב",
+    "type": "מקומית",
+    "settlements": "נאות חובב",
+    "url": "http://rhv.bartech-net.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "נגב מזרחי",
+    "type": "מרחבית",
+    "settlements": "תל שבע, כסיפה, ערערה בנגב, שגב שלום, חורה, לקיה",
+    "url": "http://nmz.bartech-net.co.il/default.aspx"
+  },
+  {
+    "district": "דרום",
+    "name": "נגב מערבי",
+    "type": "מרחבית",
+    "settlements": "אשכול, שדות נגב, שער הנגב, מרחבים",
+    "url": "http://ngm.bartech-net.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "נתיבות",
+    "type": "מקומית",
+    "settlements": "נתיבות",
+    "url": "http://www.netivot.muni.il/html5/?_id=9088&did=1116&g=9074&sm=9088&title=%EE%F0%E4%EC%20%E4%F0%E3%F1%E4"
+  },
+  {
+    "district": "דרום",
+    "name": "עומר",
+    "type": "מקומית",
+    "settlements": "עומר",
+    "url": "http://www.omer.muni.il/%D7%94%D7%A0%D7%93%D7%A1%D7%94/"
+  },
+  {
+    "district": "דרום",
+    "name": "ערבה תיכונה",
+    "type": "מקומית",
+    "settlements": "ערבה תיכונה",
+    "url": "https://www.arava.co.il/57/"
+  },
+  {
+    "district": "דרום",
+    "name": "ערד",
+    "type": "מקומית",
+    "settlements": "ערד",
+    "url": "http://arad.bartech-net.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "קרית גת",
+    "type": "מקומית",
+    "settlements": "קרית גת",
+    "url": "http://qiryat-gat.complot.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "קרית מלאכי",
+    "type": "מקומית",
+    "settlements": "קרית מלאכי",
+    "url": "http://km.complot.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "רהט",
+    "type": "מקומית",
+    "settlements": "רהט",
+    "url": "http://www.rahat-muni.com/?lang=he"
+  },
+  {
+    "district": "דרום",
+    "name": "רמת נגב",
+    "type": "מקומית",
+    "settlements": "רמת נגב",
+    "url": "http://vaada.rng.org.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "שדרות",
+    "type": "מקומית",
+    "settlements": "שדרות",
+    "url": "http://www.e-sderot.org.il/?CategoryID=268"
+  },
+  {
+    "district": "דרום",
+    "name": "שפיר",
+    "type": "מקומית",
+    "settlements": "שפיר",
+    "url": "http://sfr.bartech-net.co.il/"
+  },
+  {
+    "district": "דרום",
+    "name": "תמר",
+    "type": "מקומית",
+    "settlements": "תמר",
+    "url": "http://tamar.bartech-net.co.il/"
+  }
+]
