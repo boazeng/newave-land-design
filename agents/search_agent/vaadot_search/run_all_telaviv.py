@@ -58,25 +58,43 @@ COMMITTEES = [
         'name': 'בת ים',
         'name_en': 'bat_yam',
         'platform': 'complot',
-        'site_id': None,        # NEEDS DISCOVERY - run find_complot_ids.py first
+        'site_id': 81,          # CONFIRMED
         'city_name': 'בת_ים',
-        'complot_subdomain': 'batyam',
     },
     {
         'name': 'אור יהודה',
         'name_en': 'or_yehuda',
         'platform': 'complot',
-        'site_id': None,        # NEEDS DISCOVERY
+        'site_id': 73,          # CONFIRMED
         'city_name': 'אור_יהודה',
-        'complot_subdomain': 'oryehuda',
     },
     {
         'name': 'רמת השרון',
         'name_en': 'ramat_hasharon',
         'platform': 'complot',
-        'site_id': None,        # NEEDS DISCOVERY
+        'site_id': 118,         # CONFIRMED
         'city_name': 'רמת_השרון',
-        'complot_subdomain': 'ramathasharon',
+    },
+    {
+        'name': 'גבעתיים',
+        'name_en': 'givatayim',
+        'platform': 'complot',
+        'site_id': 98,          # CONFIRMED
+        'city_name': 'גבעתיים',
+    },
+    {
+        'name': 'הרצליה',
+        'name_en': 'herzliya',
+        'platform': 'complot',
+        'site_id': 121,         # CONFIRMED
+        'city_name': 'הרצליה',
+    },
+    {
+        'name': 'בני ברק',
+        'name_en': 'bnei_brak',
+        'platform': 'complot',
+        'site_id': 75,          # CONFIRMED
+        'city_name': 'בני_ברק',
     },
 
     # Bartech-based committees
@@ -93,29 +111,6 @@ COMMITTEES = [
         'platform': 'bartech',
         'city_code': 'azr',
         'city_name': 'אזור',
-    },
-
-    # SharePoint/muni.il based committees
-    {
-        'name': 'בני ברק',
-        'name_en': 'bnei_brak',
-        'platform': 'sharepoint',
-        'sp_city': 'bnei-brak',
-        'city_name': 'בני_ברק',
-    },
-    {
-        'name': 'גבעתיים',
-        'name_en': 'givatayim',
-        'platform': 'sharepoint',
-        'sp_city': 'givatayim',
-        'city_name': 'גבעתיים',
-    },
-    {
-        'name': 'הרצליה',
-        'name_en': 'herzliya',
-        'platform': 'sharepoint',
-        'sp_city': 'herzliya',
-        'city_name': 'הרצליה',
     },
 
     # Tel Aviv - independent site

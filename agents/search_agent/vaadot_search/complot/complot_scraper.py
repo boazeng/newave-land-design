@@ -235,7 +235,9 @@ def download_files(documents, output_dir):
         folder = os.path.join(output_dir, committee)
         os.makedirs(folder, exist_ok=True)
 
-        filename = f"{date_str}_{meeting_num}_{doc_type}.pdf"
+        # Use GUID from URL to ensure unique filenames
+        guid = doc.get('guid', '')[:8] or str(i)
+        filename = f"{date_str}_{meeting_num}_{doc_type}_{guid}.pdf"
         filepath = os.path.join(folder, filename)
 
         if os.path.exists(filepath) and os.path.getsize(filepath) > 1000:
