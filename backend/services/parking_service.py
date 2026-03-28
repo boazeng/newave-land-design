@@ -13,7 +13,7 @@ OUR_DEVICES_FILE = os.path.join(DATA_DIR, 'parking_ours.json')
 COMPETITOR_DEVICES_FILE = os.path.join(DATA_DIR, 'parking_competitors.json')
 
 # Load global env for Priority credentials
-ENV_PATH = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'env', '.env')
+ENV_PATH = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'env', '.env')
 if os.path.exists(ENV_PATH):
     load_dotenv(ENV_PATH)
 
