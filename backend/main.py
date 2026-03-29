@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import cadastre, search, autocomplete, parking, chargers, committees
+from routers import cadastre, search, autocomplete, parking, chargers, committees, energy_companies
 
 app = FastAPI(title="Newave Land Design API")
 
@@ -17,6 +17,7 @@ app.include_router(autocomplete.router, prefix="/api/autocomplete")
 app.include_router(parking.router, prefix="/api/parking")
 app.include_router(chargers.router, prefix="/api/chargers")
 app.include_router(committees.router, prefix="/api/committees")
+app.include_router(energy_companies.router, prefix="/api/energy-companies")
 
 
 @app.get("/api/health")

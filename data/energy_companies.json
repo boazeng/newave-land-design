@@ -1,0 +1,362 @@
+[
+  {
+    "id": 1,
+    "name": "Afcon EV (אפקון)",
+    "website": "https://www.afconev.co.il",
+    "description": "מפעילת רשת הטעינה הגדולה בישראל. מעל 25,000 התקנות. עמדות טעינה ביתיות, בבניינים משותפים, חניונים ציבוריים וטעינה מהירה. ספקית עמדות טעינה של טסלה בישראל.",
+    "category": "טעינת רכבים חשמליים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 2,
+    "name": "Gnrgy (ג'ינרג'י)",
+    "website": "https://www.gnrgy.com",
+    "description": "חברה ישראלית שהוקמה ב-2008. מייצרת עמדות טעינה, מפעילה רשת טעינה ציבורית, ומספקת פתרונות ניהול טעינה בבניינים משותפים כולל איזון עומסים בזמן אמת. מפעל ייצור באשקלון. נרכשה ע\"י Freesbe.",
+    "category": "ניהול טעינה בבניינים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 3,
+    "name": "סונול EVI",
+    "website": "https://sonolevi.co.il",
+    "description": "רשת טעינה ציבורית מהירה ואולטרה מהירה בפריסה ארצית. למעלה מ-1,700 שקעי טעינה ציבוריים. חלק מקבוצת סונול.",
+    "category": "טעינת רכבים חשמליים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 4,
+    "name": "פז Charge",
+    "website": "https://www.paz.co.il/pazcharge",
+    "description": "רשת הטעינה האולטרה מהירה הגדולה בישראל. עמדות טעינה אולטרה מהירות בפריסה ארצית. חלק מקבוצת פז.",
+    "category": "טעינת רכבים חשמליים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 5,
+    "name": "GreenSpot (גרינספוט)",
+    "website": "https://greenspot.com",
+    "description": "חלק מקבוצת שוסטר. תחבורה חכמה ושיתופית + תשתית טעינה לרכבים חשמליים. פתרונות לבתים פרטיים, בניינים משותפים ומקומות עבודה. הובילה פיילוט בארה\"ב.",
+    "category": "ניהול טעינה בבניינים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 6,
+    "name": "שנפ-EV (SHNF-EV)",
+    "website": "https://www.shnf.co.il",
+    "description": "חברה ציבורית ותיקה (70+ שנה) הנסחרת בבורסת תל אביב. פתרונות טעינה ללקוחות פרטיים ומסחריים - חניונים, חברות נדל\"ן, מוסכים וציי רכב.",
+    "category": "טעינת רכבים חשמליים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 7,
+    "name": "EV Edge",
+    "website": "https://www.ev-edge.co.il",
+    "description": "מקימה מאות עמדות טעינה ברחבי הארץ. 100+ עמדות חדשות במרכזי מסחר ותעסוקה של עמות. חניונים באזורי תעסוקה ומסחר.",
+    "category": "טעינת רכבים חשמליים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 8,
+    "name": "EV Meter (Nayax)",
+    "website": "https://www.nayax.com/ev-meter/",
+    "description": "עמדות טעינה חכמות עם מסוף תשלום מובנה. פתרון מלא - ייצור, התקנה ואפליקציית ניהול. קבלת כל אמצעי תשלום. מבוסס על תשתית Nayax.",
+    "category": "ניהול טעינה בבניינים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 9,
+    "name": "Driivz",
+    "website": "https://driivz.com",
+    "description": "פלטפורמת תוכנה לניהול רשתות טעינה. פועלת ב-30+ מדינות. נרכשה ב-2021 ע\"י Gilbarco Veeder-Root ב-200M$. מנהלת מיליוני משתמשים ועשרות אלפי עמדות.",
+    "category": "תוכנה לניהול טעינה",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 10,
+    "name": "Kedma Solar (קדמא סולאר)",
+    "website": "https://kedmasolar.com",
+    "description": "פתרונות טעינה לבתים פרטיים, בניינים משותפים, חנויות, משרדים ומרחבים ציבוריים. מומחים בתכנון והתקנת תשתית חשמלית משותפת.",
+    "category": "ניהול טעינה בבניינים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 11,
+    "name": "Scala Energy (סקאלה אנרגיה)",
+    "website": "https://www.scala-energy.co.il",
+    "description": "אנרגיה מתחדשת ותשתיות חשמל. שיווק והתקנת עמדות טעינה לבניינים משותפים, ועדי בתים ולקוחות פרטיים.",
+    "category": "ניהול טעינה בבניינים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 12,
+    "name": "Afikim Electric (אפיקים חשמל)",
+    "website": "https://www.afikim-electric.co.il",
+    "description": "מתמחה בהרחבת תשתית טעינה בישראל. התמחות בעמדות טעינה לבתים ומתחמי דירות.",
+    "category": "טעינת רכבים חשמליים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 13,
+    "name": "Nayax (נאיאקס)",
+    "website": "https://www.nayax.com",
+    "description": "חברה ישראלית ציבורית לפתרונות תשלום ללא מזומן. מפתחת פתרונות תשלום ל-EV charging כולל EVMeter. נסחרת בבורסת ת\"א ונאסד\"ק.",
+    "category": "תוכנה לניהול טעינה",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 14,
+    "name": "SolarEdge (סולאראדג')",
+    "website": "https://www.solaredge.com",
+    "description": "חברה ישראלית ציבורית (נאסד\"ק). מובילה עולמית באנרגיה סולארית. מייצרת עמדות טעינה לרכבים חשמליים המשולבות עם מערכות סולאריות.",
+    "category": "אנרגיה סולארית",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 15,
+    "name": "StoreDot (סטורדוט)",
+    "website": "https://www.store-dot.com",
+    "description": "סטארטאפ ישראלי מפתח טכנולוגיית טעינה מהירה במיוחד לסוללות (5 דקות טעינה). גייסה מאות מיליוני דולרים.",
+    "category": "טכנולוגיית סוללות",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 16,
+    "name": "ElectReon (אלקטריאון)",
+    "website": "https://www.electreon.com",
+    "description": "חברה ישראלית ציבורית. טעינה אלחוטית דינמית לרכבים חשמליים תוך כדי נסיעה. פיילוטים בישראל, שוודיה וארה\"ב.",
+    "category": "טכנולוגיית טעינה",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 17,
+    "name": "Freesbe (פריסבי)",
+    "website": "https://www.freesbe.co.il",
+    "description": "חברת שיתוף רכבים חשמליים. רכשה את חברת Gnrgy. מפעילה שירות שיתוף רכבים חשמליים וטעינה בערים בישראל.",
+    "category": "שיתוף רכבים חשמליים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 18,
+    "name": "GoTo (גו-טו)",
+    "website": "https://www.goto-mobility.com",
+    "description": "שירות שיתוף רכבים חשמליים בישראל. ציי רכבים חשמליים שיתופיים בערים מרכזיות.",
+    "category": "שיתוף רכבים חשמליים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 19,
+    "name": "EVenergy (איואנרג'י)",
+    "website": "https://www.evenergy.co.il",
+    "description": "פורטל מידע ופתרונות טעינה. מחשבון עלויות, מחירון עמדות טעינה, השוואת מחירים ומדריכים.",
+    "category": "מידע ושירותים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 20,
+    "name": "CelloCharge (סלוצ'ארג')",
+    "website": "https://www.cellocharge.com",
+    "description": "מפת עמדות הטענה בשיתוף משרד האנרגיה. פלטפורמה למיפוי ואיתור עמדות טעינה בישראל.",
+    "category": "מידע ושירותים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 21,
+    "name": "Blink Charging",
+    "website": "https://www.blinkcharging.com",
+    "description": "חברה אמריקאית-ישראלית לתשתית טעינה. רכשה את סטארטאפ Envoy הישראלי ב-34M$. מפעילה עמדות טעינה בארה\"ב ובעולם.",
+    "category": "טעינת רכבים חשמליים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 22,
+    "name": "Emda (עמדה)",
+    "website": "https://apps.apple.com/us/app/emda/id6739249489",
+    "description": "אפליקציה ישראלית לאיתור עמדות טעינה. תומכת ברשתות EV Edge, Gnrgy, Afcon EV, Sonol EVI, GreenSpot.",
+    "category": "מידע ושירותים",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 23,
+    "name": "EN Plus",
+    "website": "https://www.en-plustech.com",
+    "description": "יצרנית עמדות טעינה AC בינלאומית עם פרויקטים בישראל.",
+    "category": "יצרני עמדות טעינה",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "id": 24,
+    "name": "Wi-Charge",
+    "website": "https://www.wi-charge.com",
+    "description": "סטארטאפ ישראלי לטעינה אלחוטית למכשירים ולרכבים. טכנולוגיה חדשנית להעברת אנרגיה אלחוטית.",
+    "category": "טכנולוגיית טעינה",
+    "source": "web_search",
+    "added_at": "2026-03-28T01:00:00"
+  },
+  {
+    "name": "OPC Energy (או.פי.סי)",
+    "website": "https://opc-energy.com",
+    "description": "יצרנית חשמל פרטית מובילה בישראל. מחזיקה 51% מ-Gnrgy. אנרגיה סולארית, רוח וגז טבעי. חברה ציבורית.",
+    "category": "ייצור אנרגיה",
+    "id": 25,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "Electra Power (אלקטרה פאוור)",
+    "website": "https://electra-power.co.il",
+    "description": "ספקית חשמל וגז לבית ולעסק. פתרונות אנרגיה מלאים כולל מערכות סולאריות.",
+    "category": "ספקי אנרגיה",
+    "id": 26,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "Colmobil Energy (כלמוביל אנרגיה)",
+    "website": "https://www.colmobil-energy.co.il",
+    "description": "מערכות סולאריות ואנרגיה מתחדשת. חלק מקבוצת כלמוביל. הקמת מפעל מיחזור סוללות רכב.",
+    "category": "אנרגיה סולארית",
+    "id": 27,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "Green Energy (אנרגיה ירוקה)",
+    "website": "https://green-energy.co.il",
+    "description": "מובילים את מהפכת האנרגיה הסולארית בישראל. מערכות סולאריות לבתים ועסקים.",
+    "category": "אנרגיה סולארית",
+    "id": 28,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "Chakratec",
+    "website": "https://www.chakratec.com",
+    "description": "טכנולוגיית גלגל תנופה מגנטי לאחסון אנרגיה לעמדות טעינה. שותפות עם Blink Charging. אלטרנטיבה ירוקה לסוללות ליתיום.",
+    "category": "טכנולוגיית אחסון אנרגיה",
+    "id": 29,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "Addionics",
+    "website": "https://www.addionics.com",
+    "description": "שינוי ארכיטקטורת סוללות להגדלת צפיפות אנרגיה. הפחתת זמן טעינה ב-50% והגדלת טווח. גייסה 27M$ Series A.",
+    "category": "טכנולוגיית סוללות",
+    "id": 30,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "Phinergy (פינרג'י)",
+    "website": "https://www.phinergy.com",
+    "description": "טכנולוגיית מתכת-אוויר (אלומיניום, אבץ) לאנרגיה נקייה. הרחבת טווח לרכבים חשמליים ואחסון אנרגיה מתחדשת. חברה ציבורית.",
+    "category": "טכנולוגיית סוללות",
+    "id": 31,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "GenCell Energy (ג'נסל)",
+    "website": "https://www.gencellenergy.com",
+    "description": "פתרונות תאי דלק מימן ואמוניה. השיקה GenCell EVOX - תחנת טעינה אוטונומית off-grid מבוססת מימן.",
+    "category": "טכנולוגיית טעינה",
+    "id": 32,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "EVAYA",
+    "website": "https://www.evaya.co.il",
+    "description": "תכנון, הקמה וניהול עמדות טעינה ביתיות. פתרונות לבתים פרטיים ובניינים משותפים. ניהול מלא 100%.",
+    "category": "ניהול טעינה בבניינים",
+    "id": 33,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "ElectroPark (אלקטרופארק)",
+    "website": "https://electropark.co.il",
+    "description": "התקנת עמדות טעינה לרכב חשמלי - בתים פרטיים, בניינים משותפים, חניונים תת-קרקעיים. מחיר תחרותי.",
+    "category": "ניהול טעינה בבניינים",
+    "id": 34,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "Elexify",
+    "website": "https://www.elexify.net",
+    "description": "מדריכים ופתרונות להתקנת עמדות טעינה בבתים משותפים. ייעוץ חוקי ותכנוני.",
+    "category": "מידע ושירותים",
+    "id": 35,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "Schneider Electric Israel",
+    "website": "https://www.se.com/il/he/",
+    "description": "EcoStruxure - פלטפורמת ניהול אנרגיה לבניינים חכמים. ניטור צריכת חשמל, בניינים ירוקים. עשרות פרויקטים בישראל.",
+    "category": "ניהול אנרגיה חכם",
+    "id": 36,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "ABB Israel",
+    "website": "https://new.abb.com/il",
+    "description": "ABB Ability - מערכת ניהול אנרגיה חכם למבנים. בקרה וניתוח צריכת חשמל בזמן אמת. בניינים חכמים.",
+    "category": "ניהול אנרגיה חכם",
+    "id": 37,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "i-feel (איי-פיל)",
+    "website": "https://www.i-feel.co.il",
+    "description": "מערכות בית חכם לבנייני מגורים. מיזוג, תאורה, תריסים ומתגים חכמים. פתרונות ליזמי בנייה.",
+    "category": "בית חכם",
+    "id": 38,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "Powermat",
+    "website": "https://www.powermat.com",
+    "description": "חברה ישראלית לטעינה אלחוטית. טכנולוגיית טעינה אלחוטית למכשירים ורכבים. שיתוף פעולה עם יצרני רכב.",
+    "category": "טכנולוגיית טעינה",
+    "id": 39,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "Electromaps Israel",
+    "website": "https://www.electromaps.com/en/charging-stations/israel",
+    "description": "מפת עמדות טעינה בינלאומית עם כיסוי בישראל. איתור עמדות טעינה בזמן אמת.",
+    "category": "מידע ושירותים",
+    "id": 40,
+    "source": "web_search",
+    "added_at": "2026-03-28T02:00:00"
+  }
+]

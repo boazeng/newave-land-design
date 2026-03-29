@@ -118,6 +118,32 @@ function DatabasesPage() {
           </div>
         </button>
 
+        {/* Energy companies card */}
+        <button
+          onClick={() => navigate('/energy-companies')}
+          className="w-full mb-8 group bg-white rounded-2xl shadow-md border border-sky-100 p-8
+                     hover:shadow-xl hover:border-sky-300 hover:-translate-y-1
+                     transition-all duration-300 text-right"
+        >
+          <div className="flex items-center gap-5">
+            <div className="w-16 h-16 bg-sky-50 rounded-2xl flex items-center justify-center flex-shrink-0
+                            group-hover:bg-sky-100 transition-colors duration-300">
+              <svg className="w-9 h-9 text-sky-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h2 className="text-xl font-bold text-blue-900">חברות אנרגיה וטעינה</h2>
+              <p className="text-base text-blue-800 mt-1">
+                חיפוש ומיפוי חברות טעינת רכבים חשמליים וניהול אנרגיה בבניינים
+              </p>
+            </div>
+            <svg className="w-6 h-6 text-sky-400 group-hover:text-sky-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+            </svg>
+          </div>
+        </button>
+
         {/* Other databases */}
         <h3 className="text-lg font-bold text-blue-900 mb-4">נתוני מקרקעין</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
