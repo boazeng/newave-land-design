@@ -3,50 +3,85 @@ from fastapi import APIRouter
 from fastapi.responses import FileResponse
 import json
 import os
+import glob
 
 router = APIRouter()
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
 PROTOCOLS_DIR = os.path.join(DATA_DIR, 'protocols')
 
+# City config: maps city key to display name and result files
+CITY_CONFIG = {
+    'tel_aviv': {
+        'name': 'תל אביב-יפו',
+        'result_files': [
+            'parking_results_vaada_mishne.json',
+            'parking_results_vaada_old.json',
+            'parking_results_vaada_rishui.json',
+        ],
+        'protocol_dirs': [
+            'תל_אביב_יפו/ועדת_משנה',
+            'תל_אביב_יפו_ועדת_משנה',
+            'תל_אביב_יפו_ועדת_משנה_רישוי',
+        ],
+    },
+    # Future cities will be added here:
+    # 'ramat_gan': { 'name': 'רמת גן', 'result_files': [...], 'protocol_dirs': [...] },
+}
 
-def _load_results():
-    """Load all parking device search result files and merge."""
+
+def _load_results(city=None):
+    """Load parking device results, optionally filtered by city."""
     all_buildings = []
     seen = set()
 
-    result_files = [
-        'parking_results_vaada_mishne.json',
-        'parking_results_vaada_old.json',
-        'parking_results_vaada_rishui.json',
-    ]
+    if city and city in CITY_CONFIG:
+        configs = {city: CITY_CONFIG[city]}
+    else:
+        configs = CITY_CONFIG
 
-    for filename in result_files:
-        path = os.path.join(DATA_DIR, filename)
-        if not os.path.exists(path):
-            continue
-        with open(path, encoding='utf-8') as f:
-            data = json.load(f)
-        for b in data.get('buildings', []):
-            # Deduplicate by address+gush+helka
-            key = (b.get('address', ''), b.get('gush', ''), b.get('helka', ''))
-            if key not in seen:
-                seen.add(key)
-                all_buildings.append(b)
+    for city_key, config in configs.items():
+        for filename in config['result_files']:
+            path = os.path.join(DATA_DIR, filename)
+            if not os.path.exists(path):
+                continue
+            with open(path, encoding='utf-8') as f:
+                data = json.load(f)
+            for b in data.get('buildings', []):
+                key = (b.get('address', ''), b.get('gush', ''), b.get('helka', ''))
+                if key not in seen:
+                    seen.add(key)
+                    b['city'] = config['name']
+                    b['city_key'] = city_key
+                    all_buildings.append(b)
 
     return all_buildings
 
 
+@router.get("/cities")
+def get_cities():
+    """Return available cities with building counts."""
+    cities = []
+    for key, config in CITY_CONFIG.items():
+        count = len(_load_results(key))
+        cities.append({
+            'key': key,
+            'name': config['name'],
+            'count': count,
+        })
+    return cities
+
+
 @router.get("/results")
-def get_parking_devices():
-    """Get all buildings with parking devices."""
-    return _load_results()
+def get_parking_devices(city: str = None):
+    """Get all buildings with parking devices, optionally filtered by city."""
+    return _load_results(city)
 
 
 @router.get("/stats")
-def get_parking_stats():
+def get_parking_stats(city: str = None):
     """Get statistics about parking device search."""
-    buildings = _load_results()
+    buildings = _load_results(city)
 
     by_type = {}
     for b in buildings:
@@ -72,22 +107,18 @@ def get_parking_stats():
 @router.get("/pdf/{filename:path}")
 def serve_protocol_pdf(filename: str):
     """Serve a protocol PDF file."""
-    # Search in all protocol directories
-    search_dirs = [
-        os.path.join(PROTOCOLS_DIR, 'תל_אביב_יפו', 'ועדת_משנה'),
-        os.path.join(PROTOCOLS_DIR, 'תל_אביב_יפו_ועדת_משנה'),
-        os.path.join(PROTOCOLS_DIR, 'תל_אביב_יפו_ועדת_משנה_רישוי'),
-    ]
-
-    for search_dir in search_dirs:
-        if not os.path.exists(search_dir):
-            continue
-        for root, dirs, files in os.walk(search_dir):
-            if filename in files:
-                return FileResponse(
-                    os.path.join(root, filename),
-                    media_type='application/pdf',
-                    headers={'Content-Disposition': 'inline'},
-                )
+    # Search in all protocol directories for all cities
+    for config in CITY_CONFIG.values():
+        for proto_dir in config['protocol_dirs']:
+            search_dir = os.path.join(PROTOCOLS_DIR, proto_dir)
+            if not os.path.exists(search_dir):
+                continue
+            for root, dirs, files in os.walk(search_dir):
+                if filename in files:
+                    return FileResponse(
+                        os.path.join(root, filename),
+                        media_type='application/pdf',
+                        headers={'Content-Disposition': 'inline'},
+                    )
 
     return {"error": "קובץ לא נמצא"}

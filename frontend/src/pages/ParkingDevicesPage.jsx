@@ -4,6 +4,8 @@ import axios from 'axios'
 
 function ParkingDevicesPage() {
   const navigate = useNavigate()
+  const [cities, setCities] = useState([])
+  const [selectedCity, setSelectedCity] = useState('')
   const [buildings, setBuildings] = useState([])
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -11,22 +13,24 @@ function ParkingDevicesPage() {
   const [typeFilter, setTypeFilter] = useState('')
   const [yearFilter, setYearFilter] = useState('')
 
+  // Load available cities
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [resultsResp, statsResp] = await Promise.all([
-          axios.get('/api/parking-devices/results'),
-          axios.get('/api/parking-devices/stats'),
-        ])
-        setBuildings(resultsResp.data)
-        setStats(statsResp.data)
-      } catch (err) {
-        console.error(err)
-      }
-      setLoading(false)
-    }
-    fetchData()
+    axios.get('/api/parking-devices/cities').then(r => setCities(r.data)).catch(() => {})
   }, [])
+
+  // Load data when city changes
+  useEffect(() => {
+    setLoading(true)
+    const params = selectedCity ? { city: selectedCity } : {}
+    Promise.all([
+      axios.get('/api/parking-devices/results', { params }),
+      axios.get('/api/parking-devices/stats', { params }),
+    ]).then(([resultsResp, statsResp]) => {
+      setBuildings(resultsResp.data)
+      setStats(statsResp.data)
+    }).catch(err => console.error(err))
+      .finally(() => setLoading(false))
+  }, [selectedCity])
 
   const extractYear = (date) => {
     if (!date || !date.includes('/')) return ''
@@ -64,6 +68,35 @@ function ParkingDevicesPage() {
       </header>
 
       <main className="max-w-7xl mx-auto px-6 py-8">
+        {/* City Selection */}
+        <div className="mb-6">
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => { setSelectedCity(''); setTypeFilter(''); setYearFilter(''); setFilter('') }}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
+                ${!selectedCity
+                  ? 'bg-blue-900 text-white shadow-md'
+                  : 'bg-white text-blue-800 border border-sky-200 hover:bg-sky-50'
+                }`}
+            >
+              כל הערים
+            </button>
+            {cities.map(city => (
+              <button
+                key={city.key}
+                onClick={() => { setSelectedCity(city.key); setTypeFilter(''); setYearFilter(''); setFilter('') }}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
+                  ${selectedCity === city.key
+                    ? 'bg-blue-900 text-white shadow-md'
+                    : 'bg-white text-blue-800 border border-sky-200 hover:bg-sky-50'
+                  }`}
+              >
+                {city.name} ({city.count})
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Stats Cards */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
@@ -129,6 +162,7 @@ function ParkingDevicesPage() {
               <thead className="bg-sky-50">
                 <tr>
                   <th className="px-3 py-3 text-right font-bold text-blue-900">#</th>
+                  {!selectedCity && <th className="px-3 py-3 text-right font-bold text-blue-900">עיר</th>}
                   <th className="px-3 py-3 text-right font-bold text-blue-900">כתובת</th>
                   <th className="px-3 py-3 text-right font-bold text-blue-900">גוש</th>
                   <th className="px-3 py-3 text-right font-bold text-blue-900">חלקה</th>
@@ -142,16 +176,21 @@ function ParkingDevicesPage() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={9} className="px-4 py-8 text-center text-blue-800/50">טוען...</td>
+                    <td colSpan={10} className="px-4 py-8 text-center text-blue-800/50">טוען...</td>
                   </tr>
                 ) : filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={9} className="px-4 py-8 text-center text-blue-800/50">לא נמצאו תוצאות</td>
+                    <td colSpan={10} className="px-4 py-8 text-center text-blue-800/50">לא נמצאו תוצאות</td>
                   </tr>
                 ) : (
                   filtered.map((b, i) => (
                     <tr key={i} className="border-t border-sky-50 hover:bg-sky-50/50">
                       <td className="px-3 py-2 text-blue-800/50">{i + 1}</td>
+                      {!selectedCity && (
+                        <td className="px-3 py-2">
+                          <span className="px-2 py-0.5 bg-sky-50 rounded text-xs">{b.city || '-'}</span>
+                        </td>
+                      )}
                       <td className="px-3 py-2 text-blue-900 font-medium">{b.address || '-'}</td>
                       <td className="px-3 py-2 text-blue-900">{b.gush || '-'}</td>
                       <td className="px-3 py-2 text-blue-900">{b.helka || '-'}</td>
