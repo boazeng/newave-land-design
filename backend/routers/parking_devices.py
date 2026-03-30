@@ -87,7 +87,7 @@ def serve_protocol_pdf(filename: str):
                 return FileResponse(
                     os.path.join(root, filename),
                     media_type='application/pdf',
-                    filename=filename,
+                    headers={'Content-Disposition': 'inline'},
                 )
 
     return {"error": "קובץ לא נמצא"}
