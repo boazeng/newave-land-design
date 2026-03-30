@@ -1,0 +1,16 @@
+[Unit]
+Description=Newave Land Design API
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/newave-land-design/backend
+Environment=PATH=/opt/newave-land-design/venv/bin:/usr/bin
+EnvironmentFile=/opt/newave-land-design/env/.env
+ExecStart=/opt/newave-land-design/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8001
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
