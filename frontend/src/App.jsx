@@ -6,6 +6,7 @@ import ParkingPage from './pages/parking/ParkingPage'
 import ChargersPage from './pages/parking/ChargersPage'
 import CommitteesPage from './pages/CommitteesPage'
 import EnergyCompaniesPage from './pages/EnergyCompaniesPage'
+import ParkingDevicesPage from './pages/ParkingDevicesPage'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/chargers" element={<ChargersPage />} />
           <Route path="/committees" element={<CommitteesPage />} />
           <Route path="/energy-companies" element={<EnergyCompaniesPage />} />
+          <Route path="/parking-devices" element={<ParkingDevicesPage />} />
         </Routes>
       </div>
     </BrowserRouter>
