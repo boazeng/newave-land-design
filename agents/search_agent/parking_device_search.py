@@ -104,7 +104,8 @@ def extract_info_with_claude(filename, matching_pages, all_pages):
   "date": "תאריך הפרוטוקול/הישיבה (DD/MM/YYYY, אחרת null)",
   "description": "סיכום קצר (1-2 משפטים) של הפרויקט ותיאור מתקן החניה",
   "parking_count": "מספר מקומות חניה במתקן (מספר, אחרת null)",
-  "device_type": "סוג המתקן (מכפיל/רובוטי/אוטומטי/חצי אוטומטי/מכני/אחר)"
+  "device_type": "סוג המתקן (מכפיל/רובוטי/אוטומטי/חצי אוטומטי/מכני/אחר)",
+  "page_number": "מספר העמוד בפרוטוקול שבו מוזכר הפרויקט (מספר, אחרת null)"
 }}]
 
 חשוב: חלץ רק פרויקטים שבהם מתואר מתקן חניה מכני/אוטומטי/רובוטי/מכפיל - לא חניה רגילה.
@@ -196,6 +197,7 @@ def scan_directory(input_dir, scan_only=False):
 
         for building in extracted:
             building['source_file'] = match['filename']
+            building['source_path'] = match['path']
             all_buildings.append(building)
 
         print(f"    Found {len(extracted)} building(s)")

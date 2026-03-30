@@ -1,11 +1,13 @@
 """API for parking device search results."""
 from fastapi import APIRouter
+from fastapi.responses import FileResponse
 import json
 import os
 
 router = APIRouter()
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
+PROTOCOLS_DIR = os.path.join(DATA_DIR, 'protocols')
 
 
 def _load_results():
@@ -46,13 +48,11 @@ def get_parking_stats():
     """Get statistics about parking device search."""
     buildings = _load_results()
 
-    # Count by device type
     by_type = {}
     for b in buildings:
         dt = b.get('device_type') or 'לא ידוע'
         by_type[dt] = by_type.get(dt, 0) + 1
 
-    # Count by year
     by_year = {}
     for b in buildings:
         date = b.get('date') or ''
@@ -67,3 +67,27 @@ def get_parking_stats():
         'by_device_type': by_type,
         'by_year': dict(sorted(by_year.items())),
     }
+
+
+@router.get("/pdf/{filename:path}")
+def serve_protocol_pdf(filename: str):
+    """Serve a protocol PDF file."""
+    # Search in all protocol directories
+    search_dirs = [
+        os.path.join(PROTOCOLS_DIR, 'תל_אביב_יפו', 'ועדת_משנה'),
+        os.path.join(PROTOCOLS_DIR, 'תל_אביב_יפו_ועדת_משנה'),
+        os.path.join(PROTOCOLS_DIR, 'תל_אביב_יפו_ועדת_משנה_רישוי'),
+    ]
+
+    for search_dir in search_dirs:
+        if not os.path.exists(search_dir):
+            continue
+        for root, dirs, files in os.walk(search_dir):
+            if filename in files:
+                return FileResponse(
+                    os.path.join(root, filename),
+                    media_type='application/pdf',
+                    filename=filename,
+                )
+
+    return {"error": "קובץ לא נמצא"}

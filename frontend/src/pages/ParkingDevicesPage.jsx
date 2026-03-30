@@ -136,16 +136,17 @@ function ParkingDevicesPage() {
                   <th className="px-3 py-3 text-right font-bold text-blue-900">חניות</th>
                   <th className="px-3 py-3 text-right font-bold text-blue-900">תאריך</th>
                   <th className="px-3 py-3 text-right font-bold text-blue-900 max-w-md">תיאור</th>
+                  <th className="px-3 py-3 text-right font-bold text-blue-900">פרוטוקול</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={8} className="px-4 py-8 text-center text-blue-800/50">טוען...</td>
+                    <td colSpan={9} className="px-4 py-8 text-center text-blue-800/50">טוען...</td>
                   </tr>
                 ) : filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="px-4 py-8 text-center text-blue-800/50">לא נמצאו תוצאות</td>
+                    <td colSpan={9} className="px-4 py-8 text-center text-blue-800/50">לא נמצאו תוצאות</td>
                   </tr>
                 ) : (
                   filtered.map((b, i) => (
@@ -168,6 +169,18 @@ function ParkingDevicesPage() {
                       <td className="px-3 py-2 text-blue-800 text-xs max-w-md">
                         {b.description ? (
                           <span title={b.description}>{b.description.substring(0, 100)}{b.description.length > 100 ? '...' : ''}</span>
+                        ) : '-'}
+                      </td>
+                      <td className="px-3 py-2">
+                        {b.source_file ? (
+                          <a
+                            href={`/api/parking-devices/pdf/${encodeURIComponent(b.source_file)}${b.page_number ? `#page=${b.page_number}` : ''}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-sky-600 hover:text-sky-800 underline text-xs whitespace-nowrap"
+                          >
+                            {b.page_number ? `עמ' ${b.page_number}` : 'צפה'}
+                          </a>
                         ) : '-'}
                       </td>
                     </tr>
