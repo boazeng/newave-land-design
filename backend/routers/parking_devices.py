@@ -25,8 +25,21 @@ CITY_CONFIG = {
             'תל_אביב_יפו_ועדת_משנה_רישוי',
         ],
     },
-    # Future cities will be added here:
-    # 'ramat_gan': { 'name': 'רמת גן', 'result_files': [...], 'protocol_dirs': [...] },
+    'ramat_gan': {
+        'name': 'רמת גן',
+        'result_files': ['parking_results_ramat_gan.json'],
+        'protocol_dirs': ['protocols_search/רמת_גן'],
+    },
+    'holon': {
+        'name': 'חולון',
+        'result_files': ['parking_results_holon.json'],
+        'protocol_dirs': ['protocols_search/חולון'],
+    },
+    'herzliya': {
+        'name': 'הרצליה',
+        'result_files': ['parking_results_herzliya.json'],
+        'protocol_dirs': ['protocols_search/הרצליה'],
+    },
 }
 
 
