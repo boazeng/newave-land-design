@@ -119,8 +119,8 @@ def get_parking_stats(city: str = None):
 
 @router.get("/pdf/{filename:path}")
 def serve_protocol_pdf(filename: str):
-    """Serve a protocol PDF file."""
-    # Search in all protocol directories for all cities
+    """Serve a protocol PDF - from local files or redirect to SharePoint."""
+    # First try local files
     for config in CITY_CONFIG.values():
         for proto_dir in config['protocol_dirs']:
             search_dir = os.path.join(PROTOCOLS_DIR, proto_dir)
@@ -133,5 +133,20 @@ def serve_protocol_pdf(filename: str):
                         media_type='application/pdf',
                         headers={'Content-Disposition': 'inline'},
                     )
+
+    # Fallback: get URL from SharePoint
+    from services.sharepoint_pdf_service import get_pdf_url
+    from fastapi.responses import RedirectResponse
+
+    sp_folders = [
+        'החלטות ועדות תכנון/תל אביב-יפו/ועדת_משנה_לפי_שנה',
+        'החלטות ועדות תכנון/תל אביב-יפו',
+        'החלטות ועדות תכנון/רמת גן',
+        'החלטות ועדות תכנון/חולון',
+        'החלטות ועדות תכנון/הרצליה',
+    ]
+    url = get_pdf_url(filename, sp_folders)
+    if url:
+        return RedirectResponse(url=url)
 
     return {"error": "קובץ לא נמצא"}
