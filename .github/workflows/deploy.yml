@@ -25,7 +25,8 @@ jobs:
             git fetch origin main
             git reset --hard origin/main
             # Setup Python venv
-            if [ ! -d venv ]; then
+            if [ ! -f venv/bin/activate ]; then
+              rm -rf venv
               python3 -m venv venv
             fi
             source venv/bin/activate
