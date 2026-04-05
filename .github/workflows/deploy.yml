@@ -1,0 +1,32 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+            cd /opt/newave-land-design
+            git pull origin main
+            source venv/bin/activate 2>/dev/null || python3 -m venv venv && source venv/bin/activate
+            pip install -q -r backend/requirements.txt
+            cd frontend
+            npm install --silent
+            npm run build
+            cd ..
+            sudo systemctl restart newave
+            sudo systemctl reload nginx
+            echo "Deploy completed"
