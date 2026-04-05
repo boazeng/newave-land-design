@@ -20,13 +20,22 @@ jobs:
           script: |
             set -e
             cd /opt/newave-land-design
-            git pull origin main
-            source venv/bin/activate 2>/dev/null || python3 -m venv venv && source venv/bin/activate
+            # Stash any local changes (like updated data files)
+            git stash -u || true
+            git fetch origin main
+            git reset --hard origin/main
+            # Setup Python venv
+            if [ ! -d venv ]; then
+              python3 -m venv venv
+            fi
+            source venv/bin/activate
             pip install -q -r backend/requirements.txt
+            # Build frontend
             cd frontend
             npm install --silent
             npm run build
             cd ..
+            # Restart services
             sudo systemctl restart newave
             sudo systemctl reload nginx
             echo "Deploy completed"
