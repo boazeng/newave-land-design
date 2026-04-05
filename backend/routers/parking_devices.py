@@ -118,8 +118,11 @@ def get_parking_stats(city: str = None):
 
 
 @router.get("/pdf/{filename:path}")
-def serve_protocol_pdf(filename: str):
-    """Serve a protocol PDF - from local files or redirect to SharePoint."""
+async def serve_protocol_pdf(filename: str):
+    """Serve a protocol PDF inline for viewing (not downloading)."""
+    import httpx
+    from fastapi.responses import Response
+
     # First try local files
     for config in CITY_CONFIG.values():
         for proto_dir in config['protocol_dirs']:
@@ -131,22 +134,35 @@ def serve_protocol_pdf(filename: str):
                     return FileResponse(
                         os.path.join(root, filename),
                         media_type='application/pdf',
-                        headers={'Content-Disposition': 'inline'},
+                        headers={'Content-Disposition': f'inline; filename="{filename}"'},
                     )
 
-    # Fallback: get URL from SharePoint
+    # Fallback: fetch from SharePoint and serve inline
     from services.sharepoint_pdf_service import get_pdf_url
-    from fastapi.responses import RedirectResponse
 
     sp_folders = [
+        'החלטות ועדות תכנון/תל אביב-יפו/ועדת_משנה',
         'החלטות ועדות תכנון/תל אביב-יפו/ועדת_משנה_לפי_שנה',
+        'החלטות ועדות תכנון/תל אביב-יפו/אחר',
         'החלטות ועדות תכנון/תל אביב-יפו',
+        'החלטות ועדות תכנון/רמת גן/ועדת_משנה',
         'החלטות ועדות תכנון/רמת גן',
+        'החלטות ועדות תכנון/חולון/ועדת_משנה',
         'החלטות ועדות תכנון/חולון',
+        'החלטות ועדות תכנון/הרצליה/ועדת_משנה',
         'החלטות ועדות תכנון/הרצליה',
+        'החלטות ועדות תכנון/יקנעם עילית',
     ]
     url = get_pdf_url(filename, sp_folders)
     if url:
-        return RedirectResponse(url=url)
+        # Download from SharePoint and serve inline
+        async with httpx.AsyncClient(timeout=60) as client:
+            resp = await client.get(url)
+            if resp.status_code == 200:
+                return Response(
+                    content=resp.content,
+                    media_type='application/pdf',
+                    headers={'Content-Disposition': f'inline; filename="{filename}"'},
+                )
 
     return {"error": "קובץ לא נמצא"}

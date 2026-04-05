@@ -2,6 +2,11 @@
 import os
 import requests
 from functools import lru_cache
+from dotenv import load_dotenv
+
+ENV_PATH = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'env', '.env')
+if os.path.exists(ENV_PATH):
+    load_dotenv(ENV_PATH)
 
 SITE_ID = 'yaelisrael.sharepoint.com,1e880094-7633-4f48-aee6-88f272bd30ee,e624f0cf-a6b3-4f1c-b2d8-911f75d1c14f'
 DRIVE_ID = 'b!lACIHjN2SE-u5ojycr0w7s_wJOazphxPstiRH3XRwU8YVObFPrGeSY2HFvo2E83m'
@@ -37,16 +42,13 @@ def get_pdf_url(filename, search_folders):
     headers = {'Authorization': f'Bearer {token}'}
     from urllib.parse import quote
 
+    # Try direct access first (fastest)
     for folder_path in search_folders:
-        encoded = quote(folder_path)
-        url = f"{BASE}/root:/{encoded}:/children"
+        url = f"{BASE}/root:/{quote(folder_path)}/{quote(filename)}"
         try:
             resp = requests.get(url, headers=headers, timeout=15)
-            if resp.status_code != 200:
-                continue
-            for item in resp.json().get('value', []):
-                if item.get('name') == filename:
-                    return item.get('@microsoft.graph.downloadUrl')
+            if resp.status_code == 200:
+                return resp.json().get('@microsoft.graph.downloadUrl')
         except:
             continue
 
