@@ -4,6 +4,7 @@ import axios from 'axios'
 
 const ENDPOINTS = {
   parking: '/api/parking/ours',
+  parking_telaviv: '/api/parking-protocols/telaviv',
   chargers: '/api/chargers/sites',
 }
 
@@ -99,10 +100,14 @@ function DatabaseMarkers({ map, dbId, markerStyle }) {
           if (!item.lat || !item.lng) continue
 
           const popup = `
-            <div dir="rtl" style="min-width:200px">
+            <div dir="rtl" style="min-width:220px">
               <b>${item.site_name || item.address || ''}</b><br/>
+              ${item.city ? `<span style="color:#6b7280">${item.city}</span><br/>` : ''}
               ${item.site_code ? `<span>אתר: ${item.site_code}</span><br/>` : ''}
               ${item.family ? `<span>סוג: ${item.family}</span><br/>` : ''}
+              ${item.device_types ? `<span>סוג מתקן: ${item.device_types}</span><br/>` : ''}
+              ${item.gush ? `<span>גוש: ${item.gush}${item.helka ? ` חלקה: ${item.helka}` : ''}</span><br/>` : ''}
+              ${item.parking_count ? `<span>מקומות חניה: ${item.parking_count}</span><br/>` : ''}
               ${item.count ? `<span>כמות: ${item.count}</span>` : ''}
             </div>
           `

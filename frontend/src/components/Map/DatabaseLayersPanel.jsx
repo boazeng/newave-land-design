@@ -15,8 +15,13 @@ const MARKER_STYLES = [
 const DATABASES = [
   {
     id: 'parking',
-    label: 'מתקני חניה',
+    label: 'מתקני חניה - שלנו',
     endpoint: '/api/parking/ours',
+  },
+  {
+    id: 'parking_telaviv',
+    label: 'מתקני חניה - תל אביב (פרוטוקולים)',
+    endpoint: '/api/parking-protocols/telaviv',
   },
   {
     id: 'chargers',
