@@ -31,6 +31,11 @@ jobs:
             fi
             source venv/bin/activate
             pip install -q -r backend/requirements.txt
+            # Install Node.js if missing
+            if ! command -v npm &> /dev/null; then
+              curl -fsSL https://rpm.nodesource.com/setup_20.x | sudo bash -
+              sudo yum install -y nodejs
+            fi
             # Build frontend
             cd frontend
             npm install --silent
