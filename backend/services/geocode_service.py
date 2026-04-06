@@ -25,7 +25,7 @@ def _save_cache(cache):
         json.dump(cache, f, ensure_ascii=False, indent=2)
 
 
-async def geocode_address(address: str) -> dict | None:
+async def geocode_address(address: str) -> dict:
     """Geocode a single address. Returns {lat, lng} or None."""
     if not address or address == "(ללא כתובת)":
         return None
@@ -70,7 +70,7 @@ async def geocode_address(address: str) -> dict | None:
     return None
 
 
-async def geocode_batch(addresses: list[str]) -> dict:
+async def geocode_batch(addresses) -> dict:
     """
     Geocode a list of addresses. Returns {address: {lat, lng}}.
     Respects Nominatim rate limit (1 req/sec).

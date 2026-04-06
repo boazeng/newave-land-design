@@ -14,7 +14,7 @@ MAX_BLOCKS = 5000
 MAX_PARCELS = 3000
 
 
-def get_features(layer: str, bbox: list[float], limit: int | None = None) -> dict:
+def get_features(layer: str, bbox, limit=None) -> dict:
     """
     Get features from GeoPackage filtered by bounding box.
     bbox: [min_lng, min_lat, max_lng, max_lat] in WGS84

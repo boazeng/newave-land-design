@@ -17,7 +17,7 @@ async def fetch_wms_tile(
     width: int,
     height: int,
     srs: str = "EPSG:3857",
-) -> bytes | None:
+) -> bytes:
     """Fetch a WMS tile from GovMap GeoServer."""
     params = {
         "service": "WMS",
@@ -50,7 +50,7 @@ async def fetch_wms_tile(
     return None
 
 
-async def search_parcel(block: int, parcel: int) -> dict | None:
+async def search_parcel(block: int, parcel: int) -> dict:
     """Search for a specific block and parcel using GovMap API."""
     search_term = f"{block}-{parcel}"
 

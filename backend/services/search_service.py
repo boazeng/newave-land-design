@@ -11,7 +11,7 @@ GPKG_PATH = os.path.join(DATA_DIR, 'cadastre.gpkg')
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 
 
-def search_by_parcel(gush: int, parcel: int | None = None) -> dict:
+def search_by_parcel(gush: int, parcel=None) -> dict:
     """Search for a block/parcel in local GeoPackage data."""
     if not os.path.exists(GPKG_PATH):
         return {"error": "נתוני קדסטר לא נמצאו"}
@@ -47,7 +47,7 @@ def search_by_parcel(gush: int, parcel: int | None = None) -> dict:
     return result
 
 
-async def search_by_address(city: str, street: str, house: str | None = None) -> dict:
+async def search_by_address(city: str, street: str, house=None) -> dict:
     """Search address using Nominatim (OpenStreetMap geocoder)."""
     query_parts = []
     if house:

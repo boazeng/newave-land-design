@@ -41,7 +41,7 @@ def _load_data():
     return cities, streets
 
 
-def search_cities(query: str, limit: int = 10) -> list[dict]:
+def search_cities(query: str, limit: int = 10) -> list:
     """Search cities by prefix."""
     cities, _ = _load_data()
     query = query.strip()
@@ -60,7 +60,7 @@ def search_cities(query: str, limit: int = 10) -> list[dict]:
     return results[:limit]
 
 
-def search_streets(city_code: str, query: str, limit: int = 10) -> list[dict]:
+def search_streets(city_code: str, query: str, limit: int = 10) -> list:
     """Search streets within a city by prefix."""
     _, streets = _load_data()
     query = query.strip()
