@@ -12,10 +12,17 @@ function ParkingDevicesPage() {
   const [filter, setFilter] = useState('')
   const [typeFilter, setTypeFilter] = useState('')
   const [yearFilter, setYearFilter] = useState('')
+  const [noLocationFilter, setNoLocationFilter] = useState(false)
+  const [noLocationAddresses, setNoLocationAddresses] = useState(new Set())
 
-  // Load available cities
+  // Load available cities + no-location addresses
   useEffect(() => {
     axios.get('/api/parking-devices/cities').then(r => setCities(r.data)).catch(() => {})
+    axios.get('/api/parking-protocols/telaviv', { params: { no_location: true } })
+      .then(r => {
+        const addrs = new Set(r.data.map(d => (d.address || '').trim().toLowerCase()))
+        setNoLocationAddresses(addrs)
+      }).catch(() => {})
   }, [])
 
   // Load data when city changes
@@ -46,6 +53,10 @@ function ParkingDevicesPage() {
     if (filter && !text.includes(filter.toLowerCase())) return false
     if (typeFilter && (b.device_type || '') !== typeFilter) return false
     if (yearFilter && extractYear(b.date) !== yearFilter) return false
+    if (noLocationFilter) {
+      const addr = (b.address || '').trim().toLowerCase()
+      if (!noLocationAddresses.has(addr)) return false
+    }
     return true
   })
 
@@ -120,6 +131,24 @@ function ParkingDevicesPage() {
             </div>
           </div>
         )}
+
+        {/* No-location filter */}
+        <div className="flex items-center gap-4 mb-4 bg-white rounded-xl shadow-sm border border-sky-100 p-3">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={noLocationFilter}
+              onChange={e => setNoLocationFilter(e.target.checked)}
+              className="w-4 h-4 text-sky-500 rounded border-sky-300 focus:ring-sky-400"
+            />
+            <span className="text-sm text-blue-900">הצג רק בניינים ללא מיקום על המפה</span>
+          </label>
+          {noLocationFilter && (
+            <span className="text-sm text-amber-600 font-medium">
+              {filtered.length} בניינים ללא מיקום
+            </span>
+          )}
+        </div>
 
         {/* Filters */}
         <div className="flex flex-wrap gap-3 mb-4">
