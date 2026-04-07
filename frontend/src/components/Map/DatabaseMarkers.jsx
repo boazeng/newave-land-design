@@ -5,6 +5,7 @@ import axios from 'axios'
 const ENDPOINTS = {
   parking: '/api/parking/ours',
   parking_telaviv: '/api/parking-protocols/telaviv',
+  parking_ramatgan: '/api/parking-protocols/ramatgan',
   chargers: '/api/chargers/sites',
 }
 

@@ -24,6 +24,11 @@ const DATABASES = [
     endpoint: '/api/parking-protocols/telaviv',
   },
   {
+    id: 'parking_ramatgan',
+    label: 'מתקני חניה - רמת גן (פרוטוקולים)',
+    endpoint: '/api/parking-protocols/ramatgan',
+  },
+  {
     id: 'chargers',
     label: 'מטענים',
     endpoint: '/api/chargers/sites',
