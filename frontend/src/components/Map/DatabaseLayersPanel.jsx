@@ -29,8 +29,13 @@ const DATABASES = [
     endpoint: '/api/parking-protocols/ramatgan',
   },
   {
+    id: 'charging_stations',
+    label: 'עמדות טעינה ציבוריות (2,261)',
+    endpoint: '/api/charging-stations',
+  },
+  {
     id: 'chargers',
-    label: 'מטענים',
+    label: 'מטענים - שלנו',
     endpoint: '/api/chargers/sites',
   },
 ]

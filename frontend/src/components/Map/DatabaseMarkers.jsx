@@ -6,6 +6,7 @@ const ENDPOINTS = {
   parking: '/api/parking/ours',
   parking_telaviv: '/api/parking-protocols/telaviv',
   parking_ramatgan: '/api/parking-protocols/ramatgan',
+  charging_stations: '/api/charging-stations',
   chargers: '/api/chargers/sites',
 }
 
@@ -110,6 +111,8 @@ function DatabaseMarkers({ map, dbId, markerStyle }) {
               ${item.gush ? `<span>גוש: ${item.gush}${item.helka ? ` חלקה: ${item.helka}` : ''}</span><br/>` : ''}
               ${item.parking_count ? `<span>מקומות חניה: ${item.parking_count}</span><br/>` : ''}
               ${item.count ? `<span>כמות: ${item.count}</span>` : ''}
+              ${item.operator ? `<span>מפעיל: ${item.operator}</span><br/>` : ''}
+              ${item.total_chargers ? `<span>עמדות: ${item.total_chargers} (${item.fast_chargers || 0} מהירות, ${item.slow_chargers || 0} איטיות)</span>` : ''}
             </div>
           `
 
