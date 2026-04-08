@@ -358,5 +358,131 @@
     "id": 40,
     "source": "web_search",
     "added_at": "2026-03-28T02:00:00"
+  },
+  {
+    "name": "Scala Energy (סקאלה)",
+    "website": "https://scala-energy.co.il",
+    "description": "עמדות טעינה חכמות לבית ולציבור. 215 עמדות ברחבי הארץ. אחריות 3 שנים, אפליקציה לניהול טעינה.",
+    "category": "טעינת רכבים חשמליים",
+    "id": 41,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "Nofar Energy (נופר אנרגיה)",
+    "website": "https://www.nofar-energy.com",
+    "description": "חברה ציבורית לאנרגיה מתחדשת. 164 עמדות טעינה. מאות עמדות ב-25+ רשויות מקומיות, קיבוצים ומבנים מסחריים. נוסדה 2012.",
+    "category": "טעינת רכבים חשמליים",
+    "id": 42,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "Enova Energy (אנובה)",
+    "website": "https://enova-energy.co.il",
+    "description": "פתרונות אנרגיה וטעינת רכבים חשמליים. 160 עמדות. שותפות עם קבוצת מילגם. אפליקציית טעינה חכמה.",
+    "category": "טעינת רכבים חשמליים",
+    "id": 43,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "EdgeControl",
+    "website": "https://www.linkedin.com/in/edgecontrol-ev-charging-67b989258/",
+    "description": "פתרון EV מלא. 76 עמדות טעינה. מבוסס בתל אביב.",
+    "category": "טעינת רכבים חשמליים",
+    "id": 44,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "Greems",
+    "website": "https://www.greems.io",
+    "description": "פלטפורמת טעינה חכמה SaaS. 63 עמדות. מערכת EQoS לניהול אנרגיה ואופטימיזציה. פועלת בישראל, קנדה, בלגיה, פולין, צרפת. נוסדה 2022.",
+    "category": "ניהול טעינה בבניינים",
+    "id": 45,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "Lishatech (לישאטק)",
+    "website": "",
+    "description": "מפעילת עמדות טעינה בישראל. 60 עמדות + 6 עמדות CPW.",
+    "category": "טעינת רכבים חשמליים",
+    "id": 46,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "ZenEv",
+    "website": "",
+    "description": "מפעילת עמדות טעינה בישראל. 54 עמדות CEP + 32 עמדות נוספות. סה\"כ 86 עמדות.",
+    "category": "טעינת רכבים חשמליים",
+    "id": 47,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "InterEV",
+    "website": "",
+    "description": "פתרונות טעינה פרימיום לרכבים חשמליים. 53 עמדות. שותפות עם EvGateway לישראל ואירופה.",
+    "category": "טעינת רכבים חשמליים",
+    "id": 48,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "SevenEv",
+    "website": "",
+    "description": "מפעילת עמדות טעינה בישראל. 37 עמדות.",
+    "category": "טעינת רכבים חשמליים",
+    "id": 49,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "ViMore (ויטריאה)",
+    "website": "",
+    "description": "רשת טעינה חכמה מקבוצת VITREA. 25 עמדות. פתרון לבעיות חשמל בטעינת רכבים חשמליים.",
+    "category": "ניהול טעינה בבניינים",
+    "id": 50,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "Ev4u",
+    "website": "",
+    "description": "מפעילת עמדות טעינה בישראל. 15 עמדות.",
+    "category": "טעינת רכבים חשמליים",
+    "id": 51,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "AdviceCPW",
+    "website": "",
+    "description": "מפעילת עמדות טעינה CPW בישראל. 15 עמדות.",
+    "category": "טעינת רכבים חשמליים",
+    "id": 52,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "Xeed Energy",
+    "website": "",
+    "description": "אפליקציית טעינת רכבים חשמליים. 5 עמדות.",
+    "category": "טעינת רכבים חשמליים",
+    "id": 53,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
+  },
+  {
+    "name": "EvTech",
+    "website": "",
+    "description": "מפעילת עמדות טעינה בישראל.",
+    "category": "טעינת רכבים חשמליים",
+    "id": 54,
+    "source": "data.gov.il",
+    "added_at": "2026-04-08T12:00:00"
   }
 ]
