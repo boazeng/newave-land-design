@@ -12,7 +12,7 @@ from services.geocode_service import geocode_batch
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
 CHARGERS_FILE = os.path.join(DATA_DIR, 'chargers.json')
 
-ENV_PATH = os.path.join(os.path.dirname(__file__), '..', '..', '..', '..', 'env', '.env')
+ENV_PATH = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'env', '.env')
 if os.path.exists(ENV_PATH):
     load_dotenv(ENV_PATH)
 

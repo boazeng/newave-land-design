@@ -12,11 +12,16 @@ jobs:
     steps:
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          SHAREPOINT_TENANT_ID: ${{ secrets.SHAREPOINT_TENANT_ID }}
+          SHAREPOINT_CLIENT_ID: ${{ secrets.SHAREPOINT_CLIENT_ID }}
+          SHAREPOINT_CLIENT_SECRET: ${{ secrets.SHAREPOINT_CLIENT_SECRET }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
+          envs: SHAREPOINT_TENANT_ID,SHAREPOINT_CLIENT_ID,SHAREPOINT_CLIENT_SECRET
           script: |
             set -e
             cd /opt/newave-land-design
@@ -24,6 +29,15 @@ jobs:
             git stash -u || true
             git fetch origin main
             git reset --hard origin/main
+            # Write env file with secrets
+            sudo mkdir -p /opt/env
+            sudo tee /opt/env/.env > /dev/null <<EOF
+            SHAREPOINT_TENANT_ID=${SHAREPOINT_TENANT_ID}
+            SHAREPOINT_CLIENT_ID=${SHAREPOINT_CLIENT_ID}
+            SHAREPOINT_CLIENT_SECRET=${SHAREPOINT_CLIENT_SECRET}
+            EOF
+            sudo chmod 600 /opt/env/.env
+            sudo chown ec2-user:ec2-user /opt/env/.env
             # Setup Python venv
             if [ ! -f venv/bin/activate ]; then
               rm -rf venv
