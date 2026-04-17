@@ -158,21 +158,33 @@ def get_plans_geojson(db_name='plans_tanai_saf', bbox=None):
     if matched.empty:
         return {"type": "FeatureCollection", "features": []}
 
+    # Load review statuses
+    all_statuses = _load_statuses()
+
     # Build plan-to-gush lookup
     gush_to_plans = {}
     for p in plans_with_gush:
+        pnum = p['plan_number']
+        st = all_statuses.get(pnum, {})
         for g in p['gushim']:
             gn = g['gush']
             if gn not in gush_to_plans:
                 gush_to_plans[gn] = []
             gush_to_plans[gn].append({
-                'plan_number': p['plan_number'],
+                'plan_number': pnum,
                 'plan_name': p['plan_name'],
                 'authority': p['authority'],
                 'status': p['status'],
                 'area_dunam': p.get('area_dunam'),
                 'purpose': p.get('purpose', ''),
+                'explanation': p.get('explanation', ''),
+                'housing_units': p.get('housing_units'),
+                'main_instructions': p.get('main_instructions', ''),
                 'has_pdf': p.get('has_downloaded_files', False),
+                'mavat_url': p.get('mavat_url', ''),
+                'sharepoint_url': p.get('sharepoint_url', ''),
+                'review': st.get('review', 'not_reviewed'),
+                'priority': st.get('priority'),
             })
 
     # Build GeoJSON features - one per block, with plan info
@@ -200,6 +212,42 @@ def get_plans_geojson(db_name='plans_tanai_saf', bbox=None):
         'features': features,
         'totalFeatures': len(features),
     }
+
+
+_STATUS_FILE = os.path.join(DATA_DIR, 'plans_status.json')
+
+
+def _load_statuses():
+    if os.path.exists(_STATUS_FILE):
+        with open(_STATUS_FILE, encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+
+def _save_statuses(data):
+    with open(_STATUS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def get_plan_status(plan_number):
+    statuses = _load_statuses()
+    return statuses.get(plan_number, {'review': 'not_reviewed', 'priority': None})
+
+
+def set_plan_status(plan_number, review=None, priority=None):
+    statuses = _load_statuses()
+    if plan_number not in statuses:
+        statuses[plan_number] = {'review': 'not_reviewed', 'priority': None}
+    if review is not None:
+        statuses[plan_number]['review'] = review
+    if priority is not None:
+        statuses[plan_number]['priority'] = priority
+    _save_statuses(statuses)
+    return statuses[plan_number]
+
+
+def get_all_statuses():
+    return _load_statuses()
 
 
 def get_statistics(db_name='plans_tanai_saf'):

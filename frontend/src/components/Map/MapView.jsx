@@ -59,6 +59,7 @@ function MapView() {
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isDbLayersOpen, setIsDbLayersOpen] = useState(false)
   const [layers, setLayers] = useState(INITIAL_LAYERS)
+  const [plansFilter, setPlansFilter] = useState('all')
   const [dbLayers, setDbLayers] = useState(() => {
     try {
       const saved = localStorage.getItem('dbLayerStyles')
@@ -185,7 +186,27 @@ function MapView() {
         <PlansLayer
           map={mapRef.current}
           visible={layers.find(l => l.id === 'plans')?.visible || false}
+          filter={plansFilter}
         />
+      )}
+
+      {/* Plans filter panel */}
+      {layers.find(l => l.id === 'plans')?.visible && (
+        <div className="absolute top-20 left-14 z-[1000] bg-white rounded-xl shadow-lg border border-purple-200 p-3 text-sm" style={{direction:'rtl'}}>
+          <div className="font-bold text-purple-900 mb-2 text-xs">סינון תכניות</div>
+          <select
+            value={plansFilter}
+            onChange={e => setPlansFilter(e.target.value)}
+            className="w-full px-2 py-1.5 border border-purple-200 rounded-lg text-xs bg-white focus:ring-1 focus:ring-purple-400"
+          >
+            <option value="all">הכל</option>
+            <option value="not_reviewed">לא נבדק</option>
+            <option value="relevant">רלוונטי</option>
+            <option value="high">עדיפות גבוהה</option>
+            <option value="medium">עדיפות בינונית</option>
+            <option value="low">עדיפות נמוכה</option>
+          </select>
+        </div>
       )}
 
       {/* Database markers */}

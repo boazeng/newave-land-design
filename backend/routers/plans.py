@@ -4,10 +4,17 @@ Provides endpoints for searching, filtering, and viewing plans.
 """
 from fastapi import APIRouter, Query
 from typing import Optional
+from pydantic import BaseModel
 from services.plans_service import (
     list_databases, search_plans, get_plan, get_plans_by_gush,
-    get_statistics, invalidate_cache, get_plans_geojson
+    get_statistics, invalidate_cache, get_plans_geojson,
+    get_plan_status, set_plan_status, get_all_statuses
 )
+
+
+class PlanStatusUpdate(BaseModel):
+    review: Optional[str] = None      # not_reviewed, not_relevant, relevant
+    priority: Optional[str] = None    # low, medium, high
 
 router = APIRouter()
 
@@ -68,6 +75,24 @@ def plan_detail(plan_number: str, db: str = Query('plans_tanai_saf')):
     if not plan:
         return {"error": "Plan not found"}
     return plan
+
+
+@router.get("/statuses")
+def all_statuses():
+    """Get review statuses for all plans."""
+    return get_all_statuses()
+
+
+@router.get("/status/{plan_number}")
+def plan_status(plan_number: str):
+    """Get review status for a plan."""
+    return get_plan_status(plan_number)
+
+
+@router.put("/status/{plan_number}")
+def update_status(plan_number: str, body: PlanStatusUpdate):
+    """Update review status / priority for a plan."""
+    return set_plan_status(plan_number, body.review, body.priority)
 
 
 @router.post("/refresh")
