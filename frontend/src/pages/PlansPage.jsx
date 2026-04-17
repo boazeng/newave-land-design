@@ -2,6 +2,184 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
+function DetailPanel({ plan: p, onClose }) {
+  const [tab, setTab] = useState('info')
+
+  const tabs = [
+    { id: 'info', label: 'פרטים כלליים' },
+    { id: 'purpose', label: 'מטרות התכנית', show: p.purpose || p.main_instructions },
+    { id: 'explanation', label: 'דברי הסבר', show: p.explanation },
+    { id: 'stages', label: 'שלבי טיפול', show: p.processing_stages?.length > 0 },
+    { id: 'decisions', label: 'החלטות', show: p.committee_decisions?.length > 0 },
+    { id: 'gushim', label: 'גושים וחלקות', show: p.gushim?.length > 0 },
+  ].filter(t => t.show !== false)
+
+  return (
+    <div className="border-t-2 border-sky-200 bg-sky-50/50 px-6 py-4">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-3">
+        <div>
+          <h3 className="text-lg font-bold text-blue-900">{p.plan_number} - {p.plan_name}</h3>
+          {p.district && (
+            <span className="text-sm text-blue-800/60">
+              {p.district} | {p.planning_area || ''} | {p.municipality || ''}
+            </span>
+          )}
+        </div>
+        <div className="flex gap-2 items-center">
+          {p.mavat_url && (
+            <a href={p.mavat_url} target="_blank" rel="noopener noreferrer"
+               className="px-3 py-1.5 bg-sky-600 text-white rounded-lg text-xs hover:bg-sky-700">
+              MAVAT ↗
+            </a>
+          )}
+          {p.sharepoint_url && (
+            <a href={p.sharepoint_url} target="_blank" rel="noopener noreferrer"
+               className="px-3 py-1.5 bg-green-600 text-white rounded-lg text-xs hover:bg-green-700">
+              PDF ↗
+            </a>
+          )}
+          <button onClick={onClose} className="text-blue-800/40 hover:text-blue-800 text-xl mr-2">✕</button>
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex gap-1 bg-blue-900/5 rounded-lg p-0.5 mb-4 overflow-x-auto">
+        {tabs.map(t => (
+          <button key={t.id} onClick={() => setTab(t.id)}
+            className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-all
+              ${tab === t.id ? 'bg-white text-blue-900 shadow-sm' : 'text-blue-800/60 hover:text-blue-900'}`}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Tab Content */}
+      {tab === 'info' && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+          <div><span className="text-blue-800/50">סמכות:</span><span className="mr-2 font-medium">{p.authority}</span></div>
+          <div><span className="text-blue-800/50">סטטוס:</span><span className="mr-2 font-medium">{p.status}</span></div>
+          <div><span className="text-blue-800/50">שטח:</span><span className="mr-2 font-medium">{p.area_dunam ? `${p.area_dunam.toLocaleString()} דונם` : '-'}</span></div>
+          <div><span className="text-blue-800/50">סוג:</span><span className="mr-2 font-medium">{p.plan_type || '-'}</span></div>
+          {p.housing_units && <div><span className="text-blue-800/50">יח"ד:</span><span className="mr-2 font-medium">{p.housing_units}</span></div>}
+          <div><span className="text-blue-800/50">מיקום:</span><span className="mr-2">{p.location}</span></div>
+          {p.last_update && <div><span className="text-blue-800/50">עדכון אחרון:</span><span className="mr-2">{p.last_update}</span></div>}
+          {p.downloaded_files?.length > 0 && (
+            <div className="col-span-full">
+              <span className="text-blue-800/50">קבצים שהורדו:</span>
+              <div className="flex flex-wrap gap-1 mt-1">
+                {p.downloaded_files.map((f, j) => (
+                  <span key={j} className="px-2 py-0.5 bg-green-100 text-green-800 rounded text-xs">📄 {f}</span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {tab === 'purpose' && (
+        <div className="text-sm space-y-4">
+          {p.purpose && (
+            <div>
+              <h4 className="font-bold text-blue-900 mb-2">מטרת התכנית</h4>
+              <p className="text-blue-800 bg-white rounded-lg p-3 border border-sky-100 whitespace-pre-line">{p.purpose}</p>
+            </div>
+          )}
+          {p.main_instructions && (
+            <div>
+              <h4 className="font-bold text-blue-900 mb-2">עיקרי הוראותיה</h4>
+              <p className="text-blue-800 bg-white rounded-lg p-3 border border-sky-100 whitespace-pre-line">{p.main_instructions}</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {tab === 'explanation' && p.explanation && (
+        <div className="text-sm">
+          <h4 className="font-bold text-blue-900 mb-2">דברי הסבר</h4>
+          <p className="text-blue-800 bg-white rounded-lg p-3 border border-sky-100 whitespace-pre-line leading-relaxed">{p.explanation}</p>
+        </div>
+      )}
+
+      {tab === 'stages' && p.processing_stages?.length > 0 && (
+        <div className="text-sm">
+          <h4 className="font-bold text-blue-900 mb-2">שלבי טיפול בתכנית</h4>
+          <div className="bg-white rounded-lg border border-sky-100 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-sky-50">
+                <tr>
+                  <th className="px-4 py-2 text-right font-bold text-blue-900">שלב</th>
+                  <th className="px-4 py-2 text-right font-bold text-blue-900">תאריך</th>
+                </tr>
+              </thead>
+              <tbody>
+                {p.processing_stages.map((s, j) => (
+                  <tr key={j} className="border-t border-sky-50">
+                    <td className="px-4 py-2 text-blue-900">{s.status}</td>
+                    <td className="px-4 py-2 text-blue-800">{s.date}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {tab === 'decisions' && p.committee_decisions?.length > 0 && (
+        <div className="text-sm">
+          <h4 className="font-bold text-blue-900 mb-2">החלטות מוסדות תכנון</h4>
+          <div className="bg-white rounded-lg border border-sky-100 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-sky-50">
+                <tr>
+                  <th className="px-4 py-2 text-right font-bold text-blue-900">מספר ישיבה</th>
+                  <th className="px-4 py-2 text-right font-bold text-blue-900">מוסד תכנון</th>
+                  <th className="px-4 py-2 text-right font-bold text-blue-900">תאריך</th>
+                </tr>
+              </thead>
+              <tbody>
+                {p.committee_decisions.map((d, j) => (
+                  <tr key={j} className="border-t border-sky-50">
+                    <td className="px-4 py-2 text-blue-900 font-mono">{d.session_number}</td>
+                    <td className="px-4 py-2 text-blue-800 text-xs">{d.institution}</td>
+                    <td className="px-4 py-2 text-blue-800">{d.date}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {tab === 'gushim' && p.gushim?.length > 0 && (
+        <div className="text-sm">
+          <h4 className="font-bold text-blue-900 mb-2">גושים וחלקות</h4>
+          <div className="bg-white rounded-lg border border-sky-100 overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-sky-50">
+                <tr>
+                  <th className="px-4 py-2 text-right font-bold text-blue-900">מספר גוש</th>
+                  <th className="px-4 py-2 text-right font-bold text-blue-900">חלקות בשלמותן</th>
+                  <th className="px-4 py-2 text-right font-bold text-blue-900">חלקות בחלקן</th>
+                </tr>
+              </thead>
+              <tbody>
+                {p.gushim.map((g, j) => (
+                  <tr key={j} className="border-t border-sky-50">
+                    <td className="px-4 py-2 text-blue-900 font-bold font-mono">{g.gush}</td>
+                    <td className="px-4 py-2 text-blue-800">{g.helkot_full || g.helka || '-'}</td>
+                    <td className="px-4 py-2 text-blue-800">{g.helkot_partial || '-'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 function PlansPage() {
   const navigate = useNavigate()
   const [plans, setPlans] = useState([])
@@ -249,86 +427,7 @@ function PlansPage() {
 
           {/* Detail Panel */}
           {selectedPlan && (
-            <div className="border-t-2 border-sky-200 bg-sky-50/50 px-6 py-4">
-              <div className="flex items-start justify-between mb-3">
-                <h3 className="text-lg font-bold text-blue-900">
-                  {selectedPlan.plan_number} - {selectedPlan.plan_name}
-                </h3>
-                <button onClick={() => setSelectedPlan(null)} className="text-blue-800/40 hover:text-blue-800">✕</button>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                <div>
-                  <span className="text-blue-800/50">סמכות:</span>
-                  <span className="mr-2 font-medium text-blue-900">{selectedPlan.authority}</span>
-                </div>
-                <div>
-                  <span className="text-blue-800/50">סטטוס:</span>
-                  <span className="mr-2 font-medium text-blue-900">{selectedPlan.status}</span>
-                </div>
-                <div>
-                  <span className="text-blue-800/50">שטח:</span>
-                  <span className="mr-2 font-medium text-blue-900">
-                    {selectedPlan.area_dunam ? `${selectedPlan.area_dunam.toLocaleString()} דונם` : 'לא ידוע'}
-                  </span>
-                </div>
-                <div>
-                  <span className="text-blue-800/50">סוג:</span>
-                  <span className="mr-2 font-medium text-blue-900">{selectedPlan.plan_type || 'לא ידוע'}</span>
-                </div>
-                {selectedPlan.purpose && (
-                  <div className="col-span-2">
-                    <span className="text-blue-800/50">מטרה:</span>
-                    <span className="mr-2 text-blue-900">{selectedPlan.purpose}</span>
-                  </div>
-                )}
-                {selectedPlan.housing_units && (
-                  <div>
-                    <span className="text-blue-800/50">יח"ד:</span>
-                    <span className="mr-2 font-medium text-blue-900">{selectedPlan.housing_units}</span>
-                  </div>
-                )}
-                <div>
-                  <span className="text-blue-800/50">מיקום:</span>
-                  <span className="mr-2 text-blue-900">{selectedPlan.location}</span>
-                </div>
-                {selectedPlan.gushim && selectedPlan.gushim.length > 0 && (
-                  <div className="col-span-full">
-                    <span className="text-blue-800/50">גושים:</span>
-                    <div className="flex flex-wrap gap-1 mt-1">
-                      {selectedPlan.gushim.map((g, j) => (
-                        <span key={j} className="px-2 py-1 bg-amber-100 text-amber-800 rounded text-xs font-medium">
-                          גוש {g.gush}{g.helka ? ` חלקה ${g.helka}` : ''}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {selectedPlan.downloaded_files && selectedPlan.downloaded_files.length > 0 && (
-                  <div className="col-span-full">
-                    <span className="text-blue-800/50">קבצים:</span>
-                    <div className="flex flex-wrap gap-2 mt-1">
-                      {selectedPlan.downloaded_files.map((f, j) => (
-                        <span key={j} className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">📄 {f}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-3 mt-3">
-                {selectedPlan.mavat_url && (
-                  <a href={selectedPlan.mavat_url} target="_blank" rel="noopener noreferrer"
-                     className="px-3 py-1.5 bg-sky-600 text-white rounded-lg text-sm hover:bg-sky-700 transition-colors">
-                    פתח ב-MAVAT ↗
-                  </a>
-                )}
-                {selectedPlan.sharepoint_url && (
-                  <a href={selectedPlan.sharepoint_url} target="_blank" rel="noopener noreferrer"
-                     className="px-3 py-1.5 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition-colors">
-                    פתח בשיירפוינט ↗
-                  </a>
-                )}
-              </div>
-            </div>
+            <DetailPanel plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
           )}
 
           {/* Pagination */}
