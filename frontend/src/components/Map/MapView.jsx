@@ -8,6 +8,7 @@ import SearchPanel from '../Search/SearchPanel'
 import DistrictsLayer from './DistrictsLayer'
 import DatabaseLayersPanel from './DatabaseLayersPanel'
 import DatabaseMarkers from './DatabaseMarkers'
+import PlansLayer from './PlansLayer'
 
 // Israel bounds
 const ISRAEL_BOUNDS = [
@@ -38,6 +39,12 @@ const INITIAL_LAYERS = [
     id: 'parcels',
     name: 'חלקות',
     description: 'חלקות רישום בתוך גושים (זום 15+)',
+    visible: false,
+  },
+  {
+    id: 'plans',
+    name: 'תכניות תכנון',
+    description: 'תכניות בבדיקת תנאי סף - מעל 10,000 מ"ר (זום 11+)',
     visible: false,
   },
 ]
@@ -164,7 +171,7 @@ function MapView() {
       )}
 
       {/* Cadastre layers */}
-      {mapReady && layers.filter(l => l.id !== 'districts').map(layer => (
+      {mapReady && layers.filter(l => l.id !== 'districts' && l.id !== 'plans').map(layer => (
         <CadastreLayer
           key={layer.id}
           map={mapRef.current}
@@ -172,6 +179,14 @@ function MapView() {
           visible={layer.visible}
         />
       ))}
+
+      {/* Plans layer */}
+      {mapReady && (
+        <PlansLayer
+          map={mapRef.current}
+          visible={layers.find(l => l.id === 'plans')?.visible || false}
+        />
+      )}
 
       {/* Database markers */}
       {mapReady && Object.entries(dbLayers).map(([dbId, markerStyle]) => (

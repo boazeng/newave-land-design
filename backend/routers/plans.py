@@ -6,7 +6,7 @@ from fastapi import APIRouter, Query
 from typing import Optional
 from services.plans_service import (
     list_databases, search_plans, get_plan, get_plans_by_gush,
-    get_statistics, invalidate_cache
+    get_statistics, invalidate_cache, get_plans_geojson
 )
 
 router = APIRouter()
@@ -43,6 +43,16 @@ def search(
 def stats(db: str = Query('plans_tanai_saf')):
     """Get statistics about the plans database."""
     return get_statistics(db)
+
+
+@router.get("/geojson")
+def plans_geojson(
+    db: str = Query('plans_tanai_saf'),
+    bbox: Optional[str] = Query(None, description='min_lng,min_lat,max_lng,max_lat'),
+):
+    """Get plans as GeoJSON with block geometries for map display."""
+    bbox_coords = [float(x) for x in bbox.split(',')] if bbox else None
+    return get_plans_geojson(db, bbox_coords)
 
 
 @router.get("/by-gush/{gush_num}")

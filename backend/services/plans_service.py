@@ -5,7 +5,14 @@ Loads plans from JSON database, supports filtering by various criteria.
 import json
 import os
 
+try:
+    import geopandas as gpd
+    HAS_GEO = True
+except ImportError:
+    HAS_GEO = False
+
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
+GPKG_PATH = os.path.join(DATA_DIR, 'cadastre.gpkg')
 
 
 def _load_db(filename):
@@ -108,6 +115,91 @@ def get_plans_by_gush(db_name, gush_num):
     db = get_plans_db(db_name)
     return [p for p in db.get('plans', [])
             if any(g.get('gush') == gush_num for g in p.get('gushim', []))]
+
+
+def get_plans_geojson(db_name='plans_tanai_saf', bbox=None):
+    """
+    Get plans as GeoJSON with geometries from cadastre blocks.
+    Matches plan gush numbers to block geometries.
+    """
+    if not HAS_GEO or not os.path.exists(GPKG_PATH):
+        return {"type": "FeatureCollection", "features": []}
+
+    db = get_plans_db(db_name)
+    plans = db.get('plans', [])
+
+    # Only plans with gush data
+    plans_with_gush = [p for p in plans if p.get('gushim')]
+    if not plans_with_gush:
+        return {"type": "FeatureCollection", "features": []}
+
+    # Collect all unique gush numbers
+    all_gush_nums = set()
+    for p in plans_with_gush:
+        for g in p['gushim']:
+            all_gush_nums.add(g['gush'])
+
+    if not all_gush_nums:
+        return {"type": "FeatureCollection", "features": []}
+
+    # Read blocks from GeoPackage
+    kwargs = {}
+    if bbox:
+        kwargs['bbox'] = tuple(bbox)
+
+    blocks_gdf = gpd.read_file(GPKG_PATH, layer='blocks', **kwargs)
+
+    if blocks_gdf.empty:
+        return {"type": "FeatureCollection", "features": []}
+
+    # Filter to only blocks that match our plans
+    matched = blocks_gdf[blocks_gdf['GUSH_NUM'].isin(all_gush_nums)]
+
+    if matched.empty:
+        return {"type": "FeatureCollection", "features": []}
+
+    # Build plan-to-gush lookup
+    gush_to_plans = {}
+    for p in plans_with_gush:
+        for g in p['gushim']:
+            gn = g['gush']
+            if gn not in gush_to_plans:
+                gush_to_plans[gn] = []
+            gush_to_plans[gn].append({
+                'plan_number': p['plan_number'],
+                'plan_name': p['plan_name'],
+                'authority': p['authority'],
+                'status': p['status'],
+                'area_dunam': p.get('area_dunam'),
+                'purpose': p.get('purpose', ''),
+                'has_pdf': p.get('has_downloaded_files', False),
+            })
+
+    # Build GeoJSON features - one per block, with plan info
+    features = []
+    for _, row in matched.iterrows():
+        gush_num = row['GUSH_NUM']
+        plan_list = gush_to_plans.get(gush_num, [])
+        if not plan_list:
+            continue
+
+        geom = row.geometry.__geo_interface__
+        features.append({
+            'type': 'Feature',
+            'geometry': geom,
+            'properties': {
+                'gush_num': int(gush_num),
+                'plans': plan_list,
+                'plan_count': len(plan_list),
+                'plan_numbers': ', '.join(p['plan_number'] for p in plan_list),
+            }
+        })
+
+    return {
+        'type': 'FeatureCollection',
+        'features': features,
+        'totalFeatures': len(features),
+    }
 
 
 def get_statistics(db_name='plans_tanai_saf'):
