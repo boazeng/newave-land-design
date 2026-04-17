@@ -189,6 +189,8 @@ function PlansPage() {
   const [plans, setPlans] = useState([])
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [databases, setDatabases] = useState([])
+  const [activeDb, setActiveDb] = useState('plans_tanai_saf')
   const [filter, setFilter] = useState('')
   const [authorityFilter, setAuthorityFilter] = useState('')
   const [pdfFilter, setPdfFilter] = useState('')
@@ -199,12 +201,17 @@ function PlansPage() {
   const limit = 50
 
   useEffect(() => {
-    axios.get('/api/plans/stats').then(r => setStats(r.data)).catch(() => {})
+    axios.get('/api/plans/databases').then(r => setDatabases(r.data || [])).catch(() => {})
   }, [])
 
   useEffect(() => {
+    axios.get('/api/plans/stats', { params: { db: activeDb } }).then(r => setStats(r.data)).catch(() => {})
+    setOffset(0)
+  }, [activeDb])
+
+  useEffect(() => {
     setLoading(true)
-    const params = { limit, offset }
+    const params = { limit, offset, db: activeDb }
     if (filter) params.q = filter
     if (authorityFilter) params.authority = authorityFilter
     if (pdfFilter === 'yes') params.has_pdf = true
@@ -218,7 +225,7 @@ function PlansPage() {
       })
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [filter, authorityFilter, pdfFilter, minArea, offset])
+  }, [filter, authorityFilter, pdfFilter, minArea, offset, activeDb])
 
   const totalPages = Math.ceil(total / limit)
   const currentPage = Math.floor(offset / limit) + 1
@@ -265,6 +272,23 @@ function PlansPage() {
               <div className="text-3xl font-bold text-amber-700">{stats.plans_with_gush}</div>
               <div className="text-sm text-blue-800/60 mt-1">עם גוש/חלקה</div>
             </div>
+          </div>
+        )}
+
+        {/* Database selector */}
+        {databases.length > 1 && (
+          <div className="flex gap-1 bg-blue-900/10 rounded-xl p-1 mb-4">
+            {databases.map(db => (
+              <button
+                key={db.name}
+                onClick={() => setActiveDb(db.name)}
+                className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all
+                  ${activeDb === db.name ? 'bg-white text-blue-900 shadow-md' : 'text-blue-800 hover:bg-white/50'}`}
+              >
+                {db.title.replace('כל התוכניות, סטטוס: ', '').replace(', שטח מעל 10,000 מ"ר', '')}
+                <span className="mr-1 text-xs opacity-60">({db.total_plans})</span>
+              </button>
+            ))}
           </div>
         )}
 
