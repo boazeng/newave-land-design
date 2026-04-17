@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
@@ -338,8 +338,8 @@ function PlansPage() {
                   </tr>
                 ) : (
                   plans.map((p, i) => (
+                    <React.Fragment key={i}>
                     <tr
-                      key={i}
                       className={`border-t border-sky-50 hover:bg-sky-50/50 cursor-pointer transition-colors
                         ${selectedPlan?.plan_number === p.plan_number ? 'bg-sky-100' : ''}`}
                       onClick={() => setSelectedPlan(selectedPlan?.plan_number === p.plan_number ? null : p)}
@@ -419,16 +419,19 @@ function PlansPage() {
                         </div>
                       </td>
                     </tr>
+                    {selectedPlan?.plan_number === p.plan_number && (
+                      <tr>
+                        <td colSpan={8} className="p-0">
+                          <DetailPanel plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
+                        </td>
+                      </tr>
+                    )}
+                    </React.Fragment>
                   ))
                 )}
               </tbody>
             </table>
           </div>
-
-          {/* Detail Panel */}
-          {selectedPlan && (
-            <DetailPanel plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
-          )}
 
           {/* Pagination */}
           <div className="px-6 py-3 border-t border-sky-100 flex items-center justify-between">
