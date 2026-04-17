@@ -15,7 +15,7 @@ function HomePage() {
 
       {/* Main */}
       <main className="flex-1 flex items-center justify-center px-6">
-        <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
 
           {/* Interactive Map */}
           <button
@@ -74,6 +74,26 @@ function HomePage() {
             <h2 className="text-xl font-bold text-blue-900">ועדות מקומיות ומחוזיות</h2>
             <p className="text-base text-blue-800 leading-relaxed">
               הפקת נתונים מוועדות מקומיות ומוועדות מחוזיות
+            </p>
+          </button>
+
+          {/* Plans */}
+          <button
+            onClick={() => navigate('/plans')}
+            className="group bg-white rounded-2xl shadow-md border border-sky-100 p-10
+                       hover:shadow-xl hover:border-sky-300 hover:-translate-y-1
+                       transition-all duration-300
+                       flex flex-col items-center gap-5 text-center"
+          >
+            <div className="w-20 h-20 bg-sky-50 rounded-2xl flex items-center justify-center
+                            group-hover:bg-sky-100 transition-colors duration-300">
+              <svg className="w-10 h-10 text-sky-500 group-hover:text-sky-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-blue-900">תוכניות תכנון</h2>
+            <p className="text-base text-blue-800 leading-relaxed">
+              499 תוכניות בבדיקת תנאי סף - חיפוש, סינון וצפייה במסמכים
             </p>
           </button>
 
