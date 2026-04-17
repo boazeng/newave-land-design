@@ -348,6 +348,7 @@ function PlansPage() {
                   <th className="px-4 py-3 text-right font-bold text-blue-900">מגורים (מ"ר)</th>
                   <th className="px-4 py-3 text-right font-bold text-blue-900">מסחר (מ"ר)</th>
                   <th className="px-4 py-3 text-right font-bold text-blue-900">גושים</th>
+                  <th className="px-4 py-3 text-right font-bold text-blue-900">פעילות אחרונה</th>
                   <th className="px-4 py-3 text-right font-bold text-blue-900">מסמכים</th>
                   <th className="px-4 py-3 text-right font-bold text-blue-900">קישורים</th>
                 </tr>
@@ -355,7 +356,7 @@ function PlansPage() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={11} className="px-4 py-12 text-center text-blue-800/50">
+                    <td colSpan={12} className="px-4 py-12 text-center text-blue-800/50">
                       <svg className="animate-spin h-6 w-6 mx-auto mb-2 text-sky-500" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -365,7 +366,7 @@ function PlansPage() {
                   </tr>
                 ) : plans.length === 0 ? (
                   <tr>
-                    <td colSpan={11} className="px-4 py-12 text-center text-blue-800/50">לא נמצאו תוכניות</td>
+                    <td colSpan={12} className="px-4 py-12 text-center text-blue-800/50">לא נמצאו תוכניות</td>
                   </tr>
                 ) : (
                   plans.map((p, i) => (
@@ -439,6 +440,9 @@ function PlansPage() {
                           <span className="text-blue-800/20">-</span>
                         )}
                       </td>
+                      <td className="px-4 py-3 text-blue-800 text-xs text-center whitespace-nowrap">
+                        {p.last_activity_date || '-'}
+                      </td>
                       <td className="px-4 py-3 text-center">
                         <div className="flex items-center gap-1 justify-center">
                           {p.has_horaot_pdf && (
@@ -473,7 +477,7 @@ function PlansPage() {
                     </tr>
                     {selectedPlan?.plan_number === p.plan_number && (
                       <tr>
-                        <td colSpan={11} className="p-0">
+                        <td colSpan={12} className="p-0">
                           <DetailPanel plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
                         </td>
                       </tr>
