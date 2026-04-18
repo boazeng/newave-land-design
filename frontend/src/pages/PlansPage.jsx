@@ -198,10 +198,13 @@ function PlansPage() {
   const [total, setTotal] = useState(0)
   const [offset, setOffset] = useState(0)
   const [selectedPlan, setSelectedPlan] = useState(null)
+  const [reviewFilter, setReviewFilter] = useState('')
+  const [statuses, setStatuses] = useState({})
   const limit = 50
 
   useEffect(() => {
     axios.get('/api/plans/databases').then(r => setDatabases(r.data || [])).catch(() => {})
+    axios.get('/api/plans/statuses').then(r => setStatuses(r.data || {})).catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -220,12 +223,39 @@ function PlansPage() {
 
     axios.get('/api/plans/search', { params })
       .then(r => {
-        setPlans(r.data.plans || [])
-        setTotal(r.data.total || 0)
+        let filtered = r.data.plans || []
+        if (reviewFilter) {
+          filtered = filtered.filter(p => {
+            const st = statuses[p.plan_number] || {}
+            if (reviewFilter === 'not_reviewed') return !st.review || st.review === 'not_reviewed'
+            if (reviewFilter === 'relevant') return st.review === 'relevant'
+            if (reviewFilter === 'not_relevant') return st.review === 'not_relevant'
+            if (reviewFilter === 'high') return st.priority === 'high'
+            if (reviewFilter === 'medium') return st.priority === 'medium'
+            if (reviewFilter === 'low') return st.priority === 'low'
+            return true
+          })
+        }
+        setPlans(filtered)
+        setTotal(reviewFilter ? filtered.length : (r.data.total || 0))
       })
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [filter, authorityFilter, pdfFilter, minArea, offset, activeDb])
+  }, [filter, authorityFilter, pdfFilter, minArea, offset, activeDb, reviewFilter, statuses])
+
+  const updateStatus = async (planNum, field, value) => {
+    const body = {}
+    body[field] = value || null
+    try {
+      await axios.put(`/api/plans/status/${encodeURIComponent(planNum)}`, body)
+      setStatuses(prev => ({
+        ...prev,
+        [planNum]: { ...prev[planNum], [field]: value || null }
+      }))
+    } catch {}
+  }
+
+  const getStatus = (planNum) => statuses[planNum] || { review: 'not_reviewed', priority: null }
 
   const totalPages = Math.ceil(total / limit)
   const currentPage = Math.floor(offset / limit) + 1
@@ -323,6 +353,20 @@ function PlansPage() {
             <option value="yes">עם PDF</option>
             <option value="no">בלי PDF</option>
           </select>
+          <select
+            value={reviewFilter}
+            onChange={e => { setReviewFilter(e.target.value); setOffset(0) }}
+            className="px-4 py-2 border border-sky-200 rounded-lg text-base text-blue-900 bg-white
+                       focus:outline-none focus:ring-2 focus:ring-sky-400"
+          >
+            <option value="">כל הסיווגים</option>
+            <option value="not_reviewed">לא נבדק</option>
+            <option value="relevant">רלוונטי</option>
+            <option value="not_relevant">לא רלוונטי</option>
+            <option value="high">עדיפות גבוהה</option>
+            <option value="medium">עדיפות בינונית</option>
+            <option value="low">עדיפות נמוכה</option>
+          </select>
           <input
             type="number"
             placeholder="שטח מינימלי (דונם)"
@@ -350,13 +394,15 @@ function PlansPage() {
                   <th className="px-4 py-3 text-right font-bold text-blue-900">גושים</th>
                   <th className="px-4 py-3 text-right font-bold text-blue-900">פעילות אחרונה</th>
                   <th className="px-4 py-3 text-right font-bold text-blue-900">מסמכים</th>
+                  <th className="px-4 py-3 text-right font-bold text-blue-900">סיווג</th>
+                  <th className="px-4 py-3 text-right font-bold text-blue-900">עדיפות</th>
                   <th className="px-4 py-3 text-right font-bold text-blue-900">קישורים</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={12} className="px-4 py-12 text-center text-blue-800/50">
+                    <td colSpan={14} className="px-4 py-12 text-center text-blue-800/50">
                       <svg className="animate-spin h-6 w-6 mx-auto mb-2 text-sky-500" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
@@ -366,14 +412,17 @@ function PlansPage() {
                   </tr>
                 ) : plans.length === 0 ? (
                   <tr>
-                    <td colSpan={12} className="px-4 py-12 text-center text-blue-800/50">לא נמצאו תוכניות</td>
+                    <td colSpan={14} className="px-4 py-12 text-center text-blue-800/50">לא נמצאו תוכניות</td>
                   </tr>
                 ) : (
                   plans.map((p, i) => (
                     <React.Fragment key={i}>
                     <tr
                       className={`border-t border-sky-50 hover:bg-sky-50/50 cursor-pointer transition-colors
-                        ${selectedPlan?.plan_number === p.plan_number ? 'bg-sky-100' : ''}`}
+                        ${selectedPlan?.plan_number === p.plan_number ? 'bg-sky-100' :
+                          getStatus(p.plan_number).review === 'relevant' ? 'bg-green-50/50' :
+                          getStatus(p.plan_number).review === 'not_relevant' ? 'bg-gray-50/50 opacity-60' :
+                          getStatus(p.plan_number).priority === 'high' ? 'bg-red-50/30' : ''}`}
                       onClick={() => setSelectedPlan(selectedPlan?.plan_number === p.plan_number ? null : p)}
                     >
                       <td className="px-4 py-3 text-blue-900 font-mono text-sm font-medium whitespace-nowrap">
@@ -456,6 +505,36 @@ function PlansPage() {
                           )}
                         </div>
                       </td>
+                      <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
+                        <select
+                          value={getStatus(p.plan_number).review || 'not_reviewed'}
+                          onChange={e => updateStatus(p.plan_number, 'review', e.target.value)}
+                          className={`text-xs px-1.5 py-1 rounded border transition-colors w-full
+                            ${getStatus(p.plan_number).review === 'relevant' ? 'bg-green-100 border-green-300 text-green-800' :
+                              getStatus(p.plan_number).review === 'not_relevant' ? 'bg-gray-100 border-gray-300 text-gray-600' :
+                              'bg-white border-sky-200 text-blue-900'}`}
+                        >
+                          <option value="not_reviewed">לא נבדק</option>
+                          <option value="relevant">רלוונטי</option>
+                          <option value="not_relevant">לא רלוונטי</option>
+                        </select>
+                      </td>
+                      <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
+                        <select
+                          value={getStatus(p.plan_number).priority || ''}
+                          onChange={e => updateStatus(p.plan_number, 'priority', e.target.value)}
+                          className={`text-xs px-1.5 py-1 rounded border transition-colors w-full
+                            ${getStatus(p.plan_number).priority === 'high' ? 'bg-red-100 border-red-300 text-red-800' :
+                              getStatus(p.plan_number).priority === 'medium' ? 'bg-amber-100 border-amber-300 text-amber-800' :
+                              getStatus(p.plan_number).priority === 'low' ? 'bg-gray-100 border-gray-300 text-gray-600' :
+                              'bg-white border-sky-200 text-blue-900'}`}
+                        >
+                          <option value="">-</option>
+                          <option value="high">גבוהה</option>
+                          <option value="medium">בינונית</option>
+                          <option value="low">נמוכה</option>
+                        </select>
+                      </td>
                       <td className="px-4 py-3">
                         <div className="flex gap-2">
                           {p.mavat_url && (
@@ -477,7 +556,7 @@ function PlansPage() {
                     </tr>
                     {selectedPlan?.plan_number === p.plan_number && (
                       <tr>
-                        <td colSpan={12} className="p-0">
+                        <td colSpan={14} className="p-0">
                           <DetailPanel plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
                         </td>
                       </tr>
