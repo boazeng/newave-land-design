@@ -1,47 +1,57 @@
+import { useEffect, useRef, useState } from 'react'
+
 function LayersPanel({ layers, onToggleLayer, onClose }) {
+  const [pos, setPos] = useState({ top: 16, right: 16 })
+  const dragging = useRef(false)
+  const startRef = useRef({})
+
+  const onMouseDown = (e) => {
+    if (['INPUT', 'BUTTON', 'LABEL'].includes(e.target.tagName)) return
+    dragging.current = true
+    startRef.current = { mx: e.clientX, my: e.clientY, top: pos.top, right: pos.right }
+    e.preventDefault()
+  }
+
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!dragging.current) return
+      setPos({
+        top: startRef.current.top + (e.clientY - startRef.current.my),
+        right: startRef.current.right - (e.clientX - startRef.current.mx),
+      })
+    }
+    const onUp = () => { dragging.current = false }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+  }, [])
+
   return (
-    <div className="absolute top-4 right-4 z-[1000] w-72 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-sky-200">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-sky-100">
-        <h3 className="text-sm font-bold text-sky-900">שכבות</h3>
-        <button
-          onClick={onClose}
-          className="text-sky-300 hover:text-sky-600 text-lg leading-none"
-        >
-          &times;
-        </button>
+    <div
+      onMouseDown={onMouseDown}
+      style={{
+        position: 'absolute', top: pos.top, right: pos.right, zIndex: 1000,
+        width: 288, background: 'rgba(255,255,255,0.97)', backdropFilter: 'blur(4px)',
+        borderRadius: 12, boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+        border: '1px solid #bae6fd', cursor: 'grab', userSelect: 'none',
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', borderBottom: '1px solid #e0f2fe' }}>
+        <h3 style={{ fontSize: 13, fontWeight: 700, color: '#0c4a6e', margin: 0 }}>שכבות</h3>
+        <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 18, color: '#7dd3fc', cursor: 'pointer', lineHeight: 1, padding: '0 2px' }}>×</button>
       </div>
-
-      {/* Tabs */}
-      <div className="flex border-b border-sky-100">
-        <button className="flex-1 px-4 py-2 text-sm font-medium text-sky-600 border-b-2 border-sky-500">
-          בחירת שכבות
-        </button>
-      </div>
-
-      {/* Layers List */}
-      <div className="p-4 flex flex-col gap-3">
+      <div style={{ padding: '12px 16px', display: 'flex', flexDirection: 'column', gap: 12, direction: 'rtl' }}>
         {layers.map((layer) => (
-          <label
-            key={layer.id}
-            className="flex items-center gap-3 cursor-pointer group"
-          >
+          <label key={layer.id} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
             <input
               type="checkbox"
               checked={layer.visible}
               onChange={() => onToggleLayer(layer.id)}
-              className="w-4 h-4 text-sky-500 rounded border-sky-300
-                         focus:ring-sky-400 cursor-pointer"
+              style={{ width: 15, height: 15, cursor: 'pointer', accentColor: '#0ea5e9' }}
             />
-            <div className="flex flex-col">
-              <span className="text-sm text-sky-800 group-hover:text-sky-900">
-                {layer.name}
-              </span>
-              {layer.description && (
-                <span className="text-xs text-sky-400">
-                  {layer.description}
-                </span>
-              )}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontSize: 13, color: '#0c4a6e' }}>{layer.name}</span>
+              {layer.description && <span style={{ fontSize: 11, color: '#7dd3fc' }}>{layer.description}</span>}
             </div>
           </label>
         ))}

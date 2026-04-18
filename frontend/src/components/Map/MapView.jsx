@@ -9,6 +9,7 @@ import DistrictsLayer from './DistrictsLayer'
 import DatabaseLayersPanel from './DatabaseLayersPanel'
 import DatabaseMarkers from './DatabaseMarkers'
 import PlansLayer from './PlansLayer'
+import PlanDetailPanel from './PlanDetailPanel'
 
 const DB_OPTIONS = [
   { value: 'plans_tanai_saf',      label: 'תנאי סף',         color: '#7c3aed', bg: '#f5f3ff' },
@@ -16,7 +17,7 @@ const DB_OPTIONS = [
   { value: 'plans_bdika_tichnunit',label: 'בדיקה תכנונית',   color: '#92400e', bg: '#fef3c7' },
 ]
 
-function PlanFilterPanel({ plansDbSet, setPlansDbSet, plansFilter, setPlansFilter }) {
+function PlanFilterPanel({ plansDbSet, setPlansDbSet, plansFilter, setPlansFilter, onClose }) {
   const posRef = useRef(null)
   const [pos, setPos] = useState({ top: 80, left: 56 })
   const dragging = useRef(false)
@@ -62,8 +63,9 @@ function PlanFilterPanel({ plansDbSet, setPlansDbSet, plansFilter, setPlansFilte
         cursor: 'grab', userSelect: 'none',
       }}
     >
-      <div style={{ fontWeight: 700, fontSize: 12, color: '#374151', marginBottom: 8, borderBottom: '1px solid #e5e7eb', paddingBottom: 6 }}>
-        ⠿ מאגר תוכניות
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8, borderBottom: '1px solid #e5e7eb', paddingBottom: 6 }}>
+        <span style={{ fontWeight: 700, fontSize: 12, color: '#374151' }}>⠿ מאגר תוכניות</span>
+        {onClose && <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 18, color: '#9ca3af', cursor: 'pointer', lineHeight: 1 }}>×</button>}
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 10 }}>
         {DB_OPTIONS.map(db => {
@@ -164,6 +166,8 @@ function MapView() {
   const [layers, setLayers] = useState(INITIAL_LAYERS)
   const [plansFilter, setPlansFilter] = useState('all')
   const [plansDbSet, setPlansDbSet] = useState(['plans_tanai_saf'])
+  const [plansPanelOpen, setPlansPanelOpen] = useState(true)
+  const [planPopup, setPlanPopup] = useState(null)
   const [dbLayers, setDbLayers] = useState(() => {
     try {
       const saved = localStorage.getItem('dbLayerStyles')
@@ -212,6 +216,7 @@ function MapView() {
     setLayers(prev => prev.map(layer =>
       layer.id === layerId ? { ...layer, visible: !layer.visible } : layer
     ))
+    if (layerId === 'plans') setPlansPanelOpen(true)
   }, [])
 
   const handleDbLayerChange = useCallback((dbId, markerStyle) => {
@@ -294,16 +299,26 @@ function MapView() {
           filter={plansFilter}
           db={d.value}
           dbColor={d.color}
+          onPlanClick={setPlanPopup}
         />
       ))}
 
       {/* Plans filter panel - draggable */}
-      {layers.find(l => l.id === 'plans')?.visible && (
+      {layers.find(l => l.id === 'plans')?.visible && plansPanelOpen && (
         <PlanFilterPanel
           plansDbSet={plansDbSet}
           setPlansDbSet={setPlansDbSet}
           plansFilter={plansFilter}
           setPlansFilter={setPlansFilter}
+          onClose={() => setPlansPanelOpen(false)}
+        />
+      )}
+
+      {/* Plan detail popup - draggable React panel */}
+      {planPopup && (
+        <PlanDetailPanel
+          data={planPopup}
+          onClose={() => setPlanPopup(null)}
         />
       )}
 
