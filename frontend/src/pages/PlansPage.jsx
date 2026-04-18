@@ -4,7 +4,6 @@ import axios from 'axios'
 
 function DetailPanel({ plan: p, onClose }) {
   const [tab, setTab] = useState('info')
-
   const tabs = [
     { id: 'info', label: 'פרטים כלליים' },
     { id: 'purpose', label: 'מטרות התכנית', show: p.purpose || p.main_instructions },
@@ -15,169 +14,72 @@ function DetailPanel({ plan: p, onClose }) {
   ].filter(t => t.show !== false)
 
   return (
-    <div className="border-t-2 border-sky-200 bg-sky-50/50 px-6 py-4">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-3">
+    <div className="border-t-2 border-sky-200 bg-sky-50/50 px-4 py-3">
+      <div className="flex items-start justify-between mb-2">
         <div>
-          <h3 className="text-lg font-bold text-blue-900">{p.plan_number} - {p.plan_name}</h3>
-          {p.district && (
-            <span className="text-sm text-blue-800/60">
-              {p.district} | {p.planning_area || ''} | {p.municipality || ''}
-            </span>
-          )}
+          <h3 className="text-sm font-bold text-blue-900">{p.plan_number} - {p.plan_name}</h3>
+          {p.district && <span className="text-xs text-blue-800/60">{p.district} | {p.planning_area || ''} | {p.municipality || ''}</span>}
         </div>
-        <div className="flex gap-2 items-center">
-          {p.mavat_url && (
-            <a href={p.mavat_url} target="_blank" rel="noopener noreferrer"
-               className="px-3 py-1.5 bg-sky-600 text-white rounded-lg text-xs hover:bg-sky-700">
-              MAVAT ↗
-            </a>
-          )}
-          {p.sharepoint_url && (
-            <a href={p.sharepoint_url} target="_blank" rel="noopener noreferrer"
-               className="px-3 py-1.5 bg-green-600 text-white rounded-lg text-xs hover:bg-green-700">
-              PDF ↗
-            </a>
-          )}
-          <button onClick={onClose} className="text-blue-800/40 hover:text-blue-800 text-xl mr-2">✕</button>
+        <div className="flex gap-1.5 items-center">
+          {p.mavat_url && <a href={p.mavat_url} target="_blank" rel="noopener noreferrer" className="px-2 py-1 bg-sky-600 text-white rounded text-[10px] hover:bg-sky-700">MAVAT ↗</a>}
+          {p.sharepoint_url && <a href={p.sharepoint_url} target="_blank" rel="noopener noreferrer" className="px-2 py-1 bg-green-600 text-white rounded text-[10px] hover:bg-green-700">PDF ↗</a>}
+          <button onClick={onClose} className="text-blue-800/40 hover:text-blue-800 text-lg mr-1">✕</button>
         </div>
       </div>
-
-      {/* Tabs */}
-      <div className="flex gap-1 bg-blue-900/5 rounded-lg p-0.5 mb-4 overflow-x-auto">
+      <div className="flex gap-0.5 bg-blue-900/5 rounded p-0.5 mb-3 overflow-x-auto">
         {tabs.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-all
+            className={`px-2.5 py-1 rounded text-[11px] font-medium whitespace-nowrap transition-all
               ${tab === t.id ? 'bg-white text-blue-900 shadow-sm' : 'text-blue-800/60 hover:text-blue-900'}`}>
             {t.label}
           </button>
         ))}
       </div>
-
-      {/* Tab Content */}
       {tab === 'info' && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-          <div><span className="text-blue-800/50">סמכות:</span><span className="mr-2 font-medium">{p.authority}</span></div>
-          <div><span className="text-blue-800/50">סטטוס:</span><span className="mr-2 font-medium">{p.status}</span></div>
-          <div><span className="text-blue-800/50">שטח:</span><span className="mr-2 font-medium">{p.area_dunam ? `${p.area_dunam.toLocaleString()} דונם` : '-'}</span></div>
-          <div><span className="text-blue-800/50">סוג:</span><span className="mr-2 font-medium">{p.plan_type || '-'}</span></div>
-          {p.housing_units && <div><span className="text-blue-800/50">יח"ד:</span><span className="mr-2 font-medium">{p.housing_units.toLocaleString()}</span></div>}
-          {p.residential_sqm && <div><span className="text-blue-800/50">מגורים:</span><span className="mr-2 font-medium">{p.residential_sqm.toLocaleString()} מ"ר</span></div>}
-          {p.commercial_sqm && <div><span className="text-blue-800/50">מסחר:</span><span className="mr-2 font-medium">{p.commercial_sqm.toLocaleString()} מ"ר</span></div>}
-          {p.office_sqm && <div><span className="text-blue-800/50">משרדים:</span><span className="mr-2 font-medium">{p.office_sqm.toLocaleString()} מ"ר</span></div>}
-          {p.hotel_rooms && <div><span className="text-blue-800/50">חדרי מלון:</span><span className="mr-2 font-medium">{p.hotel_rooms}</span></div>}
-          <div><span className="text-blue-800/50">מיקום:</span><span className="mr-2">{p.location}</span></div>
-          {p.last_update && <div><span className="text-blue-800/50">עדכון אחרון:</span><span className="mr-2">{p.last_update}</span></div>}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-xs">
+          <div><span className="text-blue-800/50">סמכות:</span> <span className="font-medium">{p.authority}</span></div>
+          <div><span className="text-blue-800/50">סטטוס:</span> <span className="font-medium">{p.status}</span></div>
+          <div><span className="text-blue-800/50">שטח:</span> <span className="font-medium">{p.area_dunam ? `${p.area_dunam.toLocaleString()} דונם` : '-'}</span></div>
+          <div><span className="text-blue-800/50">סוג:</span> <span className="font-medium">{p.plan_type || '-'}</span></div>
+          {p.housing_units && <div><span className="text-blue-800/50">יח"ד:</span> <span className="font-medium">{p.housing_units.toLocaleString()}</span></div>}
+          {p.residential_sqm && <div><span className="text-blue-800/50">מגורים:</span> <span className="font-medium">{p.residential_sqm.toLocaleString()} מ"ר</span></div>}
+          {p.commercial_sqm && <div><span className="text-blue-800/50">מסחר:</span> <span className="font-medium">{p.commercial_sqm.toLocaleString()} מ"ר</span></div>}
+          {p.office_sqm && <div><span className="text-blue-800/50">משרדים:</span> <span className="font-medium">{p.office_sqm.toLocaleString()} מ"ר</span></div>}
+          {p.hotel_rooms && <div><span className="text-blue-800/50">חדרי מלון:</span> <span className="font-medium">{p.hotel_rooms}</span></div>}
+          <div><span className="text-blue-800/50">מיקום:</span> <span>{p.location}</span></div>
+          {p.last_update && <div><span className="text-blue-800/50">עדכון:</span> <span>{p.last_update}</span></div>}
           {p.downloaded_files?.length > 0 && (
-            <div className="col-span-full">
-              <span className="text-blue-800/50">קבצים שהורדו:</span>
-              <div className="flex flex-wrap gap-1 mt-1">
-                {p.downloaded_files.map((f, j) => (
-                  <span key={j} className="px-2 py-0.5 bg-green-100 text-green-800 rounded text-xs">📄 {f}</span>
-                ))}
-              </div>
+            <div className="col-span-full"><span className="text-blue-800/50">קבצים:</span>
+              <div className="flex flex-wrap gap-1 mt-0.5">{p.downloaded_files.map((f, j) => <span key={j} className="px-1.5 py-0.5 bg-green-100 text-green-800 rounded text-[10px]">📄 {f}</span>)}</div>
             </div>
           )}
         </div>
       )}
-
       {tab === 'purpose' && (
-        <div className="text-sm space-y-4">
-          {p.purpose && (
-            <div>
-              <h4 className="font-bold text-blue-900 mb-2">מטרת התכנית</h4>
-              <p className="text-blue-800 bg-white rounded-lg p-3 border border-sky-100 whitespace-pre-line">{p.purpose}</p>
-            </div>
-          )}
-          {p.main_instructions && (
-            <div>
-              <h4 className="font-bold text-blue-900 mb-2">עיקרי הוראותיה</h4>
-              <p className="text-blue-800 bg-white rounded-lg p-3 border border-sky-100 whitespace-pre-line">{p.main_instructions}</p>
-            </div>
-          )}
+        <div className="text-xs space-y-3">
+          {p.purpose && <div><h4 className="font-bold text-blue-900 mb-1">מטרת התכנית</h4><p className="text-blue-800 bg-white rounded p-2 border border-sky-100 whitespace-pre-line">{p.purpose}</p></div>}
+          {p.main_instructions && <div><h4 className="font-bold text-blue-900 mb-1">עיקרי הוראותיה</h4><p className="text-blue-800 bg-white rounded p-2 border border-sky-100 whitespace-pre-line">{p.main_instructions}</p></div>}
         </div>
       )}
-
       {tab === 'explanation' && p.explanation && (
-        <div className="text-sm">
-          <h4 className="font-bold text-blue-900 mb-2">דברי הסבר</h4>
-          <p className="text-blue-800 bg-white rounded-lg p-3 border border-sky-100 whitespace-pre-line leading-relaxed">{p.explanation}</p>
-        </div>
+        <div className="text-xs"><h4 className="font-bold text-blue-900 mb-1">דברי הסבר</h4><p className="text-blue-800 bg-white rounded p-2 border border-sky-100 whitespace-pre-line leading-relaxed">{p.explanation}</p></div>
       )}
-
       {tab === 'stages' && p.processing_stages?.length > 0 && (
-        <div className="text-sm">
-          <h4 className="font-bold text-blue-900 mb-2">שלבי טיפול בתכנית</h4>
-          <div className="bg-white rounded-lg border border-sky-100 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-sky-50">
-                <tr>
-                  <th className="px-4 py-2 text-right font-bold text-blue-900">שלב</th>
-                  <th className="px-4 py-2 text-right font-bold text-blue-900">תאריך</th>
-                </tr>
-              </thead>
-              <tbody>
-                {p.processing_stages.map((s, j) => (
-                  <tr key={j} className="border-t border-sky-50">
-                    <td className="px-4 py-2 text-blue-900">{s.status}</td>
-                    <td className="px-4 py-2 text-blue-800">{s.date}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="text-xs"><h4 className="font-bold text-blue-900 mb-1">שלבי טיפול</h4>
+          <table className="w-full bg-white rounded border border-sky-100"><thead className="bg-sky-50"><tr><th className="px-2 py-1 text-right text-blue-900">שלב</th><th className="px-2 py-1 text-right text-blue-900">תאריך</th></tr></thead>
+            <tbody>{p.processing_stages.map((s, j) => <tr key={j} className="border-t border-sky-50"><td className="px-2 py-1">{s.status}</td><td className="px-2 py-1">{s.date}</td></tr>)}</tbody></table>
         </div>
       )}
-
       {tab === 'decisions' && p.committee_decisions?.length > 0 && (
-        <div className="text-sm">
-          <h4 className="font-bold text-blue-900 mb-2">החלטות מוסדות תכנון</h4>
-          <div className="bg-white rounded-lg border border-sky-100 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-sky-50">
-                <tr>
-                  <th className="px-4 py-2 text-right font-bold text-blue-900">מספר ישיבה</th>
-                  <th className="px-4 py-2 text-right font-bold text-blue-900">מוסד תכנון</th>
-                  <th className="px-4 py-2 text-right font-bold text-blue-900">תאריך</th>
-                </tr>
-              </thead>
-              <tbody>
-                {p.committee_decisions.map((d, j) => (
-                  <tr key={j} className="border-t border-sky-50">
-                    <td className="px-4 py-2 text-blue-900 font-mono">{d.session_number}</td>
-                    <td className="px-4 py-2 text-blue-800 text-xs">{d.institution}</td>
-                    <td className="px-4 py-2 text-blue-800">{d.date}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="text-xs"><h4 className="font-bold text-blue-900 mb-1">החלטות מוסדות תכנון</h4>
+          <table className="w-full bg-white rounded border border-sky-100"><thead className="bg-sky-50"><tr><th className="px-2 py-1 text-right text-blue-900">ישיבה</th><th className="px-2 py-1 text-right text-blue-900">מוסד</th><th className="px-2 py-1 text-right text-blue-900">תאריך</th></tr></thead>
+            <tbody>{p.committee_decisions.map((d, j) => <tr key={j} className="border-t border-sky-50"><td className="px-2 py-1 font-mono">{d.session_number}</td><td className="px-2 py-1 text-[10px]">{d.institution}</td><td className="px-2 py-1">{d.date}</td></tr>)}</tbody></table>
         </div>
       )}
-
       {tab === 'gushim' && p.gushim?.length > 0 && (
-        <div className="text-sm">
-          <h4 className="font-bold text-blue-900 mb-2">גושים וחלקות</h4>
-          <div className="bg-white rounded-lg border border-sky-100 overflow-hidden">
-            <table className="w-full text-sm">
-              <thead className="bg-sky-50">
-                <tr>
-                  <th className="px-4 py-2 text-right font-bold text-blue-900">מספר גוש</th>
-                  <th className="px-4 py-2 text-right font-bold text-blue-900">חלקות בשלמותן</th>
-                  <th className="px-4 py-2 text-right font-bold text-blue-900">חלקות בחלקן</th>
-                </tr>
-              </thead>
-              <tbody>
-                {p.gushim.map((g, j) => (
-                  <tr key={j} className="border-t border-sky-50">
-                    <td className="px-4 py-2 text-blue-900 font-bold font-mono">{g.gush}</td>
-                    <td className="px-4 py-2 text-blue-800">{g.helkot_full || g.helka || '-'}</td>
-                    <td className="px-4 py-2 text-blue-800">{g.helkot_partial || '-'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="text-xs"><h4 className="font-bold text-blue-900 mb-1">גושים וחלקות</h4>
+          <table className="w-full bg-white rounded border border-sky-100"><thead className="bg-sky-50"><tr><th className="px-2 py-1 text-right text-blue-900">גוש</th><th className="px-2 py-1 text-right text-blue-900">חלקות מלאות</th><th className="px-2 py-1 text-right text-blue-900">חלקות חלקיות</th></tr></thead>
+            <tbody>{p.gushim.map((g, j) => <tr key={j} className="border-t border-sky-50"><td className="px-2 py-1 font-bold font-mono">{g.gush}</td><td className="px-2 py-1">{g.helkot_full || g.helka || '-'}</td><td className="px-2 py-1">{g.helkot_partial || '-'}</td></tr>)}</tbody></table>
         </div>
       )}
     </div>
@@ -227,9 +129,9 @@ function PlansPage() {
         if (reviewFilter) {
           filtered = filtered.filter(p => {
             const st = statuses[p.plan_number] || {}
-            if (reviewFilter === 'not_reviewed') return !st.review || st.review === 'not_reviewed'
-            if (reviewFilter === 'relevant') return st.review === 'relevant'
-            if (reviewFilter === 'not_relevant') return st.review === 'not_relevant'
+            if (reviewFilter === 'reviewed') return st.reviewed
+            if (reviewFilter === 'not_reviewed') return !st.reviewed
+            if (reviewFilter === 'continue') return st.continue_handling
             if (reviewFilter === 'high') return st.priority === 'high'
             if (reviewFilter === 'medium') return st.priority === 'medium'
             if (reviewFilter === 'low') return st.priority === 'low'
@@ -245,354 +147,252 @@ function PlansPage() {
 
   const updateStatus = async (planNum, field, value) => {
     const body = {}
-    body[field] = value || null
+    body[field] = value
     try {
       await axios.put(`/api/plans/status/${encodeURIComponent(planNum)}`, body)
       setStatuses(prev => ({
         ...prev,
-        [planNum]: { ...prev[planNum], [field]: value || null }
+        [planNum]: { ...prev[planNum], [field]: value }
       }))
     } catch {}
   }
 
-  const getStatus = (planNum) => statuses[planNum] || { review: 'not_reviewed', priority: null }
+  const getStatus = (planNum) => statuses[planNum] || {}
 
   const totalPages = Math.ceil(total / limit)
   const currentPage = Math.floor(offset / limit) + 1
 
+  // Compact cell classes
+  const th = "px-2 py-1.5 text-right text-[11px] font-bold text-blue-900 whitespace-nowrap"
+  const td = "px-2 py-1.5 text-[11px] text-blue-900"
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
-      {/* Header */}
       <header className="bg-blue-900 shadow-lg">
-        <div className="max-w-7xl mx-auto px-6 py-6 flex items-center gap-4">
-          <button onClick={() => navigate('/')} className="text-base text-blue-200 hover:text-white font-medium">
-            &larr; דף הבית
-          </button>
-          <div className="border-r border-blue-700 h-6" />
+        <div className="max-w-[1600px] mx-auto px-4 py-4 flex items-center gap-3">
+          <button onClick={() => navigate('/')} className="text-sm text-blue-200 hover:text-white font-medium">&larr; דף הבית</button>
+          <div className="border-r border-blue-700 h-5" />
           <div className="flex-1">
-            <h1 className="text-2xl font-bold text-white">תוכניות תכנון ובנייה</h1>
-            <p className="text-base text-blue-200">תוכניות בבדיקת תנאי סף - מעל 10,000 מ"ר</p>
+            <h1 className="text-xl font-bold text-white">תוכניות תכנון ובנייה</h1>
+            <p className="text-sm text-blue-200">תוכניות מעל 10,000 מ"ר</p>
           </div>
-          <button
-            onClick={() => navigate('/map?layer=plans')}
-            className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-white rounded-lg text-sm font-medium transition-colors"
-          >
-            🗺️ הצג על המפה
-          </button>
+          <button onClick={() => navigate('/map?layer=plans')} className="px-3 py-1.5 bg-sky-500 hover:bg-sky-400 text-white rounded text-xs font-medium">🗺️ מפה</button>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        {/* Stats Cards */}
+      <main className="max-w-[1600px] mx-auto px-4 py-4">
+        {/* Stats */}
         {stats && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-xl shadow-sm border border-sky-100 p-4 text-center">
-              <div className="text-3xl font-bold text-blue-900">{stats.total_plans}</div>
-              <div className="text-sm text-blue-800/60 mt-1">סה"כ תוכניות</div>
-            </div>
-            <div className="bg-white rounded-xl shadow-sm border border-sky-100 p-4 text-center">
-              <div className="text-3xl font-bold text-green-700">{stats.plans_with_pdf}</div>
-              <div className="text-sm text-blue-800/60 mt-1">עם קובץ PDF</div>
-            </div>
-            <div className="bg-white rounded-xl shadow-sm border border-sky-100 p-4 text-center">
-              <div className="text-3xl font-bold text-purple-700">{stats.plans_with_area}</div>
-              <div className="text-sm text-blue-800/60 mt-1">עם נתוני שטח</div>
-            </div>
-            <div className="bg-white rounded-xl shadow-sm border border-sky-100 p-4 text-center">
-              <div className="text-3xl font-bold text-amber-700">{stats.plans_with_gush}</div>
-              <div className="text-sm text-blue-800/60 mt-1">עם גוש/חלקה</div>
-            </div>
+          <div className="grid grid-cols-4 gap-2 mb-3">
+            {[
+              { v: stats.total_plans, l: 'סה"כ', c: 'text-blue-900' },
+              { v: stats.plans_with_pdf, l: 'עם PDF', c: 'text-green-700' },
+              { v: stats.plans_with_area, l: 'עם שטח', c: 'text-purple-700' },
+              { v: stats.plans_with_gush, l: 'עם גוש', c: 'text-amber-700' },
+            ].map((s, i) => (
+              <div key={i} className="bg-white rounded-lg shadow-sm border border-sky-100 p-2 text-center">
+                <div className={`text-2xl font-bold ${s.c}`}>{s.v}</div>
+                <div className="text-[10px] text-blue-800/60">{s.l}</div>
+              </div>
+            ))}
           </div>
         )}
 
-        {/* Database selector */}
+        {/* DB selector */}
         {databases.length > 1 && (
-          <div className="flex gap-1 bg-blue-900/10 rounded-xl p-1 mb-4">
+          <div className="flex gap-0.5 bg-blue-900/10 rounded-lg p-0.5 mb-3">
             {databases.map(db => (
-              <button
-                key={db.name}
-                onClick={() => setActiveDb(db.name)}
-                className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all
-                  ${activeDb === db.name ? 'bg-white text-blue-900 shadow-md' : 'text-blue-800 hover:bg-white/50'}`}
-              >
+              <button key={db.name} onClick={() => setActiveDb(db.name)}
+                className={`flex-1 py-1.5 px-2 rounded text-xs font-medium transition-all
+                  ${activeDb === db.name ? 'bg-white text-blue-900 shadow-sm' : 'text-blue-800 hover:bg-white/50'}`}>
                 {db.title.replace('כל התוכניות, סטטוס: ', '').replace(', שטח מעל 10,000 מ"ר', '')}
-                <span className="mr-1 text-xs opacity-60">({db.total_plans})</span>
+                <span className="mr-1 text-[10px] opacity-60">({db.total_plans})</span>
               </button>
             ))}
           </div>
         )}
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-4">
-          <input
-            type="text"
-            placeholder="חיפוש לפי שם, מספר או מיקום..."
-            value={filter}
+        <div className="flex flex-wrap gap-2 mb-3">
+          <input type="text" placeholder="חיפוש..." value={filter}
             onChange={e => { setFilter(e.target.value); setOffset(0) }}
-            className="flex-1 min-w-64 px-4 py-2 border border-sky-200 rounded-lg text-base text-blue-900
-                       focus:outline-none focus:ring-2 focus:ring-sky-400"
-          />
-          <select
-            value={authorityFilter}
-            onChange={e => { setAuthorityFilter(e.target.value); setOffset(0) }}
-            className="px-4 py-2 border border-sky-200 rounded-lg text-base text-blue-900 bg-white
-                       focus:outline-none focus:ring-2 focus:ring-sky-400"
-          >
-            <option value="">כל הסמכויות</option>
-            <option value="מקומית">מקומית</option>
-            <option value="מחוזית">מחוזית</option>
-            <option value="ארצית">ארצית</option>
-          </select>
-          <select
-            value={pdfFilter}
-            onChange={e => { setPdfFilter(e.target.value); setOffset(0) }}
-            className="px-4 py-2 border border-sky-200 rounded-lg text-base text-blue-900 bg-white
-                       focus:outline-none focus:ring-2 focus:ring-sky-400"
-          >
-            <option value="">כל התוכניות</option>
-            <option value="yes">עם PDF</option>
-            <option value="no">בלי PDF</option>
-          </select>
-          <select
-            value={reviewFilter}
-            onChange={e => { setReviewFilter(e.target.value); setOffset(0) }}
-            className="px-4 py-2 border border-sky-200 rounded-lg text-base text-blue-900 bg-white
-                       focus:outline-none focus:ring-2 focus:ring-sky-400"
-          >
-            <option value="">כל הסיווגים</option>
-            <option value="not_reviewed">לא נבדק</option>
-            <option value="relevant">רלוונטי</option>
-            <option value="not_relevant">לא רלוונטי</option>
-            <option value="high">עדיפות גבוהה</option>
-            <option value="medium">עדיפות בינונית</option>
-            <option value="low">עדיפות נמוכה</option>
-          </select>
-          <input
-            type="number"
-            placeholder="שטח מינימלי (דונם)"
-            value={minArea}
+            className="flex-1 min-w-48 px-3 py-1.5 border border-sky-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-sky-400" />
+          {[
+            { v: authorityFilter, set: setAuthorityFilter, opts: [['', 'סמכות'], ['מקומית', 'מקומית'], ['מחוזית', 'מחוזית'], ['ארצית', 'ארצית']] },
+            { v: pdfFilter, set: setPdfFilter, opts: [['', 'PDF'], ['yes', 'עם PDF'], ['no', 'בלי PDF']] },
+            { v: reviewFilter, set: setReviewFilter, opts: [['', 'סיווג'], ['not_reviewed', 'לא נבדק'], ['reviewed', 'נבדק'], ['continue', 'המשך טיפול'], ['high', 'עדיפות גבוהה'], ['medium', 'עדיפות בינונית'], ['low', 'עדיפות נמוכה']] },
+          ].map((f, i) => (
+            <select key={i} value={f.v} onChange={e => { f.set(e.target.value); setOffset(0) }}
+              className="px-2 py-1.5 border border-sky-200 rounded text-sm bg-white focus:outline-none focus:ring-1 focus:ring-sky-400">
+              {f.opts.map(([val, label]) => <option key={val} value={val}>{label}</option>)}
+            </select>
+          ))}
+          <input type="number" placeholder="שטח מינ' (דונם)" value={minArea}
             onChange={e => { setMinArea(e.target.value); setOffset(0) }}
-            className="w-44 px-4 py-2 border border-sky-200 rounded-lg text-base text-blue-900
-                       focus:outline-none focus:ring-2 focus:ring-sky-400"
-          />
+            className="w-32 px-2 py-1.5 border border-sky-200 rounded text-sm focus:outline-none focus:ring-1 focus:ring-sky-400" />
         </div>
 
         {/* Table */}
-        <div className="bg-white rounded-2xl shadow-md border border-sky-100 overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-base">
-              <thead className="bg-sky-50">
+        <div className="bg-white rounded-xl shadow-md border border-sky-100 overflow-hidden">
+          <div className="overflow-x-auto max-h-[calc(100vh-280px)]">
+            <table className="w-full border-collapse">
+              <thead className="bg-sky-50 sticky top-0 z-10 shadow-sm">
                 <tr>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">מספר תכנית</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">שם תכנית</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">סמכות</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">מיקום</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">שטח (דונם)</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">יח"ד</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">מגורים (מ"ר)</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">מסחר (מ"ר)</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">גושים</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">פעילות אחרונה</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">מסמכים</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">סיווג</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">עדיפות</th>
-                  <th className="px-4 py-3 text-right font-bold text-blue-900">קישורים</th>
+                  {/* Classification columns FIRST (right side in RTL) */}
+                  <th className={th}>נבדק</th>
+                  <th className={th}>המשך טיפול</th>
+                  <th className={th}>שלב בדיקה</th>
+                  <th className={th}>עדיפות</th>
+                  {/* Data columns */}
+                  <th className={th}>מספר תכנית</th>
+                  <th className={th}>שם תכנית</th>
+                  <th className={th}>סמכות</th>
+                  <th className={th}>מיקום</th>
+                  <th className={th}>שטח (דונם)</th>
+                  <th className={th}>יח"ד</th>
+                  <th className={th}>מגורים (מ"ר)</th>
+                  <th className={th}>מסחר (מ"ר)</th>
+                  <th className={th}>גושים</th>
+                  <th className={th}>פעילות</th>
+                  <th className={th}>PDF</th>
+                  <th className={th}>קישור</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan={14} className="px-4 py-12 text-center text-blue-800/50">
-                      <svg className="animate-spin h-6 w-6 mx-auto mb-2 text-sky-500" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                      </svg>
-                      טוען תוכניות...
-                    </td>
-                  </tr>
+                  <tr><td colSpan={16} className="px-4 py-8 text-center text-blue-800/50 text-sm">
+                    <svg className="animate-spin h-5 w-5 mx-auto mb-1 text-sky-500" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                    טוען...
+                  </td></tr>
                 ) : plans.length === 0 ? (
-                  <tr>
-                    <td colSpan={14} className="px-4 py-12 text-center text-blue-800/50">לא נמצאו תוכניות</td>
-                  </tr>
+                  <tr><td colSpan={16} className="px-4 py-8 text-center text-blue-800/50 text-sm">לא נמצאו תוכניות</td></tr>
                 ) : (
-                  plans.map((p, i) => (
+                  plans.map((p, i) => {
+                    const st = getStatus(p.plan_number)
+                    const rowBg = selectedPlan?.plan_number === p.plan_number ? 'bg-sky-100'
+                      : st.continue_handling ? 'bg-green-50/40'
+                      : st.priority === 'high' ? 'bg-red-50/30'
+                      : st.reviewed && !st.continue_handling ? 'bg-gray-50/40' : ''
+
+                    return (
                     <React.Fragment key={i}>
-                    <tr
-                      className={`border-t border-sky-50 hover:bg-sky-50/50 cursor-pointer transition-colors
-                        ${selectedPlan?.plan_number === p.plan_number ? 'bg-sky-100' :
-                          getStatus(p.plan_number).review === 'relevant' ? 'bg-green-50/50' :
-                          getStatus(p.plan_number).review === 'not_relevant' ? 'bg-gray-50/50 opacity-60' :
-                          getStatus(p.plan_number).priority === 'high' ? 'bg-red-50/30' : ''}`}
-                      onClick={() => setSelectedPlan(selectedPlan?.plan_number === p.plan_number ? null : p)}
-                    >
-                      <td className="px-4 py-3 text-blue-900 font-mono text-sm font-medium whitespace-nowrap">
-                        {p.plan_number}
+                    <tr className={`border-b border-gray-200 hover:bg-sky-50/50 cursor-pointer transition-colors ${rowBg}`}
+                        onClick={() => setSelectedPlan(selectedPlan?.plan_number === p.plan_number ? null : p)}>
+
+                      {/* נבדק - checkbox */}
+                      <td className={`${td} text-center`} onClick={e => e.stopPropagation()}>
+                        <input type="checkbox" checked={!!st.reviewed}
+                          onChange={e => updateStatus(p.plan_number, 'reviewed', e.target.checked)}
+                          className="w-3.5 h-3.5 accent-blue-600 cursor-pointer" />
                       </td>
-                      <td className="px-4 py-3 text-blue-900 max-w-xs">
-                        <div className="truncate">{p.plan_name}</div>
-                        {p.purpose && (
-                          <div className="text-xs text-blue-800/50 truncate mt-0.5">{p.purpose}</div>
-                        )}
+
+                      {/* המשך טיפול - checkbox */}
+                      <td className={`${td} text-center`} onClick={e => e.stopPropagation()}>
+                        <input type="checkbox" checked={!!st.continue_handling}
+                          onChange={e => updateStatus(p.plan_number, 'continue_handling', e.target.checked)}
+                          className="w-3.5 h-3.5 accent-green-600 cursor-pointer" />
                       </td>
-                      <td className="px-4 py-3">
-                        <span className={`px-2 py-1 rounded-md text-xs font-medium
-                          ${p.authority === 'מחוזית' ? 'bg-purple-50 text-purple-700' :
-                            p.authority === 'ארצית' ? 'bg-red-50 text-red-700' :
-                            'bg-sky-50 text-sky-700'}`}>
-                          {p.authority}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-blue-800 text-sm max-w-xs">
-                        <div className="truncate">{p.location}</div>
-                      </td>
-                      <td className="px-4 py-3 text-blue-900 text-sm text-center">
-                        {p.area_dunam ? (
-                          <span className="font-medium">{p.area_dunam.toLocaleString()}</span>
-                        ) : (
-                          <span className="text-blue-800/20">-</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-blue-900 text-sm text-center">
-                        {p.housing_units ? (
-                          <span className="font-medium">{p.housing_units.toLocaleString()}</span>
-                        ) : (
-                          <span className="text-blue-800/20">-</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-blue-900 text-sm text-center">
-                        {p.residential_sqm ? (
-                          <span className="font-medium">{p.residential_sqm.toLocaleString()}</span>
-                        ) : (
-                          <span className="text-blue-800/20">-</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-blue-900 text-sm text-center">
-                        {p.commercial_sqm ? (
-                          <span className="font-medium">{p.commercial_sqm.toLocaleString()}</span>
-                        ) : (
-                          <span className="text-blue-800/20">-</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-sm">
-                        {p.gushim && p.gushim.length > 0 ? (
-                          <div className="flex flex-wrap gap-1">
-                            {p.gushim.slice(0, 3).map((g, j) => (
-                              <span key={j} className="px-1.5 py-0.5 bg-amber-50 text-amber-800 rounded text-xs">
-                                {g.gush}{g.helka ? `/${g.helka}` : ''}
-                              </span>
-                            ))}
-                            {p.gushim.length > 3 && (
-                              <span className="text-xs text-blue-800/40">+{p.gushim.length - 3}</span>
-                            )}
-                          </div>
-                        ) : (
-                          <span className="text-blue-800/20">-</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-blue-800 text-xs text-center whitespace-nowrap">
-                        {p.last_activity_date || '-'}
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <div className="flex items-center gap-1 justify-center">
-                          {p.has_horaot_pdf && (
-                            <span className="px-1.5 py-0.5 bg-green-50 text-green-700 rounded text-xs" title="הוראות">📄</span>
-                          )}
-                          {p.has_tashrit_pdf && (
-                            <span className="px-1.5 py-0.5 bg-blue-50 text-blue-700 rounded text-xs" title="תשריט">🗺️</span>
-                          )}
-                          {!p.has_horaot_pdf && !p.has_tashrit_pdf && (
-                            <span className="text-blue-800/20 text-xs">אין</span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
-                        <select
-                          value={getStatus(p.plan_number).review || 'not_reviewed'}
-                          onChange={e => updateStatus(p.plan_number, 'review', e.target.value)}
-                          className={`text-xs px-1.5 py-1 rounded border transition-colors w-full
-                            ${getStatus(p.plan_number).review === 'relevant' ? 'bg-green-100 border-green-300 text-green-800' :
-                              getStatus(p.plan_number).review === 'not_relevant' ? 'bg-gray-100 border-gray-300 text-gray-600' :
-                              'bg-white border-sky-200 text-blue-900'}`}
-                        >
-                          <option value="not_reviewed">לא נבדק</option>
-                          <option value="relevant">רלוונטי</option>
-                          <option value="not_relevant">לא רלוונטי</option>
+
+                      {/* שלב בדיקה - droplist */}
+                      <td className={td} onClick={e => e.stopPropagation()}>
+                        <select value={st.check_stage || ''} onChange={e => updateStatus(p.plan_number, 'check_stage', e.target.value)}
+                          className="text-[10px] px-1 py-0.5 rounded border border-gray-200 bg-white w-full min-w-[70px]">
+                          <option value="">-</option>
+                          <option value="בדיקה תכנונית">בדיקה תכנונית</option>
+                          <option value="איתור בעלים">איתור בעלים</option>
                         </select>
                       </td>
-                      <td className="px-4 py-3" onClick={e => e.stopPropagation()}>
-                        <select
-                          value={getStatus(p.plan_number).priority || ''}
-                          onChange={e => updateStatus(p.plan_number, 'priority', e.target.value)}
-                          className={`text-xs px-1.5 py-1 rounded border transition-colors w-full
-                            ${getStatus(p.plan_number).priority === 'high' ? 'bg-red-100 border-red-300 text-red-800' :
-                              getStatus(p.plan_number).priority === 'medium' ? 'bg-amber-100 border-amber-300 text-amber-800' :
-                              getStatus(p.plan_number).priority === 'low' ? 'bg-gray-100 border-gray-300 text-gray-600' :
-                              'bg-white border-sky-200 text-blue-900'}`}
-                        >
+
+                      {/* עדיפות - droplist */}
+                      <td className={td} onClick={e => e.stopPropagation()}>
+                        <select value={st.priority || ''} onChange={e => updateStatus(p.plan_number, 'priority', e.target.value || null)}
+                          className={`text-[10px] px-1 py-0.5 rounded border w-full min-w-[55px]
+                            ${st.priority === 'high' ? 'bg-red-100 border-red-300 text-red-800' :
+                              st.priority === 'medium' ? 'bg-amber-100 border-amber-300 text-amber-800' :
+                              st.priority === 'low' ? 'bg-gray-100 border-gray-300' : 'border-gray-200 bg-white'}`}>
                           <option value="">-</option>
                           <option value="high">גבוהה</option>
                           <option value="medium">בינונית</option>
                           <option value="low">נמוכה</option>
                         </select>
                       </td>
-                      <td className="px-4 py-3">
-                        <div className="flex gap-2">
-                          {p.mavat_url && (
-                            <a href={p.mavat_url} target="_blank" rel="noopener noreferrer"
-                               onClick={e => e.stopPropagation()}
-                               className="text-sky-600 hover:text-sky-800 text-xs underline">
-                              MAVAT
-                            </a>
-                          )}
-                          {p.sharepoint_url && (
-                            <a href={p.sharepoint_url} target="_blank" rel="noopener noreferrer"
-                               onClick={e => e.stopPropagation()}
-                               className="text-green-600 hover:text-green-800 text-xs underline">
-                              PDF
-                            </a>
-                          )}
-                        </div>
+
+                      {/* מספר תכנית */}
+                      <td className={`${td} font-mono font-medium whitespace-nowrap`}>{p.plan_number}</td>
+
+                      {/* שם */}
+                      <td className={`${td} max-w-[200px]`}>
+                        <div className="truncate">{p.plan_name}</div>
+                        {p.purpose && <div className="text-[10px] text-blue-800/40 truncate">{p.purpose}</div>}
+                      </td>
+
+                      {/* סמכות */}
+                      <td className={td}>
+                        <span className={`px-1 py-0.5 rounded text-[10px] font-medium
+                          ${p.authority === 'מחוזית' ? 'bg-purple-50 text-purple-700' :
+                            p.authority === 'ארצית' ? 'bg-red-50 text-red-700' : 'bg-sky-50 text-sky-700'}`}>
+                          {p.authority}
+                        </span>
+                      </td>
+
+                      {/* מיקום */}
+                      <td className={`${td} max-w-[140px]`}><div className="truncate text-blue-800">{p.location}</div></td>
+
+                      {/* שטח */}
+                      <td className={`${td} text-center`}>{p.area_dunam ? <span className="font-medium">{p.area_dunam.toLocaleString()}</span> : <span className="text-gray-300">-</span>}</td>
+
+                      {/* יח"ד */}
+                      <td className={`${td} text-center`}>{p.housing_units ? <span className="font-medium">{p.housing_units.toLocaleString()}</span> : <span className="text-gray-300">-</span>}</td>
+
+                      {/* מגורים */}
+                      <td className={`${td} text-center`}>{p.residential_sqm ? <span className="font-medium">{p.residential_sqm.toLocaleString()}</span> : <span className="text-gray-300">-</span>}</td>
+
+                      {/* מסחר */}
+                      <td className={`${td} text-center`}>{p.commercial_sqm ? <span className="font-medium">{p.commercial_sqm.toLocaleString()}</span> : <span className="text-gray-300">-</span>}</td>
+
+                      {/* גושים */}
+                      <td className={td}>
+                        {p.gushim?.length > 0 ? (
+                          <div className="flex flex-wrap gap-0.5">
+                            {p.gushim.slice(0, 2).map((g, j) => <span key={j} className="px-1 py-0 bg-amber-50 text-amber-800 rounded text-[10px]">{g.gush}</span>)}
+                            {p.gushim.length > 2 && <span className="text-[10px] text-gray-400">+{p.gushim.length - 2}</span>}
+                          </div>
+                        ) : <span className="text-gray-300">-</span>}
+                      </td>
+
+                      {/* פעילות אחרונה */}
+                      <td className={`${td} text-center text-[10px] text-blue-800/60 whitespace-nowrap`}>{p.last_activity_date || '-'}</td>
+
+                      {/* PDF */}
+                      <td className={`${td} text-center`}>
+                        {(p.has_horaot_pdf || p.has_tashrit_pdf) ? <span className="text-green-600 text-[10px]">📄</span> : <span className="text-gray-300 text-[10px]">-</span>}
+                      </td>
+
+                      {/* קישור */}
+                      <td className={td} onClick={e => e.stopPropagation()}>
+                        {p.mavat_url && <a href={p.mavat_url} target="_blank" rel="noopener noreferrer" className="text-sky-600 hover:text-sky-800 text-[10px] underline">MAVAT</a>}
                       </td>
                     </tr>
+
                     {selectedPlan?.plan_number === p.plan_number && (
-                      <tr>
-                        <td colSpan={14} className="p-0">
-                          <DetailPanel plan={selectedPlan} onClose={() => setSelectedPlan(null)} />
-                        </td>
-                      </tr>
+                      <tr><td colSpan={16} className="p-0"><DetailPanel plan={selectedPlan} onClose={() => setSelectedPlan(null)} /></td></tr>
                     )}
                     </React.Fragment>
-                  ))
+                  )})
                 )}
               </tbody>
             </table>
           </div>
 
           {/* Pagination */}
-          <div className="px-6 py-3 border-t border-sky-100 flex items-center justify-between">
-            <span className="text-sm text-blue-800/50">
-              מציג {offset + 1}-{Math.min(offset + limit, total)} מתוך {total} תוכניות
-            </span>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setOffset(Math.max(0, offset - limit))}
-                disabled={offset === 0}
-                className="px-3 py-1 rounded-lg text-sm border border-sky-200 text-blue-900
-                           hover:bg-sky-50 disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                ← הקודם
-              </button>
-              <span className="px-3 py-1 text-sm text-blue-800/60">
-                עמוד {currentPage} מתוך {totalPages}
-              </span>
-              <button
-                onClick={() => setOffset(offset + limit)}
-                disabled={offset + limit >= total}
-                className="px-3 py-1 rounded-lg text-sm border border-sky-200 text-blue-900
-                           hover:bg-sky-50 disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                הבא →
-              </button>
+          <div className="px-4 py-2 border-t border-sky-100 flex items-center justify-between text-xs">
+            <span className="text-blue-800/50">{offset + 1}-{Math.min(offset + limit, total)} מתוך {total}</span>
+            <div className="flex gap-1.5">
+              <button onClick={() => setOffset(Math.max(0, offset - limit))} disabled={offset === 0}
+                className="px-2 py-0.5 rounded border border-sky-200 hover:bg-sky-50 disabled:opacity-30">← הקודם</button>
+              <span className="px-2 py-0.5 text-blue-800/60">{currentPage}/{totalPages}</span>
+              <button onClick={() => setOffset(offset + limit)} disabled={offset + limit >= total}
+                className="px-2 py-0.5 rounded border border-sky-200 hover:bg-sky-50 disabled:opacity-30">הבא →</button>
             </div>
           </div>
         </div>

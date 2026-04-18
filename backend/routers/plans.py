@@ -13,8 +13,11 @@ from services.plans_service import (
 
 
 class PlanStatusUpdate(BaseModel):
-    review: Optional[str] = None      # not_reviewed, not_relevant, relevant
-    priority: Optional[str] = None    # low, medium, high
+    reviewed: Optional[bool] = None
+    continue_handling: Optional[bool] = None
+    check_stage: Optional[str] = None      # בדיקה תכנונית, איתור בעלים
+    priority: Optional[str] = None         # low, medium, high
+    review: Optional[str] = None           # legacy
 
 router = APIRouter()
 
@@ -92,7 +95,11 @@ def plan_status(plan_number: str):
 @router.put("/status/{plan_number}")
 def update_status(plan_number: str, body: PlanStatusUpdate):
     """Update review status / priority for a plan."""
-    return set_plan_status(plan_number, body.review, body.priority)
+    updates = body.dict(exclude_none=True)
+    result = get_plan_status(plan_number)
+    for key, val in updates.items():
+        result[key] = val
+    return set_plan_status(plan_number, **updates)
 
 
 @router.post("/refresh")

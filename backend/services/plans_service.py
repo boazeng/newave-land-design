@@ -231,17 +231,16 @@ def _save_statuses(data):
 
 def get_plan_status(plan_number):
     statuses = _load_statuses()
-    return statuses.get(plan_number, {'review': 'not_reviewed', 'priority': None})
+    return statuses.get(plan_number, {})
 
 
-def set_plan_status(plan_number, review=None, priority=None):
+def set_plan_status(plan_number, **kwargs):
     statuses = _load_statuses()
     if plan_number not in statuses:
-        statuses[plan_number] = {'review': 'not_reviewed', 'priority': None}
-    if review is not None:
-        statuses[plan_number]['review'] = review
-    if priority is not None:
-        statuses[plan_number]['priority'] = priority
+        statuses[plan_number] = {}
+    for key, val in kwargs.items():
+        if val is not None:
+            statuses[plan_number][key] = val
     _save_statuses(statuses)
     return statuses[plan_number]
 
