@@ -10,6 +10,76 @@ import DatabaseLayersPanel from './DatabaseLayersPanel'
 import DatabaseMarkers from './DatabaseMarkers'
 import PlansLayer from './PlansLayer'
 import PlanDetailPanel from './PlanDetailPanel'
+import ParkingLayer from './ParkingLayer'
+
+const PARKING_CITIES = [
+  { key: 'tel_aviv',  name: 'תל אביב-יפו', defaultColor: '#2563eb' },
+  { key: 'ramat_gan', name: 'רמת גן',       defaultColor: '#16a34a' },
+  { key: 'holon',     name: 'חולון',        defaultColor: '#dc2626' },
+  { key: 'herzliya',  name: 'הרצליה',       defaultColor: '#9333ea' },
+]
+
+const PRESET_COLORS = ['#2563eb','#16a34a','#dc2626','#9333ea','#ea580c','#0891b2','#be185d','#854d0e']
+
+function ParkingFilterPanel({ cityStates, setCityStates, onClose }) {
+  const [pos, setPos] = useState({ top: 80, left: 56 })
+  const dragging = useRef(false)
+  const startRef = useRef({})
+
+  const onMouseDown = (e) => {
+    if (['INPUT','SELECT','OPTION','LABEL'].includes(e.target.tagName)) return
+    dragging.current = true
+    startRef.current = { mx: e.clientX, my: e.clientY, ...pos }
+    e.preventDefault()
+  }
+
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!dragging.current) return
+      setPos({ top: startRef.current.top + (e.clientY - startRef.current.my), left: startRef.current.left + (e.clientX - startRef.current.mx) })
+    }
+    const onUp = () => { dragging.current = false }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+  }, [])
+
+  const toggle = (key) => setCityStates(prev => ({ ...prev, [key]: { ...prev[key], active: !prev[key].active } }))
+  const setColor = (key, color) => setCityStates(prev => ({ ...prev, [key]: { ...prev[key], color } }))
+
+  return (
+    <div onMouseDown={onMouseDown} style={{
+      position: 'absolute', top: pos.top, left: pos.left, zIndex: 1000,
+      background: 'white', borderRadius: 10, boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+      border: '1px solid #e5e7eb', padding: '10px 12px', width: 220,
+      direction: 'rtl', cursor: 'grab', userSelect: 'none',
+    }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+        <span style={{ fontWeight: 700, fontSize: 13, color: '#1e3a5f' }}>מתקני חניה</span>
+        <button onClick={onClose} style={{ background: 'none', border: 'none', fontSize: 18, color: '#9ca3af', cursor: 'pointer', lineHeight: 1 }}>×</button>
+      </div>
+      {PARKING_CITIES.map(city => {
+        const st = cityStates[city.key] || { active: false, color: city.defaultColor }
+        return (
+          <div key={city.key} style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 6 }}>
+            <input type="checkbox" checked={st.active} onChange={() => toggle(city.key)}
+              style={{ cursor: 'pointer', accentColor: st.color, width: 14, height: 14 }} />
+            <span style={{ flex: 1, fontSize: 12, color: st.active ? '#111' : '#9ca3af', cursor: 'pointer' }}
+              onClick={() => toggle(city.key)}>{city.name}</span>
+            <div style={{ display: 'flex', gap: 3 }}>
+              {PRESET_COLORS.slice(0, 4).map(c => (
+                <div key={c} onClick={() => setColor(city.key, c)} style={{
+                  width: 14, height: 14, borderRadius: '50%', background: c, cursor: 'pointer',
+                  border: st.color === c ? '2px solid #111' : '1.5px solid #ccc',
+                }} />
+              ))}
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
 const DB_OPTIONS = [
   { value: 'plans_tanai_saf',      label: 'תנאי סף',         color: '#7c3aed', bg: '#f5f3ff' },
@@ -152,6 +222,12 @@ const INITIAL_LAYERS = [
     description: 'תוכניות מ-MAVAT בוועדות המחוזיות (זום 11+)',
     visible: false,
   },
+  {
+    id: 'parking',
+    name: 'מתקני חניה',
+    description: 'בניינים עם מתקני חניה מפרוטוקולי ועדות',
+    visible: false,
+  },
 ]
 
 function MapView() {
@@ -168,6 +244,10 @@ function MapView() {
   const [plansDbSet, setPlansDbSet] = useState(['plans_tanai_saf'])
   const [plansPanelOpen, setPlansPanelOpen] = useState(true)
   const [planPopup, setPlanPopup] = useState(null)
+  const [parkingPanelOpen, setParkingPanelOpen] = useState(true)
+  const [parkingCities, setParkingCities] = useState(() =>
+    Object.fromEntries(PARKING_CITIES.map(c => [c.key, { active: false, color: c.defaultColor }]))
+  )
   const [dbLayers, setDbLayers] = useState(() => {
     try {
       const saved = localStorage.getItem('dbLayerStyles')
@@ -217,6 +297,7 @@ function MapView() {
       layer.id === layerId ? { ...layer, visible: !layer.visible } : layer
     ))
     if (layerId === 'plans') setPlansPanelOpen(true)
+    if (layerId === 'parking') setParkingPanelOpen(true)
   }, [])
 
   const handleDbLayerChange = useCallback((dbId, markerStyle) => {
@@ -319,6 +400,29 @@ function MapView() {
         <PlanDetailPanel
           data={planPopup}
           onClose={() => setPlanPopup(null)}
+        />
+      )}
+
+      {/* Parking layers - one per active city */}
+      {mapReady && PARKING_CITIES.map(city => {
+        const st = parkingCities[city.key] || { active: false, color: city.defaultColor }
+        return (
+          <ParkingLayer
+            key={city.key}
+            map={mapRef.current}
+            visible={layers.find(l => l.id === 'parking')?.visible && st.active}
+            cityKey={city.key}
+            color={st.color}
+          />
+        )
+      })}
+
+      {/* Parking filter panel */}
+      {layers.find(l => l.id === 'parking')?.visible && parkingPanelOpen && (
+        <ParkingFilterPanel
+          cityStates={parkingCities}
+          setCityStates={setParkingCities}
+          onClose={() => setParkingPanelOpen(false)}
         />
       )}
 

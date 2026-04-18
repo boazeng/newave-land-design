@@ -14,20 +14,12 @@ PROTOCOLS_DIR = os.path.join(DATA_DIR, 'protocols')
 CITY_CONFIG = {
     'tel_aviv': {
         'name': 'תל אביב-יפו',
-        'result_files': [
-            'parking_results_vaada_mishne.json',
-            'parking_results_vaada_old.json',
-            'parking_results_vaada_rishui.json',
-        ],
-        'protocol_dirs': [
-            'תל_אביב_יפו/ועדת_משנה',
-            'תל_אביב_יפו_ועדת_משנה',
-            'תל_אביב_יפו_ועדת_משנה_רישוי',
-        ],
+        'result_files': ['parking_protocols_telaviv.json'],
+        'protocol_dirs': ['תל_אביב_יפו/ועדת_משנה', 'תל_אביב_יפו_ועדת_משנה', 'תל_אביב_יפו_ועדת_משנה_רישוי'],
     },
     'ramat_gan': {
         'name': 'רמת גן',
-        'result_files': ['parking_results_ramat_gan.json'],
+        'result_files': ['parking_protocols_ramatgan.json'],
         'protocol_dirs': ['protocols_search/רמת_גן'],
     },
     'holon': {
@@ -48,10 +40,7 @@ def _load_results(city=None):
     all_buildings = []
     seen = set()
 
-    if city and city in CITY_CONFIG:
-        configs = {city: CITY_CONFIG[city]}
-    else:
-        configs = CITY_CONFIG
+    configs = {city: CITY_CONFIG[city]} if (city and city in CITY_CONFIG) else CITY_CONFIG
 
     for city_key, config in configs.items():
         for filename in config['result_files']:
@@ -60,7 +49,9 @@ def _load_results(city=None):
                 continue
             with open(path, encoding='utf-8') as f:
                 data = json.load(f)
-            for b in data.get('buildings', []):
+            # Support both list format and dict with 'buildings' key
+            buildings = data if isinstance(data, list) else data.get('buildings', [])
+            for b in buildings:
                 key = (b.get('address', ''), b.get('gush', ''), b.get('helka', ''))
                 if key not in seen:
                     seen.add(key)
