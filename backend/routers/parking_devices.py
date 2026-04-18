@@ -151,7 +151,7 @@ def get_parking_stats(city: str = None):
 async def serve_protocol_pdf(filename: str):
     """Serve a protocol PDF inline for viewing (not downloading)."""
     import httpx
-    from fastapi.responses import Response
+    from fastapi.responses import Response, JSONResponse
 
     # First try local files
     for config in CITY_CONFIG.values():
@@ -168,31 +168,34 @@ async def serve_protocol_pdf(filename: str):
                     )
 
     # Fallback: fetch from SharePoint and serve inline
-    from services.sharepoint_pdf_service import get_pdf_url
+    try:
+        from services.sharepoint_pdf_service import get_pdf_url
 
-    sp_folders = [
-        'החלטות ועדות תכנון/תל אביב-יפו/ועדת_משנה',
-        'החלטות ועדות תכנון/תל אביב-יפו/ועדת_משנה_לפי_שנה',
-        'החלטות ועדות תכנון/תל אביב-יפו/אחר',
-        'החלטות ועדות תכנון/תל אביב-יפו',
-        'החלטות ועדות תכנון/רמת גן/ועדת_משנה',
-        'החלטות ועדות תכנון/רמת גן',
-        'החלטות ועדות תכנון/חולון/ועדת_משנה',
-        'החלטות ועדות תכנון/חולון',
-        'החלטות ועדות תכנון/הרצליה/ועדת_משנה',
-        'החלטות ועדות תכנון/הרצליה',
-        'החלטות ועדות תכנון/יקנעם עילית',
-    ]
-    url = get_pdf_url(filename, sp_folders)
-    if url:
-        # Download from SharePoint and serve inline
-        async with httpx.AsyncClient(timeout=60) as client:
-            resp = await client.get(url)
-            if resp.status_code == 200:
-                return Response(
-                    content=resp.content,
-                    media_type='application/pdf',
-                    headers={'Content-Disposition': f'inline; filename="{filename}"'},
-                )
+        sp_folders = [
+            'החלטות ועדות תכנון/תל אביב-יפו/ועדת_משנה',
+            'החלטות ועדות תכנון/תל אביב-יפו/ועדת_משנה_לפי_שנה',
+            'החלטות ועדות תכנון/תל אביב-יפו/אחר',
+            'החלטות ועדות תכנון/תל אביב-יפו',
+            'החלטות ועדות תכנון/רמת גן/ועדת_משנה',
+            'החלטות ועדות תכנון/רמת גן',
+            'החלטות ועדות תכנון/חולון/ועדת_משנה',
+            'החלטות ועדות תכנון/חולון',
+            'החלטות ועדות תכנון/הרצליה/ועדת_משנה',
+            'החלטות ועדות תכנון/הרצליה',
+            'החלטות ועדות תכנון/יקנעם עילית',
+        ]
+        url = get_pdf_url(filename, sp_folders)
+        if url:
+            async with httpx.AsyncClient(timeout=60) as client:
+                resp = await client.get(url)
+                if resp.status_code == 200:
+                    return Response(
+                        content=resp.content,
+                        media_type='application/pdf',
+                        headers={'Content-Disposition': f'inline; filename="{filename}"'},
+                    )
+    except Exception as e:
+        print(f"SharePoint PDF error for {filename}: {e}")
+        return JSONResponse(status_code=502, content={"error": f"שגיאת SharePoint: {str(e)}"})
 
-    return {"error": "קובץ לא נמצא"}
+    return JSONResponse(status_code=404, content={"error": "קובץ לא נמצא"})
