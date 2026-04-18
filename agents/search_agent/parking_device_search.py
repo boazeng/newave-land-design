@@ -16,16 +16,25 @@ sys.stdout.reconfigure(encoding='utf-8')
 sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', buffering=1, encoding='utf-8')
 
 import fitz  # PyMuPDF
-from dotenv import load_dotenv
 
-# Try multiple env paths
+def _load_env_manual(path):
+    """Load .env file manually to avoid dotenv encoding issues."""
+    if not os.path.exists(path):
+        return
+    with open(path, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                key, _, val = line.partition('=')
+                os.environ[key.strip()] = val.strip()
+
 for env_candidate in [
     os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', '..', 'env', '.env'),
     os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '..', 'env', '.env'),
     'c:/Users/boaze/Ai-Projects/env/.env',
 ]:
     if os.path.exists(env_candidate):
-        load_dotenv(env_candidate)
+        _load_env_manual(env_candidate)
         break
 
 PARKING_KEYWORDS = [
@@ -91,7 +100,7 @@ def extract_info_with_claude(filename, matching_pages, all_pages):
 
 ---
 
-הפרוטוקול לעיל הוא מפרוטוקול ועדת תכנון ובנייה בתל אביב. נמצאו בו אזכורים של מתקני חניה.
+הפרוטוקול לעיל הוא מפרוטוקול ועדת תכנון ובנייה. נמצאו בו אזכורים של מתקני חניה.
 
 חלץ את כל הפרויקטים/בניינים שבהם מוזכר שימוש במתקן חניה (מתקן רובוטי, מכפילים, מתקן אוטומטי, מתקן חניה מכנית וכו').
 
