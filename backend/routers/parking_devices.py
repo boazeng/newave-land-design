@@ -167,9 +167,10 @@ async def serve_protocol_pdf(filename: str):
                         headers={'Content-Disposition': f'inline; filename="{filename}"'},
                     )
 
-    # Fallback: fetch from SharePoint and serve inline
+    # Fallback: redirect to SharePoint URL
     try:
         from services.sharepoint_pdf_service import get_pdf_url
+        from fastapi.responses import RedirectResponse
 
         sp_folders = [
             'החלטות ועדות תכנון/תל אביב-יפו/ועדת_משנה',
@@ -186,16 +187,9 @@ async def serve_protocol_pdf(filename: str):
         ]
         url = get_pdf_url(filename, sp_folders)
         if url:
-            async with httpx.AsyncClient(timeout=60) as client:
-                resp = await client.get(url)
-                if resp.status_code == 200:
-                    return Response(
-                        content=resp.content,
-                        media_type='application/pdf',
-                        headers={'Content-Disposition': f'inline; filename="{filename}"'},
-                    )
+            return RedirectResponse(url=url)
     except Exception as e:
         print(f"SharePoint PDF error for {filename}: {e}")
         return JSONResponse(status_code=502, content={"error": f"שגיאת SharePoint: {str(e)}"})
 
-    return JSONResponse(status_code=404, content={"error": "קובץ לא נמצא"})
+    return JSONResponse(status_code=404, content={"error": f"קובץ לא נמצא: {filename}"})
