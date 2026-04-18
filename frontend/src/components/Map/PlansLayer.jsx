@@ -2,15 +2,7 @@ import { useEffect, useRef, useCallback, useState } from 'react'
 import L from 'leaflet'
 import axios from 'axios'
 
-const STYLE_DEFAULT = {
-  color: '#7c3aed', weight: 3, fillColor: '#a78bfa', fillOpacity: 0.08,
-  opacity: 0.7, dashArray: '8, 6',
-}
-const STYLE_RELEVANT = {
-  color: '#16a34a', weight: 3, fillColor: '#86efac', fillOpacity: 0.12,
-  opacity: 0.8, dashArray: '8, 6',
-}
-const STYLE_NOT_RELEVANT = {
+const STYLE_NOT_REVIEWED = {
   color: '#9ca3af', weight: 2, fillColor: '#d1d5db', fillOpacity: 0.05,
   opacity: 0.4, dashArray: '4, 8',
 }
@@ -18,20 +10,26 @@ const STYLE_HIGH_PRIORITY = {
   color: '#dc2626', weight: 4, fillColor: '#fca5a5', fillOpacity: 0.15,
   opacity: 0.9, dashArray: '10, 4',
 }
-const STYLE_HOVER = {
-  weight: 5, fillOpacity: 0.2, opacity: 1,
-}
+const STYLE_HOVER = { weight: 5, fillOpacity: 0.22, opacity: 1 }
 
 const MIN_ZOOM = 11
 
-function getStyleForPlan(plan) {
-  if (plan.priority === 'high') return STYLE_HIGH_PRIORITY
-  if (plan.continue_handling) return STYLE_RELEVANT
-  if (plan.reviewed) return STYLE_NOT_RELEVANT
-  return STYLE_DEFAULT
+function makeStyles(color) {
+  return {
+    DEFAULT: { color, weight: 3, fillColor: color, fillOpacity: 0.10, opacity: 0.75, dashArray: '8, 6' },
+    CONTINUE: { color, weight: 4, fillColor: color, fillOpacity: 0.22, opacity: 1, dashArray: '6, 3' },
+  }
 }
 
-function PlansLayer({ map, visible, filter, db = 'plans_tanai_saf' }) {
+function getStyleForPlan(plan, styles) {
+  if (plan.priority === 'high') return STYLE_HIGH_PRIORITY
+  if (plan.continue_handling) return styles.CONTINUE
+  if (plan.reviewed) return STYLE_NOT_REVIEWED
+  return styles.DEFAULT
+}
+
+function PlansLayer({ map, visible, filter, db = 'plans_tanai_saf', dbColor = '#7c3aed' }) {
+  const styles = makeStyles(dbColor)
   const layerGroupRef = useRef(null)
   const abortRef = useRef(null)
   const lastBboxRef = useRef(null)
@@ -71,9 +69,9 @@ function PlansLayer({ map, visible, filter, db = 'plans_tanai_saf' }) {
             let bestPlan = plans[0] || {}
             for (const p of plans) {
               if (p.priority === 'high') { bestPlan = p; break }
-              if (p.review === 'relevant') bestPlan = p
+              if (p.continue_handling) bestPlan = p
             }
-            return { ...getStyleForPlan(bestPlan) }
+            return { ...getStyleForPlan(bestPlan, styles) }
           },
           filter: (feature) => {
             if (!filter || filter === 'all') return true
@@ -101,9 +99,9 @@ function PlansLayer({ map, visible, filter, db = 'plans_tanai_saf' }) {
               let bestPlan = plans[0] || {}
               for (const pl of plans) {
                 if (pl.priority === 'high') { bestPlan = pl; break }
-                if (pl.review === 'relevant') bestPlan = pl
+                if (pl.continue_handling) bestPlan = pl
               }
-              layer.setStyle(getStyleForPlan(bestPlan))
+              layer.setStyle(getStyleForPlan(bestPlan, styles))
             })
 
             layer.on('click', () => {

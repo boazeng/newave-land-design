@@ -16,16 +16,20 @@ const DB_OPTIONS = [
   { value: 'plans_bdika_tichnunit',label: 'בדיקה תכנונית',   color: '#92400e', bg: '#fef3c7' },
 ]
 
-function PlanFilterPanel({ plansDb, setPlansDb, plansFilter, setPlansFilter }) {
+function PlanFilterPanel({ plansDbSet, setPlansDbSet, plansFilter, setPlansFilter }) {
   const posRef = useRef(null)
   const [pos, setPos] = useState({ top: 80, left: 56 })
   const dragging = useRef(false)
   const startRef = useRef({})
 
-  const activeDb = DB_OPTIONS.find(d => d.value === plansDb) || DB_OPTIONS[0]
+  const toggleDb = (val) => {
+    setPlansDbSet(prev =>
+      prev.includes(val) ? prev.filter(v => v !== val) : [...prev, val]
+    )
+  }
 
   const onMouseDown = (e) => {
-    if (e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION') return
+    if (['SELECT', 'OPTION', 'INPUT', 'LABEL'].includes(e.target.tagName)) return
     dragging.current = true
     startRef.current = { mx: e.clientX, my: e.clientY, top: pos.top, left: pos.left }
     e.preventDefault()
@@ -53,37 +57,47 @@ function PlanFilterPanel({ plansDb, setPlansDb, plansFilter, setPlansFilter }) {
         position: 'absolute', top: pos.top, left: pos.left,
         zIndex: 1000, background: 'white', borderRadius: 12,
         boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
-        border: `2px solid ${activeDb.color}`,
-        padding: '10px 12px', minWidth: 170, direction: 'rtl',
+        border: '2px solid #e5e7eb',
+        padding: '10px 12px', minWidth: 175, direction: 'rtl',
         cursor: 'grab', userSelect: 'none',
       }}
     >
-      <div style={{ fontWeight: 700, fontSize: 11, color: activeDb.color, marginBottom: 6 }}>
-        מאגר תוכניות
+      <div style={{ fontWeight: 700, fontSize: 12, color: '#374151', marginBottom: 8, borderBottom: '1px solid #e5e7eb', paddingBottom: 6 }}>
+        ⠿ מאגר תוכניות
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8 }}>
-        {DB_OPTIONS.map(db => (
-          <button
-            key={db.value}
-            onClick={() => setPlansDb(db.value)}
-            style={{
-              padding: '4px 8px', borderRadius: 6, fontSize: 11, fontWeight: 600,
-              border: `1.5px solid ${db.color}`, cursor: 'pointer', textAlign: 'right',
-              background: plansDb === db.value ? db.color : db.bg,
-              color: plansDb === db.value ? 'white' : db.color,
-              transition: 'all 0.15s',
-            }}
-          >
-            {db.label}
-          </button>
-        ))}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 5, marginBottom: 10 }}>
+        {DB_OPTIONS.map(db => {
+          const active = plansDbSet.includes(db.value)
+          return (
+            <label key={db.value} style={{ display: 'flex', alignItems: 'center', gap: 7, cursor: 'pointer' }}
+              onClick={() => toggleDb(db.value)}>
+              <span style={{
+                width: 14, height: 14, borderRadius: 3, flexShrink: 0,
+                border: `2px solid ${db.color}`,
+                background: active ? db.color : 'white',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+              }}>
+                {active && <span style={{ color: 'white', fontSize: 10, lineHeight: 1 }}>✓</span>}
+              </span>
+              <span style={{
+                fontSize: 11, fontWeight: 600, color: active ? db.color : '#6b7280',
+              }}>
+                {db.label}
+              </span>
+              <span style={{
+                marginRight: 'auto', width: 10, height: 3, borderRadius: 2,
+                background: db.color, opacity: active ? 1 : 0.3,
+              }} />
+            </label>
+          )
+        })}
       </div>
-      <div style={{ fontWeight: 700, fontSize: 11, color: '#6b7280', marginBottom: 4 }}>סינון</div>
+      <div style={{ fontWeight: 600, fontSize: 10, color: '#9ca3af', marginBottom: 4 }}>סינון</div>
       <select
         value={plansFilter}
         onChange={e => setPlansFilter(e.target.value)}
         style={{
-          width: '100%', padding: '3px 6px', border: `1px solid ${activeDb.color}`,
+          width: '100%', padding: '3px 6px', border: '1px solid #d1d5db',
           borderRadius: 6, fontSize: 11, background: 'white', cursor: 'pointer',
         }}
       >
@@ -149,7 +163,7 @@ function MapView() {
   const [isDbLayersOpen, setIsDbLayersOpen] = useState(false)
   const [layers, setLayers] = useState(INITIAL_LAYERS)
   const [plansFilter, setPlansFilter] = useState('all')
-  const [plansDb, setPlansDb] = useState('plans_tanai_saf')
+  const [plansDbSet, setPlansDbSet] = useState(['plans_tanai_saf'])
   const [dbLayers, setDbLayers] = useState(() => {
     try {
       const saved = localStorage.getItem('dbLayerStyles')
@@ -271,21 +285,23 @@ function MapView() {
         />
       ))}
 
-      {/* Plans layer */}
-      {mapReady && (
+      {/* Plans layers - one per active DB */}
+      {mapReady && DB_OPTIONS.filter(d => plansDbSet.includes(d.value)).map(d => (
         <PlansLayer
+          key={d.value}
           map={mapRef.current}
           visible={layers.find(l => l.id === 'plans')?.visible || false}
           filter={plansFilter}
-          db={plansDb}
+          db={d.value}
+          dbColor={d.color}
         />
-      )}
+      ))}
 
       {/* Plans filter panel - draggable */}
       {layers.find(l => l.id === 'plans')?.visible && (
         <PlanFilterPanel
-          plansDb={plansDb}
-          setPlansDb={setPlansDb}
+          plansDbSet={plansDbSet}
+          setPlansDbSet={setPlansDbSet}
           plansFilter={plansFilter}
           setPlansFilter={setPlansFilter}
         />
