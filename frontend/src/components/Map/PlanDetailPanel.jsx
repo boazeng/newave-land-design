@@ -15,6 +15,7 @@ function PlanCard({ plan }) {
     priority: plan.priority || '',
     not_interesting: plan.not_interesting || false,
   })
+  const [copied, setCopied] = useState(false)
 
   const update = async (field, val) => {
     setSt(prev => ({ ...prev, [field]: val }))
@@ -23,12 +24,24 @@ function PlanCard({ plan }) {
     } catch (e) { console.error(e) }
   }
 
+  const copyNumber = () => {
+    navigator.clipboard.writeText(plan.plan_number)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 1500)
+  }
+
   const badge = PRIORITY_BADGE[st.priority]
 
   return (
     <div style={{ border: '1px solid #e5e7eb', borderRadius: 8, padding: 10, marginBottom: 8, background: '#fafafa' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 4 }}>
-        <strong style={{ color: '#1e3a5f', fontSize: 13 }}>{plan.plan_number}</strong>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <strong style={{ color: '#1e3a5f', fontSize: 13 }}>{plan.plan_number}</strong>
+          <button onClick={copyNumber} title="העתק מספר תוכנית"
+            style={{ fontSize: 10, padding: '1px 6px', border: '1px solid #d1d5db', borderRadius: 4, cursor: 'pointer', background: copied ? '#dcfce7' : '#f9fafb', color: copied ? '#16a34a' : '#6b7280', transition: 'all 0.2s' }}>
+            {copied ? '✓' : '📋'}
+          </button>
+        </div>
         {badge && (
           <span style={{ background: badge.bg, color: 'white', padding: '1px 7px', borderRadius: 4, fontSize: 11 }}>
             {badge.label}
@@ -41,8 +54,11 @@ function PlanCard({ plan }) {
       {plan.area_dunam && <div style={{ fontSize: 11 }}><span style={{ color: '#888' }}>שטח: </span><strong>{plan.area_dunam.toLocaleString()} דונם</strong></div>}
       {plan.housing_units && <div style={{ fontSize: 11 }}><span style={{ color: '#888' }}>יח"ד: </span><strong>{plan.housing_units}</strong></div>}
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 6, flexWrap: 'wrap' }}>
-        {plan.mavat_url && <a href={plan.mavat_url} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: '#2563eb' }}>MAVAT ↗</a>}
+      <div style={{ display: 'flex', gap: 8, marginTop: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+        {plan.mavat_url
+          ? <a href={plan.mavat_url} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: '#2563eb' }}>MAVAT ↗</a>
+          : <a href={`https://mavat.iplan.gov.il/SV3/?lang=0&plan=${encodeURIComponent(plan.plan_number)}`} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: '#2563eb' }}>MAVAT ↗</a>
+        }
         <a href={`/plans?q=${encodeURIComponent(plan.plan_number)}`} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: '#7c3aed' }}>פרטים ↗</a>
         {plan.has_pdf && plan.sharepoint_url && <a href={plan.sharepoint_url} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: '#16a34a' }}>PDF ↗</a>}
       </div>
