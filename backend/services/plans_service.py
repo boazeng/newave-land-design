@@ -183,8 +183,10 @@ def get_plans_geojson(db_name='plans_tanai_saf', bbox=None):
                 'has_pdf': p.get('has_downloaded_files', False),
                 'mavat_url': p.get('mavat_url', ''),
                 'sharepoint_url': p.get('sharepoint_url', ''),
-                'review': st.get('review', 'not_reviewed'),
-                'priority': st.get('priority'),
+                'reviewed': st.get('reviewed', False),
+                'continue_handling': st.get('continue_handling', False),
+                'check_stage': st.get('check_stage', ''),
+                'priority': st.get('priority', ''),
             })
 
     # Build GeoJSON features - one per block, with plan info

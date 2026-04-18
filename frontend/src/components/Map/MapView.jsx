@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import MapControls from './MapControls'
@@ -9,6 +9,95 @@ import DistrictsLayer from './DistrictsLayer'
 import DatabaseLayersPanel from './DatabaseLayersPanel'
 import DatabaseMarkers from './DatabaseMarkers'
 import PlansLayer from './PlansLayer'
+
+const DB_OPTIONS = [
+  { value: 'plans_tanai_saf',      label: 'תנאי סף',         color: '#7c3aed', bg: '#f5f3ff' },
+  { value: 'plans_milui_tnaim',    label: 'מילוי תנאים',     color: '#16a34a', bg: '#f0fdf4' },
+  { value: 'plans_bdika_tichnunit',label: 'בדיקה תכנונית',   color: '#92400e', bg: '#fef3c7' },
+]
+
+function PlanFilterPanel({ plansDb, setPlansDb, plansFilter, setPlansFilter }) {
+  const posRef = useRef(null)
+  const [pos, setPos] = useState({ top: 80, left: 56 })
+  const dragging = useRef(false)
+  const startRef = useRef({})
+
+  const activeDb = DB_OPTIONS.find(d => d.value === plansDb) || DB_OPTIONS[0]
+
+  const onMouseDown = (e) => {
+    if (e.target.tagName === 'SELECT' || e.target.tagName === 'OPTION') return
+    dragging.current = true
+    startRef.current = { mx: e.clientX, my: e.clientY, top: pos.top, left: pos.left }
+    e.preventDefault()
+  }
+
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!dragging.current) return
+      setPos({
+        top: startRef.current.top + (e.clientY - startRef.current.my),
+        left: startRef.current.left + (e.clientX - startRef.current.mx),
+      })
+    }
+    const onUp = () => { dragging.current = false }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+  }, [])
+
+  return (
+    <div
+      ref={posRef}
+      onMouseDown={onMouseDown}
+      style={{
+        position: 'absolute', top: pos.top, left: pos.left,
+        zIndex: 1000, background: 'white', borderRadius: 12,
+        boxShadow: '0 4px 16px rgba(0,0,0,0.15)',
+        border: `2px solid ${activeDb.color}`,
+        padding: '10px 12px', minWidth: 170, direction: 'rtl',
+        cursor: 'grab', userSelect: 'none',
+      }}
+    >
+      <div style={{ fontWeight: 700, fontSize: 11, color: activeDb.color, marginBottom: 6 }}>
+        מאגר תוכניות
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginBottom: 8 }}>
+        {DB_OPTIONS.map(db => (
+          <button
+            key={db.value}
+            onClick={() => setPlansDb(db.value)}
+            style={{
+              padding: '4px 8px', borderRadius: 6, fontSize: 11, fontWeight: 600,
+              border: `1.5px solid ${db.color}`, cursor: 'pointer', textAlign: 'right',
+              background: plansDb === db.value ? db.color : db.bg,
+              color: plansDb === db.value ? 'white' : db.color,
+              transition: 'all 0.15s',
+            }}
+          >
+            {db.label}
+          </button>
+        ))}
+      </div>
+      <div style={{ fontWeight: 700, fontSize: 11, color: '#6b7280', marginBottom: 4 }}>סינון</div>
+      <select
+        value={plansFilter}
+        onChange={e => setPlansFilter(e.target.value)}
+        style={{
+          width: '100%', padding: '3px 6px', border: `1px solid ${activeDb.color}`,
+          borderRadius: 6, fontSize: 11, background: 'white', cursor: 'pointer',
+        }}
+      >
+        <option value="all">הכל</option>
+        <option value="not_reviewed">לא נבדק</option>
+        <option value="reviewed">נבדק</option>
+        <option value="continue">המשך טיפול</option>
+        <option value="high">עדיפות גבוהה</option>
+        <option value="medium">עדיפות בינונית</option>
+        <option value="low">עדיפות נמוכה</option>
+      </select>
+    </div>
+  )
+}
 
 // Israel bounds
 const ISRAEL_BOUNDS = [
@@ -192,33 +281,14 @@ function MapView() {
         />
       )}
 
-      {/* Plans filter panel */}
+      {/* Plans filter panel - draggable */}
       {layers.find(l => l.id === 'plans')?.visible && (
-        <div className="absolute top-20 left-14 z-[1000] bg-white rounded-xl shadow-lg border border-purple-200 p-3 text-sm" style={{direction:'rtl', minWidth:'160px'}}>
-          <div className="font-bold text-purple-900 mb-2 text-xs">מאגר תכניות</div>
-          <select
-            value={plansDb}
-            onChange={e => setPlansDb(e.target.value)}
-            className="w-full px-2 py-1.5 border border-purple-300 rounded-lg text-xs bg-purple-50 focus:ring-1 focus:ring-purple-400 mb-2"
-          >
-            <option value="plans_tanai_saf">תנאי סף</option>
-            <option value="plans_milui_tnaim">מילוי תנאים</option>
-            <option value="plans_bdika_tichnunit">בדיקה תכנונית</option>
-          </select>
-          <div className="font-bold text-purple-900 mb-1 text-xs">סינון</div>
-          <select
-            value={plansFilter}
-            onChange={e => setPlansFilter(e.target.value)}
-            className="w-full px-2 py-1.5 border border-purple-200 rounded-lg text-xs bg-white focus:ring-1 focus:ring-purple-400"
-          >
-            <option value="all">הכל</option>
-            <option value="not_reviewed">לא נבדק</option>
-            <option value="relevant">רלוונטי</option>
-            <option value="high">עדיפות גבוהה</option>
-            <option value="medium">עדיפות בינונית</option>
-            <option value="low">עדיפות נמוכה</option>
-          </select>
-        </div>
+        <PlanFilterPanel
+          plansDb={plansDb}
+          setPlansDb={setPlansDb}
+          plansFilter={plansFilter}
+          setPlansFilter={setPlansFilter}
+        />
       )}
 
       {/* Database markers */}

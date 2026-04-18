@@ -25,9 +25,9 @@ const STYLE_HOVER = {
 const MIN_ZOOM = 11
 
 function getStyleForPlan(plan) {
-  if (plan.review === 'not_relevant') return STYLE_NOT_RELEVANT
   if (plan.priority === 'high') return STYLE_HIGH_PRIORITY
-  if (plan.review === 'relevant') return STYLE_RELEVANT
+  if (plan.continue_handling) return STYLE_RELEVANT
+  if (plan.reviewed) return STYLE_NOT_RELEVANT
   return STYLE_DEFAULT
 }
 
@@ -78,8 +78,9 @@ function PlansLayer({ map, visible, filter, db = 'plans_tanai_saf' }) {
           filter: (feature) => {
             if (!filter || filter === 'all') return true
             const plans = feature.properties.plans || []
-            if (filter === 'not_reviewed') return plans.some(p => p.review === 'not_reviewed')
-            if (filter === 'relevant') return plans.some(p => p.review === 'relevant')
+            if (filter === 'not_reviewed') return plans.some(p => !p.reviewed)
+            if (filter === 'reviewed') return plans.some(p => p.reviewed)
+            if (filter === 'continue') return plans.some(p => p.continue_handling)
             if (filter === 'high') return plans.some(p => p.priority === 'high')
             if (filter === 'medium') return plans.some(p => p.priority === 'medium')
             if (filter === 'low') return plans.some(p => p.priority === 'low')
@@ -189,13 +190,21 @@ function buildPopupHTML(props) {
           ${plan.has_pdf && plan.sharepoint_url ? `<a href="${plan.sharepoint_url}" target="_blank" style="font-size:11px;color:#16a34a;text-decoration:underline;">PDF ↗</a>` : ''}
         </div>
 
-        <div style="display:flex;gap:4px;margin-top:8px;border-top:1px solid #e5e7eb;padding-top:8px;">
-          <select class="plan-review-select" data-plan="${plan.plan_number}" style="font-size:11px;padding:2px 4px;border:1px solid #d1d5db;border-radius:4px;flex:1;">
-            <option value="not_reviewed" ${plan.review === 'not_reviewed' ? 'selected' : ''}>לא נבדק</option>
-            <option value="relevant" ${plan.review === 'relevant' ? 'selected' : ''}>רלוונטי</option>
-            <option value="not_relevant" ${plan.review === 'not_relevant' ? 'selected' : ''}>לא רלוונטי</option>
+        <div style="margin-top:8px;border-top:1px solid #e5e7eb;padding-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer;">
+            <input type="checkbox" class="plan-reviewed-cb" data-plan="${plan.plan_number}" ${plan.reviewed ? 'checked' : ''} style="cursor:pointer;">
+            נבדק
+          </label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;cursor:pointer;">
+            <input type="checkbox" class="plan-continue-cb" data-plan="${plan.plan_number}" ${plan.continue_handling ? 'checked' : ''} style="cursor:pointer;">
+            המשך טיפול
+          </label>
+          <select class="plan-stage-select" data-plan="${plan.plan_number}" style="font-size:11px;padding:2px 4px;border:1px solid #d1d5db;border-radius:4px;">
+            <option value="" ${!plan.check_stage ? 'selected' : ''}>שלב בדיקה</option>
+            <option value="בדיקה תכנונית" ${plan.check_stage === 'בדיקה תכנונית' ? 'selected' : ''}>בדיקה תכנונית</option>
+            <option value="איתור בעלים" ${plan.check_stage === 'איתור בעלים' ? 'selected' : ''}>איתור בעלים</option>
           </select>
-          <select class="plan-priority-select" data-plan="${plan.plan_number}" style="font-size:11px;padding:2px 4px;border:1px solid #d1d5db;border-radius:4px;flex:1;">
+          <select class="plan-priority-select" data-plan="${plan.plan_number}" style="font-size:11px;padding:2px 4px;border:1px solid #d1d5db;border-radius:4px;">
             <option value="" ${!plan.priority ? 'selected' : ''}>עדיפות</option>
             <option value="high" ${plan.priority === 'high' ? 'selected' : ''}>גבוהה</option>
             <option value="medium" ${plan.priority === 'medium' ? 'selected' : ''}>בינונית</option>
@@ -217,21 +226,33 @@ function buildPopupHTML(props) {
 }
 
 function attachPopupHandlers(map) {
-  // Review status change
-  document.querySelectorAll('.plan-review-select').forEach(sel => {
-    sel.addEventListener('change', async (e) => {
+  document.querySelectorAll('.plan-reviewed-cb').forEach(cb => {
+    cb.addEventListener('change', async (e) => {
       const planNum = e.target.dataset.plan
-      const review = e.target.value
       try {
-        await axios.put(`/api/plans/status/${encodeURIComponent(planNum)}`, { review })
-        e.target.style.background = review === 'relevant' ? '#dcfce7' : review === 'not_relevant' ? '#f3f4f6' : '#faf5ff'
-      } catch (err) {
-        console.error('Status update failed:', err)
-      }
+        await axios.put(`/api/plans/status/${encodeURIComponent(planNum)}`, { reviewed: e.target.checked })
+      } catch (err) { console.error('Status update failed:', err) }
     })
   })
 
-  // Priority change
+  document.querySelectorAll('.plan-continue-cb').forEach(cb => {
+    cb.addEventListener('change', async (e) => {
+      const planNum = e.target.dataset.plan
+      try {
+        await axios.put(`/api/plans/status/${encodeURIComponent(planNum)}`, { continue_handling: e.target.checked })
+      } catch (err) { console.error('Status update failed:', err) }
+    })
+  })
+
+  document.querySelectorAll('.plan-stage-select').forEach(sel => {
+    sel.addEventListener('change', async (e) => {
+      const planNum = e.target.dataset.plan
+      try {
+        await axios.put(`/api/plans/status/${encodeURIComponent(planNum)}`, { check_stage: e.target.value || null })
+      } catch (err) { console.error('Status update failed:', err) }
+    })
+  })
+
   document.querySelectorAll('.plan-priority-select').forEach(sel => {
     sel.addEventListener('change', async (e) => {
       const planNum = e.target.dataset.plan
@@ -239,9 +260,7 @@ function attachPopupHandlers(map) {
       try {
         await axios.put(`/api/plans/status/${encodeURIComponent(planNum)}`, { priority })
         e.target.style.background = priority === 'high' ? '#fee2e2' : priority === 'medium' ? '#fef3c7' : ''
-      } catch (err) {
-        console.error('Priority update failed:', err)
-      }
+      } catch (err) { console.error('Status update failed:', err) }
     })
   })
 }
