@@ -141,18 +141,21 @@ function DetailPanel({ plan: p, onClose }) {
   ].filter(t => t.show !== false)
 
   return (
-    <div className="border-t-2 border-sky-200 bg-sky-50/50 px-4 py-3">
-      <div className="flex items-start justify-between mb-2">
+    <div className="bg-white border-t-4 border-sky-500 shadow-lg">
+      {/* Header strip */}
+      <div className="bg-gradient-to-l from-sky-600 to-blue-900 px-4 py-2.5 flex items-center justify-between">
         <div>
-          <h3 className="text-sm font-bold text-blue-900">{p.plan_number} - {p.plan_name}</h3>
-          {p.district && <span className="text-xs text-blue-800/60">{p.district} | {p.planning_area || ''} | {p.municipality || ''}</span>}
+          <span className="text-[11px] font-mono text-sky-200 block">{p.plan_number}</span>
+          <h3 className="text-sm font-bold text-white leading-tight">{p.plan_name}</h3>
+          {p.district && <span className="text-[10px] text-sky-300">{p.district}{p.planning_area ? ` › ${p.planning_area}` : ''}{p.municipality ? ` › ${p.municipality}` : ''}</span>}
         </div>
         <div className="flex gap-1.5 items-center">
-          {p.mavat_url && <a href={p.mavat_url} target="_blank" rel="noopener noreferrer" className="px-2 py-1 bg-sky-600 text-white rounded text-[10px] hover:bg-sky-700">MAVAT ↗</a>}
-          {p.sharepoint_url && <a href={p.sharepoint_url} target="_blank" rel="noopener noreferrer" className="px-2 py-1 bg-green-600 text-white rounded text-[10px] hover:bg-green-700">PDF ↗</a>}
-          <button onClick={onClose} className="text-blue-800/40 hover:text-blue-800 text-lg mr-1">✕</button>
+          {p.mavat_url && <a href={p.mavat_url} target="_blank" rel="noopener noreferrer" className="px-2.5 py-1 bg-sky-400/30 text-white border border-sky-300/50 rounded text-[10px] hover:bg-sky-400/60 transition-colors">MAVAT ↗</a>}
+          {p.sharepoint_url && <a href={p.sharepoint_url} target="_blank" rel="noopener noreferrer" className="px-2.5 py-1 bg-green-500/30 text-white border border-green-300/50 rounded text-[10px] hover:bg-green-500/60 transition-colors">PDF ↗</a>}
+          <button onClick={onClose} className="text-white/50 hover:text-white text-xl ml-1 leading-none">×</button>
         </div>
       </div>
+      <div className="px-4 py-3">
       <div className="flex gap-0.5 bg-blue-900/5 rounded p-0.5 mb-3 overflow-x-auto">
         {tabs.map(t => (
           <button key={t.id} onClick={() => setTab(t.id)}
@@ -163,43 +166,53 @@ function DetailPanel({ plan: p, onClose }) {
         ))}
       </div>
       {tab === 'info' && (
-        <div className="space-y-2 text-xs">
-        {parties && (parties.submitter?.name || parties.developer?.name) && (
-          <div className="grid grid-cols-2 gap-2 mb-2">
-            {parties.submitter?.name && (
-              <div className="bg-indigo-50 border border-indigo-100 rounded-lg px-3 py-2">
-                <div className="text-[10px] text-indigo-400 font-bold uppercase tracking-wide mb-0.5">מגיש התוכנית</div>
-                <div className="font-semibold text-indigo-900">{parties.submitter.name}</div>
-                {parties.submitter.type && <div className="text-indigo-600 text-[11px]">{parties.submitter.type}</div>}
-              </div>
-            )}
-            {parties.developer?.name && (
-              <div className="bg-amber-50 border border-amber-100 rounded-lg px-3 py-2">
-                <div className="text-[10px] text-amber-500 font-bold uppercase tracking-wide mb-0.5">יזם</div>
-                <div className="font-semibold text-amber-900">{parties.developer.name}</div>
-                {parties.developer.type && <div className="text-amber-600 text-[11px]">{parties.developer.type}</div>}
-              </div>
-            )}
-          </div>
-        )}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          <div><span className="text-blue-800/50">סמכות:</span> <span className="font-medium">{p.authority}</span></div>
-          <div><span className="text-blue-800/50">סטטוס:</span> <span className="font-medium">{p.status}</span></div>
-          <div><span className="text-blue-800/50">שטח:</span> <span className="font-medium">{p.area_dunam ? `${p.area_dunam.toLocaleString()} דונם` : '-'}</span></div>
-          <div><span className="text-blue-800/50">סוג:</span> <span className="font-medium">{p.plan_type || '-'}</span></div>
-          {p.housing_units && <div><span className="text-blue-800/50">יח"ד:</span> <span className="font-medium">{p.housing_units.toLocaleString()}</span></div>}
-          {p.residential_sqm && <div><span className="text-blue-800/50">מגורים:</span> <span className="font-medium">{p.residential_sqm.toLocaleString()} מ"ר</span></div>}
-          {p.commercial_sqm && <div><span className="text-blue-800/50">מסחר:</span> <span className="font-medium">{p.commercial_sqm.toLocaleString()} מ"ר</span></div>}
-          {p.office_sqm && <div><span className="text-blue-800/50">משרדים:</span> <span className="font-medium">{p.office_sqm.toLocaleString()} מ"ר</span></div>}
-          {p.hotel_rooms && <div><span className="text-blue-800/50">חדרי מלון:</span> <span className="font-medium">{p.hotel_rooms}</span></div>}
-          <div><span className="text-blue-800/50">מיקום:</span> <span>{p.location}</span></div>
-          {p.last_update && <div><span className="text-blue-800/50">עדכון:</span> <span>{p.last_update}</span></div>}
-          {p.downloaded_files?.length > 0 && (
-            <div className="col-span-full"><span className="text-blue-800/50">קבצים:</span>
-              <div className="flex flex-wrap gap-1 mt-0.5">{p.downloaded_files.map((f, j) => <span key={j} className="px-1.5 py-0.5 bg-green-100 text-green-800 rounded text-[10px]">📄 {f}</span>)}</div>
+        <div className="space-y-3 text-xs">
+          {/* Parties row */}
+          {parties && (parties.submitter?.name || parties.developer?.name) && (
+            <div className="grid grid-cols-2 gap-2">
+              {parties.submitter?.name && (
+                <div className="bg-indigo-50 border border-indigo-200 rounded-lg px-3 py-2">
+                  <div className="text-[10px] text-indigo-400 font-bold uppercase tracking-wide mb-0.5">מגיש התוכנית</div>
+                  <div className="font-semibold text-indigo-900">{parties.submitter.name}</div>
+                  {parties.submitter.type && <div className="text-indigo-500 text-[11px] mt-0.5">{parties.submitter.type}</div>}
+                </div>
+              )}
+              {parties.developer?.name && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                  <div className="text-[10px] text-amber-500 font-bold uppercase tracking-wide mb-0.5">יזם</div>
+                  <div className="font-semibold text-amber-900">{parties.developer.name}</div>
+                  {parties.developer.type && <div className="text-amber-600 text-[11px] mt-0.5">{parties.developer.type}</div>}
+                </div>
+              )}
             </div>
           )}
-        </div>
+          {/* Info fields grid — each in its own labeled box */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {[
+              { label: 'סמכות', value: p.authority },
+              { label: 'סטטוס', value: p.status },
+              { label: 'שטח', value: p.area_dunam ? `${p.area_dunam.toLocaleString()} דונם` : null },
+              { label: 'סוג תכנית', value: p.plan_type },
+              { label: 'יחידות דיור', value: p.housing_units?.toLocaleString() },
+              { label: 'מגורים', value: p.residential_sqm ? `${p.residential_sqm.toLocaleString()} מ"ר` : null },
+              { label: 'מסחר', value: p.commercial_sqm ? `${p.commercial_sqm.toLocaleString()} מ"ר` : null },
+              { label: 'משרדים', value: p.office_sqm ? `${p.office_sqm.toLocaleString()} מ"ר` : null },
+              { label: 'חדרי מלון', value: p.hotel_rooms },
+              { label: 'מיקום', value: p.location },
+              { label: 'עדכון אחרון', value: p.last_update },
+            ].filter(f => f.value).map(({ label, value }) => (
+              <div key={label} className="bg-slate-50 border border-slate-200 rounded-md px-2.5 py-1.5">
+                <div className="text-[10px] text-slate-400 font-medium mb-0.5">{label}</div>
+                <div className="font-semibold text-slate-800 leading-tight">{value}</div>
+              </div>
+            ))}
+          </div>
+          {p.downloaded_files?.length > 0 && (
+            <div className="bg-green-50 border border-green-200 rounded-md px-2.5 py-1.5">
+              <div className="text-[10px] text-green-600 font-medium mb-1">קבצים שהורדו</div>
+              <div className="flex flex-wrap gap-1">{p.downloaded_files.map((f, j) => <span key={j} className="px-1.5 py-0.5 bg-green-100 text-green-800 rounded text-[10px]">📄 {f}</span>)}</div>
+            </div>
+          )}
         </div>
       )}
       {tab === 'purpose' && (
@@ -230,6 +243,7 @@ function DetailPanel({ plan: p, onClose }) {
         </div>
       )}
       {tab === 'parties' && <PartiesTab planNumber={p.plan_number} />}
+      </div>
     </div>
   )
 }
@@ -418,16 +432,18 @@ function PlansPage() {
                 ) : (
                   filteredPlans.map((p, i) => {
                     const st = getStatus(p.plan_number)
-                    const rowBg = selectedPlan?.plan_number === p.plan_number ? 'bg-sky-100'
-                      : st.not_interesting ? 'bg-gray-100/60 opacity-50'
-                      : st.continue_handling ? 'bg-green-50/40'
-                      : st.priority === 'high' ? 'bg-red-50/30'
-                      : st.reviewed && !st.continue_handling ? 'bg-gray-50/40' : ''
+                    const isSelected = selectedPlan?.plan_number === p.plan_number
+                    const zebra = i % 2 === 1 ? 'bg-slate-50/60' : 'bg-white'
+                    const rowBg = isSelected ? 'bg-sky-100 border-b-2 border-sky-300'
+                      : st.not_interesting ? `${zebra} opacity-40`
+                      : st.continue_handling ? 'bg-green-50/60'
+                      : st.priority === 'high' ? 'bg-red-50/40'
+                      : st.reviewed && !st.continue_handling ? `bg-gray-50/60` : zebra
 
                     return (
                     <React.Fragment key={i}>
-                    <tr className={`border-b border-gray-200 hover:bg-sky-50/50 cursor-pointer transition-colors ${rowBg}`}
-                        onClick={() => setSelectedPlan(selectedPlan?.plan_number === p.plan_number ? null : p)}>
+                    <tr className={`border-b border-slate-200 hover:bg-sky-50/70 cursor-pointer transition-colors ${rowBg} ${isSelected ? 'ring-1 ring-inset ring-sky-400' : ''}`}
+                        onClick={() => setSelectedPlan(isSelected ? null : p)}>
 
                       {/* נבדק - checkbox */}
                       <td className={`${td} text-center`} onClick={e => e.stopPropagation()}>
