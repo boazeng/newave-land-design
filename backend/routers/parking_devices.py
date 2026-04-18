@@ -1,11 +1,9 @@
 """API for parking device search results."""
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 from fastapi.responses import FileResponse
 import json
 import os
 import glob
-
-from services.geocode_service import geocode_batch
 
 router = APIRouter()
 
@@ -88,20 +86,48 @@ def get_cities():
 
 
 @router.get("/results")
-async def get_parking_devices(city: str = None):
+def get_parking_devices(city: str = None):
     """Get all buildings with parking devices, optionally filtered by city."""
-    buildings = _load_results(city)
-    # Geocode addresses that don't have coordinates yet
-    missing = [b['address'] for b in buildings if b.get('address') and not b.get('lat')]
-    if missing:
-        geo = await geocode_batch(list(set(missing)))
-        for b in buildings:
-            if not b.get('lat') and b.get('address'):
-                coords = geo.get(b['address'])
-                if coords:
-                    b['lat'] = coords['lat']
-                    b['lng'] = coords['lng']
-    return buildings
+    return _load_results(city)
+
+
+@router.post("/geocode")
+async def geocode_parking_devices(background_tasks: BackgroundTasks):
+    """Trigger background geocoding of all parking device addresses."""
+    from services.geocode_service import geocode_batch
+
+    async def _run():
+        buildings = _load_results()
+        missing_addresses = list({
+            b['address'] for b in buildings
+            if b.get('address') and not b.get('lat')
+        })
+        if not missing_addresses:
+            return
+        geo = await geocode_batch(missing_addresses)
+
+        # Write coords back into each result file
+        for city_key, config in CITY_CONFIG.items():
+            for filename in config['result_files']:
+                path = os.path.join(DATA_DIR, filename)
+                if not os.path.exists(path):
+                    continue
+                with open(path, encoding='utf-8') as f:
+                    data = json.load(f)
+                changed = False
+                for b in data.get('buildings', []):
+                    if b.get('address') and not b.get('lat'):
+                        coords = geo.get(b['address'])
+                        if coords:
+                            b['lat'] = coords['lat']
+                            b['lng'] = coords['lng']
+                            changed = True
+                if changed:
+                    with open(path, 'w', encoding='utf-8') as f:
+                        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    background_tasks.add_task(_run)
+    return {"status": "geocoding started in background"}
 
 
 @router.get("/stats")
