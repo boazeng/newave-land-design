@@ -364,7 +364,7 @@ function MapView() {
       )}
 
       {/* Cadastre layers */}
-      {mapReady && layers.filter(l => l.id !== 'districts' && l.id !== 'plans').map(layer => (
+      {mapReady && layers.filter(l => l.id !== 'districts' && l.id !== 'plans' && l.id !== 'parking').map(layer => (
         <CadastreLayer
           key={layer.id}
           map={mapRef.current}
