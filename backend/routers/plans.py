@@ -5,7 +5,8 @@ from pydantic import BaseModel
 from services.plans_service import (
     list_databases, search_plans, get_plan, get_plans_by_gush,
     get_statistics, invalidate_cache, get_plans_geojson,
-    get_plan_status, set_plan_status, get_all_statuses
+    get_plan_status, set_plan_status, get_all_statuses,
+    get_plan_parties, set_plan_parties, add_owner, remove_owner,
 )
 
 
@@ -90,6 +91,49 @@ def update_status(plan_number: str, body: PlanStatusUpdate):
 @router.get("/status/{plan_number:path}")
 def plan_status(plan_number: str):
     return get_plan_status(plan_number)
+
+
+class OwnerItem(BaseModel):
+    name: str
+    id_type: Optional[str] = None
+    id_number: Optional[str] = None
+    address: Optional[str] = None
+    gush: Optional[int] = None
+    parcel: Optional[int] = None
+    notes: Optional[str] = None
+
+
+class PartiesUpdate(BaseModel):
+    submitter: Optional[str] = None
+    developer: Optional[str] = None
+    stakeholders: Optional[list] = None
+    owners: Optional[list] = None
+
+
+@router.get("/parties/{plan_number:path}")
+def plan_parties(plan_number: str):
+    return get_plan_parties(plan_number)
+
+
+@router.put("/parties/{plan_number:path}")
+def update_parties(plan_number: str, body: PartiesUpdate):
+    return set_plan_parties(
+        plan_number,
+        submitter=body.submitter,
+        developer=body.developer,
+        stakeholders=body.stakeholders,
+        owners=body.owners,
+    )
+
+
+@router.post("/parties/{plan_number:path}/owners")
+def add_plan_owner(plan_number: str, owner: OwnerItem):
+    return add_owner(plan_number, owner.model_dump(exclude_none=True))
+
+
+@router.delete("/parties/{plan_number:path}/owners/{index}")
+def remove_plan_owner(plan_number: str, index: int):
+    return remove_owner(plan_number, index)
 
 
 @router.post("/refresh")

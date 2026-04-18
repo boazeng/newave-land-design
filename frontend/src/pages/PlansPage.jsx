@@ -2,6 +2,103 @@ import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
+function PartiesTab({ planNumber }) {
+  const [data, setData] = useState(null)
+  const [newOwner, setNewOwner] = useState({ name: '', id_type: 'ת.ז', id_number: '', address: '', gush: '', parcel: '' })
+  const [saving, setSaving] = useState(false)
+
+  useEffect(() => {
+    axios.get(`/api/plans/parties/${encodeURIComponent(planNumber)}`).then(r => setData(r.data)).catch(() => setData({ submitter: '', developer: '', stakeholders: [], owners: [] }))
+  }, [planNumber])
+
+  const save = async (patch) => {
+    setSaving(true)
+    const updated = { ...data, ...patch }
+    await axios.put(`/api/plans/parties/${encodeURIComponent(planNumber)}`, updated)
+    setData(updated)
+    setSaving(false)
+  }
+
+  const addOwner = async () => {
+    if (!newOwner.name) return
+    const owner = { ...newOwner, gush: newOwner.gush ? +newOwner.gush : undefined, parcel: newOwner.parcel ? +newOwner.parcel : undefined }
+    const r = await axios.post(`/api/plans/parties/${encodeURIComponent(planNumber)}/owners`, owner)
+    setData(r.data)
+    setNewOwner({ name: '', id_type: 'ת.ז', id_number: '', address: '', gush: '', parcel: '' })
+  }
+
+  const removeOwner = async (i) => {
+    const r = await axios.delete(`/api/plans/parties/${encodeURIComponent(planNumber)}/owners/${i}`)
+    setData(r.data)
+  }
+
+  if (!data) return <div className="text-xs text-blue-800/50 py-2">טוען...</div>
+
+  const inp = "px-1.5 py-0.5 border border-sky-200 rounded text-xs bg-white w-full"
+
+  return (
+    <div className="text-xs space-y-3">
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="text-blue-800/60 block mb-0.5">מגיש התוכנית</label>
+          <input className={inp} value={data.submitter || ''} onChange={e => setData({ ...data, submitter: e.target.value })}
+            onBlur={() => save({ submitter: data.submitter })} placeholder="שם המגיש" />
+        </div>
+        <div>
+          <label className="text-blue-800/60 block mb-0.5">היזם</label>
+          <input className={inp} value={data.developer || ''} onChange={e => setData({ ...data, developer: e.target.value })}
+            onBlur={() => save({ developer: data.developer })} placeholder="שם היזם" />
+        </div>
+        <div className="col-span-2">
+          <label className="text-blue-800/60 block mb-0.5">בעלי עניין</label>
+          <textarea className={`${inp} h-14 resize-none`}
+            value={(data.stakeholders || []).join('\n')}
+            onChange={e => setData({ ...data, stakeholders: e.target.value.split('\n').filter(Boolean) })}
+            onBlur={() => save({ stakeholders: data.stakeholders })}
+            placeholder="שורה לכל בעל עניין" />
+        </div>
+      </div>
+
+      <div>
+        <h4 className="font-bold text-blue-900 mb-1.5">בעלים ({data.owners?.length || 0})</h4>
+        {data.owners?.length > 0 && (
+          <table className="w-full bg-white rounded border border-sky-100 mb-2">
+            <thead className="bg-sky-50">
+              <tr>
+                {['שם','סוג מזהה','מספר מזהה','כתובת','גוש','חלקה',''].map(h => <th key={h} className="px-1.5 py-1 text-right text-blue-900 text-[10px]">{h}</th>)}
+              </tr>
+            </thead>
+            <tbody>
+              {data.owners.map((o, i) => (
+                <tr key={i} className="border-t border-sky-50">
+                  <td className="px-1.5 py-1 font-medium">{o.name}</td>
+                  <td className="px-1.5 py-1 text-blue-800/60">{o.id_type || '-'}</td>
+                  <td className="px-1.5 py-1 font-mono">{o.id_number || '-'}</td>
+                  <td className="px-1.5 py-1 text-blue-800/70 max-w-[140px] truncate">{o.address || '-'}</td>
+                  <td className="px-1.5 py-1">{o.gush || '-'}</td>
+                  <td className="px-1.5 py-1">{o.parcel || '-'}</td>
+                  <td className="px-1.5 py-1"><button onClick={() => removeOwner(i)} className="text-red-400 hover:text-red-600 text-[10px]">✕</button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <div className="grid grid-cols-6 gap-1 bg-white rounded border border-sky-100 p-2">
+          <input className={inp} placeholder="שם *" value={newOwner.name} onChange={e => setNewOwner({ ...newOwner, name: e.target.value })} />
+          <select className={inp} value={newOwner.id_type} onChange={e => setNewOwner({ ...newOwner, id_type: e.target.value })}>
+            <option>ת.ז</option><option>ח.פ</option><option>עמותה</option><option>רשות</option>
+          </select>
+          <input className={inp} placeholder="מספר מזהה" value={newOwner.id_number} onChange={e => setNewOwner({ ...newOwner, id_number: e.target.value })} />
+          <input className={inp} placeholder="כתובת" value={newOwner.address} onChange={e => setNewOwner({ ...newOwner, address: e.target.value })} />
+          <input className={inp} placeholder="גוש" value={newOwner.gush} onChange={e => setNewOwner({ ...newOwner, gush: e.target.value })} />
+          <input className={inp} placeholder="חלקה" value={newOwner.parcel} onChange={e => setNewOwner({ ...newOwner, parcel: e.target.value })} />
+          <button onClick={addOwner} className="col-span-6 mt-1 px-2 py-1 bg-sky-600 text-white rounded text-[11px] hover:bg-sky-700">+ הוסף בעלים</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function DetailPanel({ plan: p, onClose }) {
   const [tab, setTab] = useState('info')
   const tabs = [
@@ -11,6 +108,7 @@ function DetailPanel({ plan: p, onClose }) {
     { id: 'stages', label: 'שלבי טיפול', show: p.processing_stages?.length > 0 },
     { id: 'decisions', label: 'החלטות', show: p.committee_decisions?.length > 0 },
     { id: 'gushim', label: 'גושים וחלקות', show: p.gushim?.length > 0 },
+    { id: 'parties', label: 'צדדים' },
   ].filter(t => t.show !== false)
 
   return (
@@ -82,6 +180,7 @@ function DetailPanel({ plan: p, onClose }) {
             <tbody>{p.gushim.map((g, j) => <tr key={j} className="border-t border-sky-50"><td className="px-2 py-1 font-bold font-mono">{g.gush}</td><td className="px-2 py-1">{g.helkot_full || g.helka || '-'}</td><td className="px-2 py-1">{g.helkot_partial || '-'}</td></tr>)}</tbody></table>
         </div>
       )}
+      {tab === 'parties' && <PartiesTab planNumber={p.plan_number} />}
     </div>
   )
 }

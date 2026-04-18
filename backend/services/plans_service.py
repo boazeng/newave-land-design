@@ -252,6 +252,71 @@ def get_all_statuses():
     return _load_statuses()
 
 
+# --- Parties (submitter, developer, stakeholders, owners) ---
+
+_PARTIES_FILE = os.path.join(DATA_DIR, 'plans_parties.json')
+
+
+def _load_parties():
+    if os.path.exists(_PARTIES_FILE):
+        with open(_PARTIES_FILE, encoding='utf-8') as f:
+            return json.load(f)
+    return {}
+
+
+def _save_parties(data):
+    with open(_PARTIES_FILE, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+
+def get_plan_parties(plan_number):
+    return _load_parties().get(plan_number, {
+        'submitter': '',
+        'developer': '',
+        'stakeholders': [],
+        'owners': [],
+    })
+
+
+def set_plan_parties(plan_number, submitter=None, developer=None,
+                     stakeholders=None, owners=None):
+    parties = _load_parties()
+    if plan_number not in parties:
+        parties[plan_number] = {'submitter': '', 'developer': '',
+                                'stakeholders': [], 'owners': []}
+    entry = parties[plan_number]
+    if submitter is not None:
+        entry['submitter'] = submitter
+    if developer is not None:
+        entry['developer'] = developer
+    if stakeholders is not None:
+        entry['stakeholders'] = stakeholders
+    if owners is not None:
+        entry['owners'] = owners
+    _save_parties(parties)
+    return entry
+
+
+def add_owner(plan_number, owner: dict):
+    parties = _load_parties()
+    if plan_number not in parties:
+        parties[plan_number] = {'submitter': '', 'developer': '',
+                                'stakeholders': [], 'owners': []}
+    parties[plan_number]['owners'].append(owner)
+    _save_parties(parties)
+    return parties[plan_number]
+
+
+def remove_owner(plan_number, owner_index: int):
+    parties = _load_parties()
+    if plan_number in parties:
+        owners = parties[plan_number].get('owners', [])
+        if 0 <= owner_index < len(owners):
+            owners.pop(owner_index)
+        _save_parties(parties)
+    return parties.get(plan_number, {})
+
+
 def get_statistics(db_name='plans_tanai_saf'):
     """Get statistics about the plans database."""
     db = get_plans_db(db_name)
