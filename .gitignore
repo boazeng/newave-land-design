@@ -18,11 +18,12 @@ frontend/dist/
 .DS_Store
 Thumbs.db
 
-# Data files (too large for git)
+# Data files (too large for git - use upload_data.sh to deploy directly to EC2)
 data/cadastre.gpkg
 data/blocks/
 data/parcels/
 data/*.zip
+data/plans_*.json
 
 # Claude plans
 .claude/
