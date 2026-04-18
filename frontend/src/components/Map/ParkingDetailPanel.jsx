@@ -28,6 +28,8 @@ function ParkingDetailPanel({ data, onClose }) {
 
   const b = data.building
 
+  const lastYear = b.dates ? b.dates.split('/').pop() : (b.date ? b.date.split('/').pop() : null)
+
   const Field = ({ label, value }) => value ? (
     <div style={{ marginBottom: 5 }}>
       <span style={{ fontSize: 10, color: '#9ca3af', display: 'block' }}>{label}</span>
@@ -72,11 +74,11 @@ function ParkingDetailPanel({ data, onClose }) {
         )}
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 10px' }}>
-          <Field label="סוג מתקן" value={b.device_type} />
+          <Field label="סוג מתקן" value={b.device_types || b.device_type} />
           <Field label="מספר מקומות" value={b.parking_count} />
           <Field label="גוש" value={b.gush} />
           <Field label="חלקה" value={b.helka} />
-          <Field label="תאריך" value={b.date} />
+          <Field label="שנת פרוטוקול אחרון" value={lastYear} />
           <Field label="סטטוס" value={b.status} />
         </div>
 
