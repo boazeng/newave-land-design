@@ -11,7 +11,8 @@ function ParkingDevicesPage() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState('')
   const [typeFilter, setTypeFilter] = useState('')
-  const [yearFilter, setYearFilter] = useState('')
+  const [yearFrom, setYearFrom] = useState('')
+  const [yearTo, setYearTo] = useState('')
   const [noLocationFilter, setNoLocationFilter] = useState(false)
   const [noLocationAddresses, setNoLocationAddresses] = useState(new Set())
 
@@ -52,7 +53,9 @@ function ParkingDevicesPage() {
     const text = `${b.address || ''} ${b.gush || ''} ${b.helka || ''} ${b.description || ''} ${b.device_types || b.device_type || ''}`.toLowerCase()
     if (filter && !text.includes(filter.toLowerCase())) return false
     if (typeFilter && (b.device_types || b.device_type || '') !== typeFilter) return false
-    if (yearFilter && extractYear(b.dates || b.date) !== yearFilter) return false
+    const yr = extractYear(b.dates || b.date)
+    if (yearFrom && yr && yr < yearFrom) return false
+    if (yearTo && yr && yr > yearTo) return false
     if (noLocationFilter) {
       const addr = (b.address || '').trim().toLowerCase()
       if (!noLocationAddresses.has(addr)) return false
@@ -83,7 +86,7 @@ function ParkingDevicesPage() {
         <div className="mb-6">
           <div className="flex flex-wrap gap-2">
             <button
-              onClick={() => { setSelectedCity(''); setTypeFilter(''); setYearFilter(''); setFilter('') }}
+              onClick={() => { setSelectedCity(''); setTypeFilter(''); setYearFrom(''); setYearTo(''); setFilter('') }}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
                 ${!selectedCity
                   ? 'bg-blue-900 text-white shadow-md'
@@ -95,7 +98,7 @@ function ParkingDevicesPage() {
             {cities.map(city => (
               <button
                 key={city.key}
-                onClick={() => { setSelectedCity(city.key); setTypeFilter(''); setYearFilter(''); setFilter('') }}
+                onClick={() => { setSelectedCity(city.key); setTypeFilter(''); setYearFrom(''); setYearTo(''); setFilter('') }}
                 className={`px-4 py-2 rounded-lg text-sm font-medium transition-all
                   ${selectedCity === city.key
                     ? 'bg-blue-900 text-white shadow-md'
@@ -172,15 +175,20 @@ function ParkingDevicesPage() {
             ))}
           </select>
           <select
-            value={yearFilter}
-            onChange={e => setYearFilter(e.target.value)}
-            className="px-3 py-2 border border-sky-200 rounded-lg text-base bg-white
-                       focus:outline-none focus:ring-2 focus:ring-sky-400"
+            value={yearFrom}
+            onChange={e => setYearFrom(e.target.value)}
+            className="px-3 py-2 border border-sky-200 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
           >
-            <option value="">כל השנים</option>
-            {years.map(y => (
-              <option key={y} value={y}>{y} ({stats.by_year[y]})</option>
-            ))}
+            <option value="">משנה</option>
+            {years.map(y => <option key={y} value={y}>{y}</option>)}
+          </select>
+          <select
+            value={yearTo}
+            onChange={e => setYearTo(e.target.value)}
+            className="px-3 py-2 border border-sky-200 rounded-lg text-base bg-white focus:outline-none focus:ring-2 focus:ring-sky-400"
+          >
+            <option value="">עד שנה</option>
+            {years.map(y => <option key={y} value={y}>{y}</option>)}
           </select>
         </div>
 

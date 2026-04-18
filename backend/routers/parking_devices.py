@@ -128,12 +128,12 @@ def get_parking_stats(city: str = None):
 
     by_type = {}
     for b in buildings:
-        dt = b.get('device_type') or 'לא ידוע'
+        dt = b.get('device_types') or b.get('device_type') or 'לא ידוע'
         by_type[dt] = by_type.get(dt, 0) + 1
 
     by_year = {}
     for b in buildings:
-        date = b.get('date') or ''
+        date = b.get('dates') or b.get('date') or ''
         if '/' in date:
             parts = date.split('/')
             year = parts[-1] if len(parts) >= 3 else ''
