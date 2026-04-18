@@ -325,8 +325,8 @@ function PlansPage() {
   const currentPage = Math.floor(offset / limit) + 1
 
   // Compact cell classes
-  const th = "px-2 py-1.5 text-right text-[11px] font-bold text-blue-900 whitespace-nowrap"
-  const td = "px-2 py-1.5 text-[11px] text-blue-900"
+  const th = "px-2 py-1.5 text-right text-[11px] font-bold text-blue-900 whitespace-nowrap border-b-2 border-gray-300"
+  const td = "px-2 py-1.5 text-[11px] text-blue-900 border-b border-gray-300"
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50">
@@ -433,16 +433,16 @@ function PlansPage() {
                   filteredPlans.map((p, i) => {
                     const st = getStatus(p.plan_number)
                     const isSelected = selectedPlan?.plan_number === p.plan_number
-                    const zebra = i % 2 === 1 ? 'bg-slate-50/60' : 'bg-white'
-                    const rowBg = isSelected ? 'bg-sky-100 border-b-2 border-sky-300'
+                    const zebra = i % 2 === 1 ? 'bg-slate-50' : 'bg-white'
+                    const rowBg = isSelected ? 'bg-sky-100'
                       : st.not_interesting ? `${zebra} opacity-40`
-                      : st.continue_handling ? 'bg-green-50/60'
-                      : st.priority === 'high' ? 'bg-red-50/40'
-                      : st.reviewed && !st.continue_handling ? `bg-gray-50/60` : zebra
+                      : st.continue_handling ? 'bg-green-50'
+                      : st.priority === 'high' ? 'bg-red-50'
+                      : st.reviewed && !st.continue_handling ? 'bg-gray-50' : zebra
 
                     return (
                     <React.Fragment key={i}>
-                    <tr className={`border-b border-slate-200 hover:bg-sky-50/70 cursor-pointer transition-colors ${rowBg} ${isSelected ? 'ring-1 ring-inset ring-sky-400' : ''}`}
+                    <tr className={`hover:bg-sky-50 cursor-pointer transition-colors ${rowBg}`}
                         onClick={() => setSelectedPlan(isSelected ? null : p)}>
 
                       {/* נבדק - checkbox */}
@@ -547,8 +547,8 @@ function PlansPage() {
                       </td>
                     </tr>
 
-                    {selectedPlan?.plan_number === p.plan_number && (
-                      <tr><td colSpan={17} className="p-0"><DetailPanel plan={selectedPlan} onClose={() => setSelectedPlan(null)} /></td></tr>
+                    {isSelected && (
+                      <tr><td colSpan={17} className="p-0 border-b-4 border-sky-500"><DetailPanel plan={selectedPlan} onClose={() => setSelectedPlan(null)} /></td></tr>
                     )}
                     </React.Fragment>
                   )})
