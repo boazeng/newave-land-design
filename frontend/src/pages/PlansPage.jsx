@@ -239,11 +239,11 @@ function PlansPage() {
               <thead className="bg-sky-50 sticky top-0 z-10 shadow-sm">
                 <tr>
                   {/* Classification columns FIRST (right side in RTL) */}
-                  <th className={th}>לא מעניין</th>
-                  <th className={th}>נבדק</th>
-                  <th className={th}>המשך טיפול</th>
-                  <th className={th}>שלב בדיקה</th>
-                  <th className={th}>עדיפות</th>
+                  <th className={th} style={{width:36}}>נבדק</th>
+                  <th className={th} style={{width:52}}>לא מעניין</th>
+                  <th className={th} style={{width:52}}>המשך טיפול</th>
+                  <th className={th} style={{width:80}}>שלב בדיקה</th>
+                  <th className={th} style={{width:60}}>עדיפות</th>
                   {/* Data columns */}
                   <th className={th}>מספר תכנית</th>
                   <th className={th}>שם תכנית</th>
@@ -281,18 +281,18 @@ function PlansPage() {
                     <tr className={`border-b border-gray-200 hover:bg-sky-50/50 cursor-pointer transition-colors ${rowBg}`}
                         onClick={() => setSelectedPlan(selectedPlan?.plan_number === p.plan_number ? null : p)}>
 
-                      {/* לא מעניין - checkbox */}
-                      <td className={`${td} text-center`} onClick={e => e.stopPropagation()}>
-                        <input type="checkbox" checked={!!st.not_interesting}
-                          onChange={e => updateStatus(p.plan_number, 'not_interesting', e.target.checked)}
-                          className="w-3.5 h-3.5 accent-gray-500 cursor-pointer" />
-                      </td>
-
                       {/* נבדק - checkbox */}
                       <td className={`${td} text-center`} onClick={e => e.stopPropagation()}>
                         <input type="checkbox" checked={!!st.reviewed}
                           onChange={e => updateStatus(p.plan_number, 'reviewed', e.target.checked)}
                           className="w-3.5 h-3.5 accent-blue-600 cursor-pointer" />
+                      </td>
+
+                      {/* לא מעניין - checkbox */}
+                      <td className={`${td} text-center`} onClick={e => e.stopPropagation()}>
+                        <input type="checkbox" checked={!!st.not_interesting}
+                          onChange={e => updateStatus(p.plan_number, 'not_interesting', e.target.checked)}
+                          className="w-3.5 h-3.5 accent-gray-500 cursor-pointer" />
                       </td>
 
                       {/* המשך טיפול - checkbox */}
@@ -305,7 +305,7 @@ function PlansPage() {
                       {/* שלב בדיקה - droplist */}
                       <td className={td} onClick={e => e.stopPropagation()}>
                         <select value={st.check_stage || ''} onChange={e => updateStatus(p.plan_number, 'check_stage', e.target.value)}
-                          className="text-[10px] px-1 py-0.5 rounded border border-gray-200 bg-white w-full min-w-[70px]">
+                          className="text-[10px] px-0.5 py-0.5 rounded border border-gray-200 bg-white w-full max-w-[78px]">
                           <option value="">-</option>
                           <option value="בדיקה תכנונית">בדיקה תכנונית</option>
                           <option value="איתור בעלים">איתור בעלים</option>
@@ -315,7 +315,7 @@ function PlansPage() {
                       {/* עדיפות - droplist */}
                       <td className={td} onClick={e => e.stopPropagation()}>
                         <select value={st.priority || ''} onChange={e => updateStatus(p.plan_number, 'priority', e.target.value || null)}
-                          className={`text-[10px] px-1 py-0.5 rounded border w-full min-w-[55px]
+                          className={`text-[10px] px-0.5 py-0.5 rounded border w-full max-w-[58px]
                             ${st.priority === 'high' ? 'bg-red-100 border-red-300 text-red-800' :
                               st.priority === 'medium' ? 'bg-amber-100 border-amber-300 text-amber-800' :
                               st.priority === 'low' ? 'bg-gray-100 border-gray-300' : 'border-gray-200 bg-white'}`}>
