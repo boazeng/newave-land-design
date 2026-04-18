@@ -5,6 +5,8 @@ import json
 import os
 import glob
 
+from services.geocode_service import geocode_batch
+
 router = APIRouter()
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
@@ -86,9 +88,20 @@ def get_cities():
 
 
 @router.get("/results")
-def get_parking_devices(city: str = None):
+async def get_parking_devices(city: str = None):
     """Get all buildings with parking devices, optionally filtered by city."""
-    return _load_results(city)
+    buildings = _load_results(city)
+    # Geocode addresses that don't have coordinates yet
+    missing = [b['address'] for b in buildings if b.get('address') and not b.get('lat')]
+    if missing:
+        geo = await geocode_batch(list(set(missing)))
+        for b in buildings:
+            if not b.get('lat') and b.get('address'):
+                coords = geo.get(b['address'])
+                if coords:
+                    b['lat'] = coords['lat']
+                    b['lng'] = coords['lng']
+    return buildings
 
 
 @router.get("/stats")

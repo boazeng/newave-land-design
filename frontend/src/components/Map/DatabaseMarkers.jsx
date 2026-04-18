@@ -4,8 +4,7 @@ import axios from 'axios'
 
 const ENDPOINTS = {
   parking: '/api/parking/ours',
-  parking_telaviv: '/api/parking-protocols/telaviv',
-  parking_ramatgan: '/api/parking-protocols/ramatgan',
+  parking_devices: '/api/parking-devices/results',
   charging_stations: '/api/charging-stations',
   chargers: '/api/chargers/sites',
 }
@@ -107,9 +106,12 @@ function DatabaseMarkers({ map, dbId, markerStyle }) {
               ${item.city ? `<span style="color:#6b7280">${item.city}</span><br/>` : ''}
               ${item.site_code ? `<span>אתר: ${item.site_code}</span><br/>` : ''}
               ${item.family ? `<span>סוג: ${item.family}</span><br/>` : ''}
+              ${item.device_type ? `<span>סוג מתקן: ${item.device_type}</span><br/>` : ''}
               ${item.device_types ? `<span>סוג מתקן: ${item.device_types}</span><br/>` : ''}
               ${item.gush ? `<span>גוש: ${item.gush}${item.helka ? ` חלקה: ${item.helka}` : ''}</span><br/>` : ''}
               ${item.parking_count ? `<span>מקומות חניה: ${item.parking_count}</span><br/>` : ''}
+              ${item.date ? `<span style="color:#9ca3af;font-size:11px">${item.date}</span><br/>` : ''}
+              ${item.description ? `<span style="font-size:11px;color:#374151">${item.description.substring(0,120)}${item.description.length>120?'...':''}</span>` : ''}
               ${item.count ? `<span>כמות: ${item.count}</span>` : ''}
               ${item.operator ? `<span>מפעיל: ${item.operator}</span><br/>` : ''}
               ${item.total_chargers ? `<span>עמדות: ${item.total_chargers} (${item.fast_chargers || 0} מהירות, ${item.slow_chargers || 0} איטיות)</span>` : ''}
