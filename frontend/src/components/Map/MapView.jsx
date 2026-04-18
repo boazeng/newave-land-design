@@ -11,6 +11,7 @@ import DatabaseMarkers from './DatabaseMarkers'
 import PlansLayer from './PlansLayer'
 import PlanDetailPanel from './PlanDetailPanel'
 import ParkingLayer from './ParkingLayer'
+import ParkingDetailPanel from './ParkingDetailPanel'
 
 const PARKING_CITIES = [
   { key: 'tel_aviv',  name: 'תל אביב-יפו', defaultColor: '#2563eb' },
@@ -245,6 +246,7 @@ function MapView() {
   const [plansPanelOpen, setPlansPanelOpen] = useState(true)
   const [planPopup, setPlanPopup] = useState(null)
   const [parkingPanelOpen, setParkingPanelOpen] = useState(true)
+  const [parkingDetail, setParkingDetail] = useState(null)
   const [parkingCities, setParkingCities] = useState(() =>
     Object.fromEntries(PARKING_CITIES.map(c => [c.key, { active: false, color: c.defaultColor }]))
   )
@@ -413,9 +415,18 @@ function MapView() {
             visible={layers.find(l => l.id === 'parking')?.visible && st.active}
             cityKey={city.key}
             color={st.color}
+            onBuildingClick={setParkingDetail}
           />
         )
       })}
+
+      {/* Parking building detail panel */}
+      {parkingDetail && (
+        <ParkingDetailPanel
+          data={parkingDetail}
+          onClose={() => setParkingDetail(null)}
+        />
+      )}
 
       {/* Parking filter panel */}
       {layers.find(l => l.id === 'parking')?.visible && parkingPanelOpen && (

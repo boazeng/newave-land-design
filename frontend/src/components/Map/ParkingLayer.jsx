@@ -1,18 +1,28 @@
 import { useEffect, useRef } from 'react'
 import L from 'leaflet'
 
-function ParkingLayer({ map, visible, cityKey, color }) {
+function createPinIcon(color) {
+  return L.divIcon({
+    html: `<svg xmlns="http://www.w3.org/2000/svg" width="22" height="30" viewBox="0 0 22 30">
+      <path d="M11 0C5.477 0 1 4.477 1 10c0 7.5 10 20 10 20S21 17.5 21 10C21 4.477 16.523 0 11 0z"
+            fill="${color}" stroke="white" stroke-width="1.5"/>
+      <circle cx="11" cy="10" r="4" fill="white" opacity="0.9"/>
+    </svg>`,
+    className: '',
+    iconSize: [22, 30],
+    iconAnchor: [11, 30],
+  })
+}
+
+function ParkingLayer({ map, visible, cityKey, color, onBuildingClick }) {
   const layerRef = useRef(null)
+  const colorRef = useRef(color)
+
+  useEffect(() => { colorRef.current = color }, [color])
 
   useEffect(() => {
     if (!map) return
-
-    // Cleanup previous layer
-    if (layerRef.current) {
-      map.removeLayer(layerRef.current)
-      layerRef.current = null
-    }
-
+    if (layerRef.current) { map.removeLayer(layerRef.current); layerRef.current = null }
     if (!visible) return
 
     const group = L.layerGroup()
@@ -22,46 +32,37 @@ function ParkingLayer({ map, visible, cityKey, color }) {
       .then(buildings => {
         buildings.forEach(b => {
           if (!b.lat || !b.lng) return
-
-          const marker = L.circleMarker([b.lat, b.lng], {
-            radius: 7,
-            fillColor: color,
-            color: '#fff',
-            weight: 1.5,
-            opacity: 1,
-            fillOpacity: 0.85,
+          const marker = L.marker([b.lat, b.lng], { icon: createPinIcon(colorRef.current) })
+          marker.on('click', (e) => {
+            const rect = map.getContainer().getBoundingClientRect()
+            const pt = map.latLngToContainerPoint([b.lat, b.lng])
+            onBuildingClick?.({
+              building: b,
+              pos: {
+                top: Math.min(pt.y + rect.top + 10, window.innerHeight - 320),
+                left: Math.min(pt.x + rect.left + 10, window.innerWidth - 280),
+              },
+            })
+            L.DomEvent.stopPropagation(e)
           })
-
-          const deviceInfo = b.device_types
-            ? (Array.isArray(b.device_types) ? b.device_types.join(', ') : b.device_types)
-            : (b.device_type || '')
-
-          const popup = `
-            <div style="direction:rtl;font-family:sans-serif;min-width:200px">
-              <div style="font-weight:700;font-size:13px;color:#1e3a5f;margin-bottom:4px">${b.address || ''}</div>
-              ${b.city ? `<div style="font-size:11px;color:#666;margin-bottom:3px">${b.city}</div>` : ''}
-              ${deviceInfo ? `<div style="font-size:11px;margin-bottom:2px"><span style="color:#888">מתקן: </span>${deviceInfo}</div>` : ''}
-              ${b.parking_count ? `<div style="font-size:11px;margin-bottom:2px"><span style="color:#888">חניות: </span><strong>${b.parking_count}</strong></div>` : ''}
-              ${b.gush ? `<div style="font-size:11px;color:#888">גוש ${b.gush}${b.helka ? ` חלקה ${b.helka}` : ''}</div>` : ''}
-              ${b.description ? `<div style="font-size:10px;color:#555;margin-top:4px;border-top:1px solid #eee;padding-top:3px;max-width:220px">${b.description.substring(0, 180)}${b.description.length > 180 ? '...' : ''}</div>` : ''}
-            </div>
-          `
-          marker.bindPopup(popup)
           group.addLayer(marker)
         })
         group.addTo(map)
+        layerRef.current = group
       })
       .catch(console.error)
 
-    layerRef.current = group
-
     return () => {
-      if (layerRef.current) {
-        map.removeLayer(layerRef.current)
-        layerRef.current = null
-      }
+      if (layerRef.current) { map.removeLayer(layerRef.current); layerRef.current = null }
     }
-  }, [map, visible, cityKey, color])
+  }, [map, visible, cityKey])
+
+  // Update icon color without refetching
+  useEffect(() => {
+    if (!layerRef.current) return
+    const icon = createPinIcon(color)
+    layerRef.current.eachLayer(m => { if (m.setIcon) m.setIcon(icon) })
+  }, [color])
 
   return null
 }

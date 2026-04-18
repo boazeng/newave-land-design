@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 
 const MARKER_STYLES = [
@@ -36,7 +36,34 @@ const DATABASES = [
 ]
 
 function DatabaseLayersPanel({ onLayerChange, activeLayers, onClose }) {
-  const [markerSelecting, setMarkerSelecting] = useState(null) // which db is selecting marker
+  const [markerSelecting, setMarkerSelecting] = useState(null)
+  const [pos, setPos] = useState({ top: 16, right: 16 })
+  const dragging = useRef(false)
+  const startRef = useRef({})
+  const panelRef = useRef(null)
+
+  const onMouseDown = (e) => {
+    if (['INPUT', 'BUTTON', 'SELECT', 'LABEL'].includes(e.target.tagName)) return
+    dragging.current = true
+    const rect = panelRef.current.getBoundingClientRect()
+    startRef.current = { mx: e.clientX, my: e.clientY, top: rect.top, left: rect.left }
+    e.preventDefault()
+  }
+
+  useEffect(() => {
+    const onMove = (e) => {
+      if (!dragging.current) return
+      setPos({
+        top: startRef.current.top + (e.clientY - startRef.current.my),
+        left: startRef.current.left + (e.clientX - startRef.current.mx),
+        right: 'auto',
+      })
+    }
+    const onUp = () => { dragging.current = false }
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+    return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
+  }, [])
 
   const handleToggle = (dbId) => {
     const current = activeLayers[dbId]
@@ -55,7 +82,12 @@ function DatabaseLayersPanel({ onLayerChange, activeLayers, onClose }) {
   }
 
   return (
-    <div className="absolute top-4 right-4 z-[1000] w-80 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-sky-200">
+    <div
+      ref={panelRef}
+      onMouseDown={onMouseDown}
+      className="z-[1000] w-80 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border border-sky-200"
+      style={{ position: 'absolute', top: pos.top, left: pos.left ?? 'auto', right: pos.right ?? 'auto', cursor: 'grab', userSelect: 'none' }}
+    >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-sky-100">
         <h3 className="text-sm font-bold text-blue-900">בסיסי נתונים על המפה</h3>
