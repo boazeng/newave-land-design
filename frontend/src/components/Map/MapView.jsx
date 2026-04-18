@@ -43,8 +43,8 @@ const INITIAL_LAYERS = [
   },
   {
     id: 'plans',
-    name: 'תכניות תכנון',
-    description: 'תכניות בבדיקת תנאי סף - מעל 10,000 מ"ר (זום 11+)',
+    name: 'תוכניות בתכנון ועדות מחוזיות',
+    description: 'תוכניות מ-MAVAT בוועדות המחוזיות (זום 11+)',
     visible: false,
   },
 ]
