@@ -125,25 +125,25 @@ function PlansPage() {
 
     axios.get('/api/plans/search', { params })
       .then(r => {
-        let filtered = r.data.plans || []
-        if (reviewFilter) {
-          filtered = filtered.filter(p => {
-            const st = statuses[p.plan_number] || {}
-            if (reviewFilter === 'reviewed') return st.reviewed
-            if (reviewFilter === 'not_reviewed') return !st.reviewed
-            if (reviewFilter === 'continue') return st.continue_handling
-            if (reviewFilter === 'high') return st.priority === 'high'
-            if (reviewFilter === 'medium') return st.priority === 'medium'
-            if (reviewFilter === 'low') return st.priority === 'low'
-            return true
-          })
-        }
-        setPlans(filtered)
-        setTotal(reviewFilter ? filtered.length : (r.data.total || 0))
+        setPlans(r.data.plans || [])
+        setTotal(r.data.total || 0)
       })
       .catch(() => {})
       .finally(() => setLoading(false))
-  }, [filter, authorityFilter, pdfFilter, minArea, offset, activeDb, reviewFilter, statuses])
+  }, [filter, authorityFilter, pdfFilter, minArea, offset, activeDb])
+
+  // Client-side filter by review status (separate from API fetch)
+  const filteredPlans = reviewFilter ? plans.filter(p => {
+    const st = statuses[p.plan_number] || {}
+    if (reviewFilter === 'reviewed') return st.reviewed
+    if (reviewFilter === 'not_reviewed') return !st.reviewed
+    if (reviewFilter === 'continue') return st.continue_handling
+    if (reviewFilter === 'high') return st.priority === 'high'
+    if (reviewFilter === 'medium') return st.priority === 'medium'
+    if (reviewFilter === 'low') return st.priority === 'low'
+    return true
+  }) : plans
+  const displayTotal = reviewFilter ? filteredPlans.length : total
 
   const updateStatus = async (planNum, field, value) => {
     const body = {}
@@ -159,7 +159,7 @@ function PlansPage() {
 
   const getStatus = (planNum) => statuses[planNum] || {}
 
-  const totalPages = Math.ceil(total / limit)
+  const totalPages = Math.ceil(displayTotal / limit)
   const currentPage = Math.floor(offset / limit) + 1
 
   // Compact cell classes
@@ -264,10 +264,10 @@ function PlansPage() {
                     <svg className="animate-spin h-5 w-5 mx-auto mb-1 text-sky-500" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
                     טוען...
                   </td></tr>
-                ) : plans.length === 0 ? (
+                ) : filteredPlans.length === 0 ? (
                   <tr><td colSpan={16} className="px-4 py-8 text-center text-blue-800/50 text-sm">לא נמצאו תוכניות</td></tr>
                 ) : (
-                  plans.map((p, i) => {
+                  filteredPlans.map((p, i) => {
                     const st = getStatus(p.plan_number)
                     const rowBg = selectedPlan?.plan_number === p.plan_number ? 'bg-sky-100'
                       : st.continue_handling ? 'bg-green-50/40'
@@ -386,12 +386,12 @@ function PlansPage() {
 
           {/* Pagination */}
           <div className="px-4 py-2 border-t border-sky-100 flex items-center justify-between text-xs">
-            <span className="text-blue-800/50">{offset + 1}-{Math.min(offset + limit, total)} מתוך {total}</span>
+            <span className="text-blue-800/50">{offset + 1}-{Math.min(offset + limit, total)} מתוך {displayTotal}</span>
             <div className="flex gap-1.5">
               <button onClick={() => setOffset(Math.max(0, offset - limit))} disabled={offset === 0}
                 className="px-2 py-0.5 rounded border border-sky-200 hover:bg-sky-50 disabled:opacity-30">← הקודם</button>
               <span className="px-2 py-0.5 text-blue-800/60">{currentPage}/{totalPages}</span>
-              <button onClick={() => setOffset(offset + limit)} disabled={offset + limit >= total}
+              <button onClick={() => setOffset(offset + limit)} disabled={offset + limit >= displayTotal}
                 className="px-2 py-0.5 rounded border border-sky-200 hover:bg-sky-50 disabled:opacity-30">הבא →</button>
             </div>
           </div>
