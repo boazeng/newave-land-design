@@ -49,10 +49,10 @@ function ParkingDevicesPage() {
   const years = stats ? Object.keys(stats.by_year).sort() : []
 
   const filtered = buildings.filter(b => {
-    const text = `${b.address || ''} ${b.gush || ''} ${b.helka || ''} ${b.description || ''} ${b.device_type || ''}`.toLowerCase()
+    const text = `${b.address || ''} ${b.gush || ''} ${b.helka || ''} ${b.description || ''} ${b.device_types || b.device_type || ''}`.toLowerCase()
     if (filter && !text.includes(filter.toLowerCase())) return false
-    if (typeFilter && (b.device_type || '') !== typeFilter) return false
-    if (yearFilter && extractYear(b.date) !== yearFilter) return false
+    if (typeFilter && (b.device_types || b.device_type || '') !== typeFilter) return false
+    if (yearFilter && extractYear(b.dates || b.date) !== yearFilter) return false
     if (noLocationFilter) {
       const addr = (b.address || '').trim().toLowerCase()
       if (!noLocationAddresses.has(addr)) return false
@@ -197,7 +197,7 @@ function ParkingDevicesPage() {
                   <th className="px-3 py-3 text-right font-bold text-blue-900">חלקה</th>
                   <th className="px-3 py-3 text-right font-bold text-blue-900">סוג מתקן</th>
                   <th className="px-3 py-3 text-right font-bold text-blue-900">חניות</th>
-                  <th className="px-3 py-3 text-right font-bold text-blue-900">תאריך</th>
+                  <th className="px-3 py-3 text-right font-bold text-blue-900">שנה</th>
                   <th className="px-3 py-3 text-right font-bold text-blue-900 max-w-md">תיאור</th>
                   <th className="px-3 py-3 text-right font-bold text-blue-900">פרוטוקול</th>
                 </tr>
@@ -225,29 +225,29 @@ function ParkingDevicesPage() {
                       <td className="px-3 py-2 text-blue-900">{b.helka || '-'}</td>
                       <td className="px-3 py-2">
                         <span className={`px-2 py-0.5 rounded text-xs font-medium
-                          ${b.device_type?.includes('רובוטי') ? 'bg-purple-50 text-purple-700' :
-                            b.device_type?.includes('אוטומטי') ? 'bg-green-50 text-green-700' :
-                            b.device_type?.includes('מכפיל') ? 'bg-amber-50 text-amber-700' :
+                          ${(b.device_types || b.device_type || '').includes('רובוטי') ? 'bg-purple-50 text-purple-700' :
+                            (b.device_types || b.device_type || '').includes('אוטומטי') ? 'bg-green-50 text-green-700' :
+                            (b.device_types || b.device_type || '').includes('מכפיל') ? 'bg-amber-50 text-amber-700' :
                             'bg-sky-50 text-sky-700'}`}>
-                          {b.device_type || '-'}
+                          {b.device_types || b.device_type || '-'}
                         </span>
                       </td>
                       <td className="px-3 py-2 text-blue-900 font-medium">{b.parking_count || '-'}</td>
-                      <td className="px-3 py-2 text-blue-800/70 text-xs">{b.date || '-'}</td>
+                      <td className="px-3 py-2 text-blue-800/70 text-xs font-medium">{extractYear(b.dates || b.date) || '-'}</td>
                       <td className="px-3 py-2 text-blue-800 text-xs max-w-md">
                         {b.description ? (
                           <span title={b.description}>{b.description.substring(0, 100)}{b.description.length > 100 ? '...' : ''}</span>
                         ) : '-'}
                       </td>
                       <td className="px-3 py-2">
-                        {b.source_file ? (
+                        {(b.source_files?.[0] || b.source_file) ? (
                           <a
-                            href={`/api/parking-devices/pdf/${encodeURIComponent(b.source_file)}${b.page_number ? `#page=${b.page_number}` : ''}`}
+                            href={`/api/parking-devices/pdf/${encodeURIComponent(b.source_files?.[0] || b.source_file)}`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-sky-600 hover:text-sky-800 underline text-xs whitespace-nowrap"
                           >
-                            {b.page_number ? `עמ' ${b.page_number}` : 'צפה'}
+                            צפה
                           </a>
                         ) : '-'}
                       </td>
