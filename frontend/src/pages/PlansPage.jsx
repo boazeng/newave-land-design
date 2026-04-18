@@ -239,6 +239,7 @@ function PlansPage() {
               <thead className="bg-sky-50 sticky top-0 z-10 shadow-sm">
                 <tr>
                   {/* Classification columns FIRST (right side in RTL) */}
+                  <th className={th}>לא מעניין</th>
                   <th className={th}>נבדק</th>
                   <th className={th}>המשך טיפול</th>
                   <th className={th}>שלב בדיקה</th>
@@ -260,16 +261,17 @@ function PlansPage() {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={16} className="px-4 py-8 text-center text-blue-800/50 text-sm">
+                  <tr><td colSpan={17} className="px-4 py-8 text-center text-blue-800/50 text-sm">
                     <svg className="animate-spin h-5 w-5 mx-auto mb-1 text-sky-500" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
                     טוען...
                   </td></tr>
                 ) : filteredPlans.length === 0 ? (
-                  <tr><td colSpan={16} className="px-4 py-8 text-center text-blue-800/50 text-sm">לא נמצאו תוכניות</td></tr>
+                  <tr><td colSpan={17} className="px-4 py-8 text-center text-blue-800/50 text-sm">לא נמצאו תוכניות</td></tr>
                 ) : (
                   filteredPlans.map((p, i) => {
                     const st = getStatus(p.plan_number)
                     const rowBg = selectedPlan?.plan_number === p.plan_number ? 'bg-sky-100'
+                      : st.not_interesting ? 'bg-gray-100/60 opacity-50'
                       : st.continue_handling ? 'bg-green-50/40'
                       : st.priority === 'high' ? 'bg-red-50/30'
                       : st.reviewed && !st.continue_handling ? 'bg-gray-50/40' : ''
@@ -278,6 +280,13 @@ function PlansPage() {
                     <React.Fragment key={i}>
                     <tr className={`border-b border-gray-200 hover:bg-sky-50/50 cursor-pointer transition-colors ${rowBg}`}
                         onClick={() => setSelectedPlan(selectedPlan?.plan_number === p.plan_number ? null : p)}>
+
+                      {/* לא מעניין - checkbox */}
+                      <td className={`${td} text-center`} onClick={e => e.stopPropagation()}>
+                        <input type="checkbox" checked={!!st.not_interesting}
+                          onChange={e => updateStatus(p.plan_number, 'not_interesting', e.target.checked)}
+                          className="w-3.5 h-3.5 accent-gray-500 cursor-pointer" />
+                      </td>
 
                       {/* נבדק - checkbox */}
                       <td className={`${td} text-center`} onClick={e => e.stopPropagation()}>
@@ -375,7 +384,7 @@ function PlansPage() {
                     </tr>
 
                     {selectedPlan?.plan_number === p.plan_number && (
-                      <tr><td colSpan={16} className="p-0"><DetailPanel plan={selectedPlan} onClose={() => setSelectedPlan(null)} /></td></tr>
+                      <tr><td colSpan={17} className="p-0"><DetailPanel plan={selectedPlan} onClose={() => setSelectedPlan(null)} /></td></tr>
                     )}
                     </React.Fragment>
                   )})

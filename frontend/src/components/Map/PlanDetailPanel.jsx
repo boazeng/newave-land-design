@@ -13,6 +13,7 @@ function PlanCard({ plan }) {
     continue_handling: plan.continue_handling || false,
     check_stage: plan.check_stage || '',
     priority: plan.priority || '',
+    not_interesting: plan.not_interesting || false,
   })
 
   const update = async (field, val) => {
@@ -46,7 +47,7 @@ function PlanCard({ plan }) {
         {plan.has_pdf && plan.sharepoint_url && <a href={plan.sharepoint_url} target="_blank" rel="noreferrer" style={{ fontSize: 11, color: '#16a34a' }}>PDF ↗</a>}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginTop: 8, paddingTop: 8, borderTop: '1px solid #e5e7eb' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 6, marginTop: 8, paddingTop: 8, borderTop: '1px solid #e5e7eb' }}>
         <label style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, cursor: 'pointer' }}>
           <input type="checkbox" checked={st.reviewed} onChange={e => update('reviewed', e.target.checked)} style={{ cursor: 'pointer' }} />
           נבדק
@@ -55,6 +56,12 @@ function PlanCard({ plan }) {
           <input type="checkbox" checked={st.continue_handling} onChange={e => update('continue_handling', e.target.checked)} style={{ cursor: 'pointer' }} />
           המשך טיפול
         </label>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 11, cursor: 'pointer', color: st.not_interesting ? '#9ca3af' : 'inherit' }}>
+          <input type="checkbox" checked={st.not_interesting} onChange={e => update('not_interesting', e.target.checked)} style={{ cursor: 'pointer', accentColor: '#9ca3af' }} />
+          לא מעניין
+        </label>
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6, marginTop: 6 }}>
         <select value={st.check_stage} onChange={e => update('check_stage', e.target.value || null)}
           style={{ fontSize: 11, padding: '2px 4px', border: '1px solid #d1d5db', borderRadius: 4 }}>
           <option value="">שלב בדיקה</option>

@@ -187,6 +187,7 @@ def get_plans_geojson(db_name='plans_tanai_saf', bbox=None):
                 'continue_handling': st.get('continue_handling', False),
                 'check_stage': st.get('check_stage', ''),
                 'priority': st.get('priority', ''),
+                'not_interesting': st.get('not_interesting', False),
             })
 
     # Build GeoJSON features - one per block, with plan info

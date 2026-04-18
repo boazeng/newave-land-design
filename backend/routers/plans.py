@@ -14,6 +14,7 @@ class PlanStatusUpdate(BaseModel):
     continue_handling: Optional[bool] = None
     check_stage: Optional[str] = None
     priority: Optional[str] = None
+    not_interesting: Optional[bool] = None
 
 
 router = APIRouter()
@@ -81,6 +82,8 @@ def update_status(plan_number: str, body: PlanStatusUpdate):
         updates['check_stage'] = body.check_stage
     if body.priority is not None:
         updates['priority'] = body.priority
+    if body.not_interesting is not None:
+        updates['not_interesting'] = body.not_interesting
     return set_plan_status(plan_number, **updates)
 
 
