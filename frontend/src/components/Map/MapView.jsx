@@ -60,6 +60,7 @@ function MapView() {
   const [isDbLayersOpen, setIsDbLayersOpen] = useState(false)
   const [layers, setLayers] = useState(INITIAL_LAYERS)
   const [plansFilter, setPlansFilter] = useState('all')
+  const [plansDb, setPlansDb] = useState('plans_tanai_saf')
   const [dbLayers, setDbLayers] = useState(() => {
     try {
       const saved = localStorage.getItem('dbLayerStyles')
@@ -187,13 +188,24 @@ function MapView() {
           map={mapRef.current}
           visible={layers.find(l => l.id === 'plans')?.visible || false}
           filter={plansFilter}
+          db={plansDb}
         />
       )}
 
       {/* Plans filter panel */}
       {layers.find(l => l.id === 'plans')?.visible && (
-        <div className="absolute top-20 left-14 z-[1000] bg-white rounded-xl shadow-lg border border-purple-200 p-3 text-sm" style={{direction:'rtl'}}>
-          <div className="font-bold text-purple-900 mb-2 text-xs">סינון תכניות</div>
+        <div className="absolute top-20 left-14 z-[1000] bg-white rounded-xl shadow-lg border border-purple-200 p-3 text-sm" style={{direction:'rtl', minWidth:'160px'}}>
+          <div className="font-bold text-purple-900 mb-2 text-xs">מאגר תכניות</div>
+          <select
+            value={plansDb}
+            onChange={e => setPlansDb(e.target.value)}
+            className="w-full px-2 py-1.5 border border-purple-300 rounded-lg text-xs bg-purple-50 focus:ring-1 focus:ring-purple-400 mb-2"
+          >
+            <option value="plans_tanai_saf">תנאי סף</option>
+            <option value="plans_milui_tnaim">מילוי תנאים</option>
+            <option value="plans_bdika_tichnunit">בדיקה תכנונית</option>
+          </select>
+          <div className="font-bold text-purple-900 mb-1 text-xs">סינון</div>
           <select
             value={plansFilter}
             onChange={e => setPlansFilter(e.target.value)}

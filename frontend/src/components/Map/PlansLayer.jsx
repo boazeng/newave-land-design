@@ -31,7 +31,7 @@ function getStyleForPlan(plan) {
   return STYLE_DEFAULT
 }
 
-function PlansLayer({ map, visible, filter }) {
+function PlansLayer({ map, visible, filter, db = 'plans_tanai_saf' }) {
   const layerGroupRef = useRef(null)
   const abortRef = useRef(null)
   const lastBboxRef = useRef(null)
@@ -57,7 +57,7 @@ function PlansLayer({ map, visible, filter }) {
 
     try {
       const resp = await axios.get('/api/plans/geojson', {
-        params: { bbox }, signal: controller.signal,
+        params: { bbox, db }, signal: controller.signal,
       })
 
       if (!layerGroupRef.current) layerGroupRef.current = L.layerGroup().addTo(map)
@@ -122,7 +122,7 @@ function PlansLayer({ map, visible, filter }) {
     } catch (err) {
       if (err.name !== 'CanceledError') console.error('Plans layer error:', err)
     }
-  }, [map, visible, filter])
+  }, [map, visible, filter, db])
 
   useEffect(() => {
     if (!map || !visible) return
@@ -142,11 +142,11 @@ function PlansLayer({ map, visible, filter }) {
     if (visible && !layerGroupRef.current) fetchPlans()
   }, [visible, map, fetchPlans])
 
-  // Re-fetch when filter changes
+  // Re-fetch when filter or db changes
   useEffect(() => {
     lastBboxRef.current = null
     if (visible) fetchPlans()
-  }, [filter])
+  }, [filter, db])
 
   useEffect(() => {
     return () => {
