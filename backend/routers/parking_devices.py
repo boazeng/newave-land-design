@@ -42,6 +42,16 @@ CITY_CONFIG = {
         'result_files': ['parking_protocols_batya.json'],
         'protocol_dirs': ['protocols_search/בת_ים'],
     },
+    'rishon': {
+        'name': 'ראשון לציון',
+        'result_files': ['parking_protocols_rishon.json'],
+        'protocol_dirs': ['protocols_search/ראשון_לציון'],
+    },
+    'netanya': {
+        'name': 'נתניה',
+        'result_files': ['parking_protocols_netanya.json'],
+        'protocol_dirs': ['protocols_search/נתניה'],
+    },
 }
 
 

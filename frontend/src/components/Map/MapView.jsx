@@ -20,6 +20,8 @@ const PARKING_CITIES = [
   { key: 'herzliya',  name: 'הרצליה',       defaultColor: '#9333ea' },
   { key: 'givatayim', name: 'גבעתיים',      defaultColor: '#ea580c' },
   { key: 'bat_yam',   name: 'בת ים',        defaultColor: '#0891b2' },
+  { key: 'rishon',    name: 'ראשון לציון',  defaultColor: '#b45309' },
+  { key: 'netanya',   name: 'נתניה',        defaultColor: '#0f766e' },
 ]
 
 const PRESET_COLORS = ['#2563eb','#16a34a','#dc2626','#9333ea','#ea580c','#0891b2','#be185d','#854d0e']
