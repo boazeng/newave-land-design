@@ -32,6 +32,16 @@ CITY_CONFIG = {
         'result_files': ['parking_results_herzliya.json'],
         'protocol_dirs': ['protocols_search/הרצליה'],
     },
+    'givatayim': {
+        'name': 'גבעתיים',
+        'result_files': ['parking_protocols_givatayim.json'],
+        'protocol_dirs': ['protocols_search/גבעתיים'],
+    },
+    'bat_yam': {
+        'name': 'בת ים',
+        'result_files': ['parking_protocols_batya.json'],
+        'protocol_dirs': ['protocols_search/בת_ים'],
+    },
 }
 
 
