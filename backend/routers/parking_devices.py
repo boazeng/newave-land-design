@@ -52,6 +52,16 @@ CITY_CONFIG = {
         'result_files': ['parking_protocols_netanya.json'],
         'protocol_dirs': ['protocols_search/נתניה'],
     },
+    'haifa': {
+        'name': 'חיפה',
+        'result_files': ['parking_protocols_haifa.json'],
+        'protocol_dirs': ['protocols_search/חיפה'],
+    },
+    'jerusalem': {
+        'name': 'ירושלים',
+        'result_files': ['parking_protocols_jerusalem.json'],
+        'protocol_dirs': ['protocols_search/ירושלים'],
+    },
 }
 
 

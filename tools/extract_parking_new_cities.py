@@ -60,6 +60,18 @@ CITY_CONFIG = {
         'output': os.path.join(DATA_DIR, 'parking_protocols_netanya.json'),
         'progress': os.path.join(PROGRESS_DIR, 'parking_netanya_progress.json'),
     },
+    'haifa': {
+        'name': 'חיפה',
+        'pdf_dir': os.path.join(DATA_DIR, 'protocols_search', 'חיפה'),
+        'output': os.path.join(DATA_DIR, 'parking_protocols_haifa.json'),
+        'progress': os.path.join(PROGRESS_DIR, 'parking_haifa_progress.json'),
+    },
+    'jerusalem': {
+        'name': 'ירושלים',
+        'pdf_dir': os.path.join(DATA_DIR, 'protocols_search', 'ירושלים'),
+        'output': os.path.join(DATA_DIR, 'parking_protocols_jerusalem.json'),
+        'progress': os.path.join(PROGRESS_DIR, 'parking_jerusalem_progress.json'),
+    },
 }
 
 
@@ -271,8 +283,8 @@ def process_city(city_key):
     processed_set = set(progress['processed'])
     buildings = progress['buildings']
 
-    # Filter to only ועדת_משנה PDFs (most relevant)
-    relevant_pdfs = [p for p in all_pdfs if 'ועדת_משנה' in p or 'ועדה' in p.lower()]
+    # Filter to ועדת_משנה + unknown committee (type_XX) PDFs; if none found, scan all
+    relevant_pdfs = [p for p in all_pdfs if 'ועדת_משנה' in p or 'ועדה' in p.lower() or 'type_' in p.lower()]
     if not relevant_pdfs:
         relevant_pdfs = all_pdfs
     print(f'Relevant PDFs (ועדת משנה): {len(relevant_pdfs)}')
@@ -338,7 +350,15 @@ def process_city(city_key):
     geocoded_count = 0
 
     for j, (address, bldgs) in enumerate(sorted(by_address.items())):
-        device_types = list({b.get('device_types', b.get('device_type', '')) for b in bldgs if b.get('device_types') or b.get('device_type')})
+        _dt_set = set()
+        for b in bldgs:
+            dt = b.get('device_types', b.get('device_type', ''))
+            if dt:
+                if isinstance(dt, list):
+                    _dt_set.update(str(x) for x in dt if x)
+                else:
+                    _dt_set.add(str(dt))
+        device_types = list(_dt_set)
         total_parking = sum(int(b.get('parking_count', 0) or 0) for b in bldgs)
         gushes = sorted({str(b['gush']) for b in bldgs if b.get('gush')})
         helkas = sorted({str(b['helka']) for b in bldgs if b.get('helka')})
