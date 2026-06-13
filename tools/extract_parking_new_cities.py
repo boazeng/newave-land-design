@@ -72,6 +72,38 @@ CITY_CONFIG = {
         'output': os.path.join(DATA_DIR, 'parking_protocols_jerusalem.json'),
         'progress': os.path.join(PROGRESS_DIR, 'parking_jerusalem_progress.json'),
     },
+    # Complot committees with CONFIRMED site_ids (see run_all_telaviv.py).
+    # The parking-leads agent (ירון) scrapes these into protocols_search/<folder>.
+    'holon': {
+        'name': 'חולון',
+        'pdf_dir': os.path.join(DATA_DIR, 'protocols_search', 'חולון'),
+        'output': os.path.join(DATA_DIR, 'parking_protocols_holon.json'),
+        'progress': os.path.join(PROGRESS_DIR, 'parking_holon_progress.json'),
+    },
+    'herzliya': {
+        'name': 'הרצליה',
+        'pdf_dir': os.path.join(DATA_DIR, 'protocols_search', 'הרצליה'),
+        'output': os.path.join(DATA_DIR, 'parking_protocols_herzliya.json'),
+        'progress': os.path.join(PROGRESS_DIR, 'parking_herzliya_progress.json'),
+    },
+    'ramat_gan': {
+        'name': 'רמת גן',
+        'pdf_dir': os.path.join(DATA_DIR, 'protocols_search', 'רמת_גן'),
+        'output': os.path.join(DATA_DIR, 'parking_protocols_ramat_gan.json'),
+        'progress': os.path.join(PROGRESS_DIR, 'parking_ramat_gan_progress.json'),
+    },
+    'ramat_hasharon': {
+        'name': 'רמת השרון',
+        'pdf_dir': os.path.join(DATA_DIR, 'protocols_search', 'רמת_השרון'),
+        'output': os.path.join(DATA_DIR, 'parking_protocols_ramat_hasharon.json'),
+        'progress': os.path.join(PROGRESS_DIR, 'parking_ramat_hasharon_progress.json'),
+    },
+    'bnei_brak': {
+        'name': 'בני ברק',
+        'pdf_dir': os.path.join(DATA_DIR, 'protocols_search', 'בני_ברק'),
+        'output': os.path.join(DATA_DIR, 'parking_protocols_bnei_brak.json'),
+        'progress': os.path.join(PROGRESS_DIR, 'parking_bnei_brak_progress.json'),
+    },
 }
 
 
