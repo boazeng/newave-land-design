@@ -25,5 +25,14 @@ data/parcels/
 data/*.zip
 data/plans_*.json
 
+# Downloaded protocol PDFs (~700MB). Served from SharePoint in production -
+# upload with tools/upload_protocols_to_sharepoint.py, never commit.
+data/protocols_search/
+
+# Scraper working files
+output/
+tools/*_progress.json
+*.log
+
 # Claude plans
 .claude/

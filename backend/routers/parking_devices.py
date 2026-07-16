@@ -1,14 +1,26 @@
 """API for parking device search results."""
 from fastapi import APIRouter, BackgroundTasks
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
+from pydantic import BaseModel
 import json
 import os
 import glob
+from functools import lru_cache
 
 router = APIRouter()
 
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
 PROTOCOLS_DIR = os.path.join(DATA_DIR, 'protocols')
+
+# SharePoint layout: 'החלטות ועדות תכנון/<city>/<committee>'. Protocols live in one of
+# these committee subfolders; a city root is searched too, for cities filed flat.
+SP_ROOT = 'החלטות ועדות תכנון'
+SP_SUBFOLDERS = [
+    'ועדת_משנה', 'ועדת_משנה_לפי_שנה', 'רשות_רישוי_מקומית',
+    'מליאת_הועדה', 'ועדת_שימור', 'אחר',
+]
+# On SharePoint but not a parking-devices city, so absent from CITY_CONFIG
+SP_EXTRA_CITIES = ['יקנעם עילית']
 
 # City config: maps city key to display name and result files
 CITY_CONFIG = {
@@ -65,6 +77,46 @@ CITY_CONFIG = {
 }
 
 
+@lru_cache(maxsize=1)
+def _protocol_city_index():
+    """Map each referenced protocol filename to the city it came from."""
+    index = {}
+    for city_key, config in CITY_CONFIG.items():
+        for filename in config['result_files']:
+            path = os.path.join(DATA_DIR, filename)
+            if not os.path.exists(path):
+                continue
+            with open(path, encoding='utf-8') as f:
+                data = json.load(f)
+            buildings = data if isinstance(data, list) else data.get('buildings', [])
+            for b in buildings:
+                for src in (b.get('source_files') or []):
+                    index[src] = city_key
+    return index
+
+
+def protocol_city(filename):
+    """City key owning a protocol file, or None if nothing references it."""
+    return _protocol_city_index().get(filename)
+
+
+def sharepoint_folders(city_key=None):
+    """SharePoint folders that may hold a protocol PDF.
+
+    Derived from CITY_CONFIG so adding a city needs no second edit here. Narrowed to
+    the owning city when known - searching every city costs a request per folder.
+    """
+    keys = [city_key] if city_key in CITY_CONFIG else list(CITY_CONFIG)
+    folders = []
+    for key in keys:
+        city = f"{SP_ROOT}/{CITY_CONFIG[key]['name']}"
+        folders.extend(f'{city}/{sub}' for sub in SP_SUBFOLDERS)
+        folders.append(city)
+    if city_key not in CITY_CONFIG:
+        folders.extend(f'{SP_ROOT}/{c}' for c in SP_EXTRA_CITIES)
+    return folders
+
+
 def _load_results(city=None):
     """Load parking device results, optionally filtered by city."""
     all_buildings = []
@@ -81,12 +133,14 @@ def _load_results(city=None):
                 data = json.load(f)
             # Support both list format and dict with 'buildings' key
             buildings = data if isinstance(data, list) else data.get('buildings', [])
-            for b in buildings:
+            for idx, b in enumerate(buildings):
                 key = (b.get('address', ''), b.get('gush', ''), b.get('helka', ''))
                 if key not in seen:
                     seen.add(key)
                     b['city'] = config['name']
                     b['city_key'] = city_key
+                    b['_file'] = filename   # source file (for editing)
+                    b['_row'] = idx         # index within source file (stable id)
                     all_buildings.append(b)
 
     return all_buildings
@@ -110,6 +164,63 @@ def get_cities():
 def get_parking_devices(city: str = None):
     """Get all buildings with parking devices, optionally filtered by city."""
     return _load_results(city)
+
+
+class BuildingUpdate(BaseModel):
+    city_key: str
+    file: str
+    row: int
+    address: str | None = None
+    lat: float | None = None
+    lng: float | None = None
+
+
+@router.post("/update")
+async def update_building(payload: BuildingUpdate):
+    """Edit a building's address (and re-geocode), or set coords manually.
+
+    Identified by source file + row index so it works for every file format.
+    Used to fix buildings that failed geocoding so they appear on the map.
+    """
+    from services.geocode_service import geocode_address
+
+    config = CITY_CONFIG.get(payload.city_key)
+    if not config or payload.file not in config['result_files']:
+        return JSONResponse(status_code=400, content={"error": "עיר או קובץ לא תקין"})
+
+    path = os.path.join(DATA_DIR, payload.file)
+    if not os.path.exists(path):
+        return JSONResponse(status_code=404, content={"error": "קובץ לא נמצא"})
+
+    with open(path, encoding='utf-8') as f:
+        data = json.load(f)
+    buildings = data if isinstance(data, list) else data.get('buildings', [])
+
+    if payload.row < 0 or payload.row >= len(buildings):
+        return JSONResponse(status_code=400, content={"error": "שורה לא תקינה"})
+
+    b = buildings[payload.row]
+    if payload.address is not None:
+        b['address'] = payload.address.strip()
+
+    geocoded = False
+    if payload.lat is not None and payload.lng is not None:
+        # manual coordinates
+        b['lat'] = payload.lat
+        b['lng'] = payload.lng
+        geocoded = True
+    elif b.get('address'):
+        coords = await geocode_address(b['address'])
+        if coords:
+            b['lat'] = coords['lat']
+            b['lng'] = coords['lng']
+            geocoded = True
+        # if geocoding fails, keep any existing coords (don't lose the pin)
+
+    with open(path, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+
+    return {"status": "ok", "geocoded": geocoded, "building": b}
 
 
 @router.post("/geocode")
@@ -202,20 +313,7 @@ async def serve_protocol_pdf(filename: str):
         from services.sharepoint_pdf_service import get_pdf_url
         from fastapi.responses import RedirectResponse
 
-        sp_folders = [
-            'החלטות ועדות תכנון/תל אביב-יפו/ועדת_משנה',
-            'החלטות ועדות תכנון/תל אביב-יפו/ועדת_משנה_לפי_שנה',
-            'החלטות ועדות תכנון/תל אביב-יפו/אחר',
-            'החלטות ועדות תכנון/תל אביב-יפו',
-            'החלטות ועדות תכנון/רמת גן/ועדת_משנה',
-            'החלטות ועדות תכנון/רמת גן',
-            'החלטות ועדות תכנון/חולון/ועדת_משנה',
-            'החלטות ועדות תכנון/חולון',
-            'החלטות ועדות תכנון/הרצליה/ועדת_משנה',
-            'החלטות ועדות תכנון/הרצליה',
-            'החלטות ועדות תכנון/יקנעם עילית',
-        ]
-        url = get_pdf_url(filename, sp_folders)
+        url = get_pdf_url(filename, sharepoint_folders(protocol_city(filename)))
         if url:
             return RedirectResponse(url=url)
     except Exception as e:

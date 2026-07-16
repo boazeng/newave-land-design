@@ -15,6 +15,35 @@ function ParkingDevicesPage() {
   const [yearTo, setYearTo] = useState('')
   const [noLocationFilter, setNoLocationFilter] = useState(false)
   const [noLocationAddresses, setNoLocationAddresses] = useState(new Set())
+  const [editingKey, setEditingKey] = useState(null) // `${_file}#${_row}`
+  const [editAddr, setEditAddr] = useState('')
+  const [savingEdit, setSavingEdit] = useState(false)
+  const [editMsg, setEditMsg] = useState(null) // {key, text, ok}
+
+  const keyOf = (b) => `${b._file}#${b._row}`
+
+  const startEdit = (b) => { setEditingKey(keyOf(b)); setEditAddr(b.address || ''); setEditMsg(null) }
+  const cancelEdit = () => { setEditingKey(null); setEditAddr('') }
+
+  const saveEdit = async (b) => {
+    setSavingEdit(true)
+    try {
+      const resp = await axios.post('/api/parking-devices/update', {
+        city_key: b.city_key, file: b._file, row: b._row, address: editAddr,
+      })
+      const u = resp.data.building
+      setBuildings(prev => prev.map(x =>
+        (x._file === b._file && x._row === b._row)
+          ? { ...x, address: u.address, lat: u.lat, lng: u.lng } : x
+      ))
+      setEditMsg({ key: keyOf(b), ok: resp.data.geocoded, text: resp.data.geocoded ? 'נשמר ומוקם' : 'נשמר (לא נמצא מיקום)' })
+      setEditingKey(null)
+    } catch {
+      setEditMsg({ key: keyOf(b), ok: false, text: 'שגיאה בשמירה' })
+    } finally {
+      setSavingEdit(false)
+    }
+  }
 
   // Load available cities + no-location addresses
   useEffect(() => {
@@ -228,7 +257,33 @@ function ParkingDevicesPage() {
                           <span className="px-2 py-0.5 bg-sky-50 rounded text-xs">{b.city || '-'}</span>
                         </td>
                       )}
-                      <td className="px-3 py-2 text-blue-900 font-medium">{b.address || '-'}</td>
+                      <td className="px-3 py-2 text-blue-900 font-medium">
+                        {editingKey === keyOf(b) ? (
+                          <div className="flex items-center gap-1">
+                            <input
+                              autoFocus
+                              value={editAddr}
+                              onChange={e => setEditAddr(e.target.value)}
+                              onKeyDown={e => { if (e.key === 'Enter') saveEdit(b); if (e.key === 'Escape') cancelEdit() }}
+                              className="flex-1 min-w-40 px-2 py-1 border border-sky-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-sky-400"
+                            />
+                            <button onClick={() => saveEdit(b)} disabled={savingEdit}
+                              className="px-2 py-1 rounded bg-blue-900 text-white text-xs disabled:opacity-50">{savingEdit ? '…' : '✓'}</button>
+                            <button onClick={cancelEdit} className="px-2 py-1 rounded bg-gray-100 text-gray-600 text-xs">✕</button>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 group/edit">
+                            <span>{b.address || '-'}</span>
+                            {!b.lat && <span className="text-amber-500 text-xs" title="ללא מיקום על המפה">⚠</span>}
+                            <button onClick={() => startEdit(b)}
+                              className="opacity-0 group-hover/edit:opacity-100 text-sky-500 hover:text-sky-700 text-xs transition"
+                              title="ערוך כתובת">✏</button>
+                            {editMsg?.key === keyOf(b) && (
+                              <span className={`text-xs ${editMsg.ok ? 'text-green-600' : 'text-amber-600'}`}>{editMsg.text}</span>
+                            )}
+                          </div>
+                        )}
+                      </td>
                       <td className="px-3 py-2 text-blue-900">{b.gush || '-'}</td>
                       <td className="px-3 py-2 text-blue-900">{b.helka || '-'}</td>
                       <td className="px-3 py-2">

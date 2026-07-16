@@ -7,7 +7,10 @@ import ChargersPage from './pages/parking/ChargersPage'
 import CommitteesPage from './pages/CommitteesPage'
 import EnergyCompaniesPage from './pages/EnergyCompaniesPage'
 import ParkingDevicesPage from './pages/ParkingDevicesPage'
+import ParkingMapPage from './pages/ParkingMapPage'
 import PlansPage from './pages/PlansPage'
+import ProjectsPage from './pages/ProjectsPage'
+import ProjectPage from './pages/ProjectPage'
 
 function App() {
   return (
@@ -22,7 +25,10 @@ function App() {
           <Route path="/committees" element={<CommitteesPage />} />
           <Route path="/energy-companies" element={<EnergyCompaniesPage />} />
           <Route path="/parking-devices" element={<ParkingDevicesPage />} />
+          <Route path="/parking-map" element={<ParkingMapPage />} />
           <Route path="/plans" element={<PlansPage />} />
+          <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/projects/:id" element={<ProjectPage />} />
         </Routes>
       </div>
     </BrowserRouter>

@@ -28,10 +28,12 @@ jobs:
             # Preserve large data files that are deployed directly (not via git)
             mkdir -p /tmp/data_backup
             cp data/plans_*.json /tmp/data_backup/ 2>/dev/null || true
+            cp data/projects.json /tmp/data_backup/ 2>/dev/null || true
             git fetch origin main
             git reset --hard origin/main
             # Restore preserved data files
             cp /tmp/data_backup/plans_*.json data/ 2>/dev/null || true
+            cp /tmp/data_backup/projects.json data/ 2>/dev/null || true
             # Write env file with secrets
             sudo mkdir -p /opt/env
             sudo tee /opt/env/.env > /dev/null <<EOF

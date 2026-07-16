@@ -142,6 +142,36 @@ def refresh_cache():
     return {"status": "ok"}
 
 
+# PDF serving - MUST come before /{plan_number} catch-all
+@router.get("/pdf/{plan_number}/{filename:path}")
+def serve_plan_pdf(plan_number: str, filename: str):
+    """Redirect to the SharePoint download URL for one of a plan's documents."""
+    from fastapi.responses import JSONResponse, RedirectResponse
+    from services.projects_service import sharepoint_folder, find_plan
+
+    plan, _ = find_plan(plan_number)
+    if not plan:
+        return JSONResponse(status_code=404, content={"error": f"תוכנית לא נמצאה: {plan_number}"})
+
+    if filename not in (plan.get('downloaded_files') or []):
+        return JSONResponse(status_code=404, content={"error": f"מסמך לא שייך לתוכנית: {filename}"})
+
+    folder = sharepoint_folder(plan)
+    if not folder:
+        return JSONResponse(status_code=404, content={"error": "לתוכנית אין תיקיית SharePoint"})
+
+    try:
+        from services.sharepoint_pdf_service import get_pdf_url
+        url = get_pdf_url(filename, [folder])
+        if url:
+            return RedirectResponse(url=url)
+    except Exception as e:
+        print(f"SharePoint PDF error for {filename}: {e}")
+        return JSONResponse(status_code=502, content={"error": f"שגיאת SharePoint: {str(e)}"})
+
+    return JSONResponse(status_code=404, content={"error": f"קובץ לא נמצא: {filename}"})
+
+
 # Catch-all for plan detail - MUST be last
 @router.get("/{plan_number:path}")
 def plan_detail(plan_number: str, db: str = Query('plans_tanai_saf')):

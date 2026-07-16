@@ -15,7 +15,27 @@ function HomePage() {
 
       {/* Main */}
       <main className="flex-1 flex items-center justify-center px-6">
-        <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+        <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          {/* Projects */}
+          <button
+            onClick={() => navigate('/projects')}
+            className="group bg-white rounded-2xl shadow-md border border-sky-100 p-10
+                       hover:shadow-xl hover:border-sky-300 hover:-translate-y-1
+                       transition-all duration-300
+                       flex flex-col items-center gap-5 text-center"
+          >
+            <div className="w-20 h-20 bg-sky-50 rounded-2xl flex items-center justify-center
+                            group-hover:bg-sky-100 transition-colors duration-300">
+              <svg className="w-10 h-10 text-sky-500 group-hover:text-sky-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 00-1.883 2.542l.857 6a2.25 2.25 0 002.227 1.932H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-1.883-2.542m-16.5 0V6A2.25 2.25 0 016 3.75h3.879a1.5 1.5 0 011.06.44l2.122 2.12a1.5 1.5 0 001.06.44H18A2.25 2.25 0 0120.25 9v.776" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-blue-900">פרוייקטים</h2>
+            <p className="text-base text-blue-800 leading-relaxed">
+              ניהול פעילות שוטפת על תוכניות - מסמכים, סטטוס והערות
+            </p>
+          </button>
 
           {/* Interactive Map */}
           <button
@@ -114,6 +134,27 @@ function HomePage() {
             <h2 className="text-xl font-bold text-blue-900">מתקני חניה בבניינים</h2>
             <p className="text-base text-blue-800 leading-relaxed">
               בניינים עם מתקני חניה מכניים - מתוך פרוטוקולי ועדות תכנון
+            </p>
+          </button>
+
+          {/* Parking Devices Map by City */}
+          <button
+            onClick={() => navigate('/parking-map')}
+            className="group bg-white rounded-2xl shadow-md border border-sky-100 p-10
+                       hover:shadow-xl hover:border-sky-300 hover:-translate-y-1
+                       transition-all duration-300
+                       flex flex-col items-center gap-5 text-center"
+          >
+            <div className="w-20 h-20 bg-sky-50 rounded-2xl flex items-center justify-center
+                            group-hover:bg-sky-100 transition-colors duration-300">
+              <svg className="w-10 h-10 text-sky-500 group-hover:text-sky-600 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              </svg>
+            </div>
+            <h2 className="text-xl font-bold text-blue-900">מפה מתקנים לפי עיר</h2>
+            <p className="text-base text-blue-800 leading-relaxed">
+              בחירת עיר, סינון לפי שנים, ותכנון מסלול חלוקת פליירים לבניינים
             </p>
           </button>
 
