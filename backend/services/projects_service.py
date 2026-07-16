@@ -10,8 +10,15 @@ from urllib.parse import unquote
 
 from services.plans_service import get_plan, list_databases
 
+try:
+    import geopandas as gpd
+    HAS_GEO = True
+except ImportError:
+    HAS_GEO = False
+
 DATA_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data')
 _PROJECTS_FILE = os.path.join(DATA_DIR, 'projects.json')
+GPKG_PATH = os.path.join(DATA_DIR, 'cadastre.gpkg')
 
 # Marker separating the drive root from the folder path inside a SharePoint URL
 _SP_ROOT_MARKER = 'Shared Documents/'
@@ -75,6 +82,54 @@ def _enrich(project):
         'plan': plan,
         'documents': _documents(plan),
     }
+
+
+def get_projects_geojson():
+    """Cadastre blocks for every project's gushim, as GeoJSON (EPSG:4326).
+
+    One feature per (project, gush) so the map can show or hide each project
+    independently, even where two projects share a gush.
+    """
+    empty = {'type': 'FeatureCollection', 'features': []}
+    if not HAS_GEO or not os.path.exists(GPKG_PATH):
+        return empty
+
+    # gush -> the projects that include it, with that project's helkot
+    by_gush = {}
+    for project in list_projects():
+        plan = project.get('plan') or {}
+        for g in (plan.get('gushim') or []):
+            by_gush.setdefault(g['gush'], []).append({
+                'project_id': project['id'],
+                'project_name': project['name'],
+                'plan_number': project['plan_number'],
+                'status': project['status'],
+                'helkot_full': g.get('helkot_full', ''),
+                'helkot_partial': g.get('helkot_partial', ''),
+            })
+    if not by_gush:
+        return empty
+
+    # Push the filter into OGR - the GeoPackage holds every block in Israel
+    nums = ','.join(str(n) for n in sorted(by_gush))
+    blocks = gpd.read_file(GPKG_PATH, layer='blocks', where=f'GUSH_NUM IN ({nums})')
+    if blocks.empty:
+        return empty
+
+    features = []
+    for _, row in blocks.iterrows():
+        geom = row.geometry
+        if geom is None or geom.is_empty:
+            continue
+        shape = json.loads(gpd.GeoSeries([geom], crs=blocks.crs).to_json())['features'][0]['geometry']
+        for entry in by_gush.get(int(row['GUSH_NUM']), []):
+            features.append({
+                'type': 'Feature',
+                'geometry': shape,
+                'properties': {'gush_num': int(row['GUSH_NUM']), **entry},
+            })
+
+    return {'type': 'FeatureCollection', 'features': features}
 
 
 def list_projects():

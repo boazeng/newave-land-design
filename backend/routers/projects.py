@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 
 from services.projects_service import (
     list_projects, get_project, create_project, update_project, delete_project,
+    get_projects_geojson,
 )
 
 router = APIRouter()
@@ -42,6 +43,13 @@ def add_project(body: ProjectCreate):
     if 'error' in result:
         return JSONResponse(status_code=400, content=result)
     return result
+
+
+# MUST come before the /{project_id} catch-all
+@router.get("/geojson")
+def projects_geojson():
+    """Cadastre blocks for every project's gushim, for the map layer."""
+    return get_projects_geojson()
 
 
 @router.get("/{project_id}")

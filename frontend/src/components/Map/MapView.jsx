@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react'
 import L from 'leaflet'
+import axios from 'axios'
 import 'leaflet/dist/leaflet.css'
 import MapControls from './MapControls'
 import LayersPanel from './LayersPanel'
@@ -12,6 +13,9 @@ import PlansLayer from './PlansLayer'
 import PlanDetailPanel from './PlanDetailPanel'
 import ParkingLayer from './ParkingLayer'
 import ParkingDetailPanel from './ParkingDetailPanel'
+import ProjectsLayer from './ProjectsLayer'
+import ProjectsPanel from './ProjectsPanel'
+import ProjectDetailPanel from './ProjectDetailPanel'
 
 const PARKING_CITIES = [
   { key: 'tel_aviv',  name: 'תל אביב-יפו', defaultColor: '#2563eb' },
@@ -235,7 +239,18 @@ const INITIAL_LAYERS = [
     description: 'בניינים עם מתקני חניה מפרוטוקולי ועדות',
     visible: false,
   },
+  {
+    id: 'projects',
+    name: 'פרוייקטים',
+    description: 'גושי התוכניות שמנוהלות כפרוייקטים',
+    visible: false,
+  },
 ]
+
+const PROJECT_COLORS = ['#dc2626', '#2563eb', '#16a34a', '#9333ea', '#ea580c', '#0891b2']
+
+// Layers with their own component; everything else in INITIAL_LAYERS is a cadastre layer
+const NON_CADASTRE_LAYERS = ['districts', 'plans', 'parking', 'projects']
 
 function MapView() {
   const mapContainerRef = useRef(null)
@@ -253,6 +268,11 @@ function MapView() {
   const [planPopup, setPlanPopup] = useState(null)
   const [parkingPanelOpen, setParkingPanelOpen] = useState(true)
   const [parkingDetail, setParkingDetail] = useState(null)
+  const [projects, setProjects] = useState([])
+  const [projectState, setProjectState] = useState({})
+  const [projectsPanelOpen, setProjectsPanelOpen] = useState(true)
+  const [projectDetail, setProjectDetail] = useState(null)
+  const projectBoundsRef = useRef({})
   const [parkingCities, setParkingCities] = useState(() =>
     Object.fromEntries(PARKING_CITIES.map(c => [c.key, { active: false, color: c.defaultColor }]))
   )
@@ -298,6 +318,36 @@ function MapView() {
       mapRef.current = null
       setMapReady(false)
     }
+  }, [])
+
+  // Load the project list for the projects menu; each gets a stable colour.
+  useEffect(() => {
+    axios.get('/api/projects')
+      .then(r => {
+        const list = r.data || []
+        setProjects(list)
+        setProjectState(prev => {
+          const next = { ...prev }
+          list.forEach((p, i) => {
+            if (!next[p.id]) next[p.id] = { active: true, color: PROJECT_COLORS[i % PROJECT_COLORS.length] }
+          })
+          return next
+        })
+      })
+      .catch(() => {})
+  }, [])
+
+  const handleToggleProject = useCallback((id) => {
+    setProjectState(prev => ({ ...prev, [id]: { ...prev[id], active: !prev[id]?.active } }))
+  }, [])
+
+  const handleProjectLoaded = useCallback((id, bounds) => {
+    projectBoundsRef.current[id] = bounds
+  }, [])
+
+  const handleZoomToProject = useCallback((id) => {
+    const bounds = projectBoundsRef.current[id]
+    if (bounds && mapRef.current) mapRef.current.fitBounds(bounds, { padding: [40, 40] })
   }, [])
 
   const handleToggleLayer = useCallback((layerId) => {
@@ -370,7 +420,7 @@ function MapView() {
       )}
 
       {/* Cadastre layers */}
-      {mapReady && layers.filter(l => l.id !== 'districts' && l.id !== 'plans' && l.id !== 'parking').map(layer => (
+      {mapReady && layers.filter(l => !NON_CADASTRE_LAYERS.includes(l.id)).map(layer => (
         <CadastreLayer
           key={layer.id}
           map={mapRef.current}
@@ -408,6 +458,38 @@ function MapView() {
         <PlanDetailPanel
           data={planPopup}
           onClose={() => setPlanPopup(null)}
+        />
+      )}
+
+      {/* Projects layers - one per project */}
+      {mapReady && projects.map(p => (
+        <ProjectsLayer
+          key={p.id}
+          map={mapRef.current}
+          visible={(layers.find(l => l.id === 'projects')?.visible || false) && !!projectState[p.id]?.active}
+          projectId={p.id}
+          color={projectState[p.id]?.color}
+          onFeatureClick={setProjectDetail}
+          onLoaded={handleProjectLoaded}
+        />
+      ))}
+
+      {/* Projects menu - draggable */}
+      {layers.find(l => l.id === 'projects')?.visible && projectsPanelOpen && (
+        <ProjectsPanel
+          projects={projects}
+          state={projectState}
+          onToggle={handleToggleProject}
+          onZoom={handleZoomToProject}
+          onClose={() => setProjectsPanelOpen(false)}
+        />
+      )}
+
+      {/* Project gush detail popup */}
+      {projectDetail && (
+        <ProjectDetailPanel
+          data={projectDetail}
+          onClose={() => setProjectDetail(null)}
         />
       )}
 
