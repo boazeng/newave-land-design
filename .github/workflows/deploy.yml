@@ -25,15 +25,20 @@ jobs:
           script: |
             set -e
             cd /opt/newave-land-design
-            # Preserve large data files that are deployed directly (not via git)
+            # Preserve data that only exists on the server: state written through the
+            # app, which git has no copy of. Everything else - including the static
+            # plans_* databases - comes from git, so edits to them actually ship.
+            # (Backing those up too meant the server's copy always won and any change
+            # to plan data was silently discarded.)
             mkdir -p /tmp/data_backup
-            cp data/plans_*.json /tmp/data_backup/ 2>/dev/null || true
-            cp data/projects.json /tmp/data_backup/ 2>/dev/null || true
+            for f in plans_status.json plans_parties.json projects.json; do
+              cp "data/$f" /tmp/data_backup/ 2>/dev/null || true
+            done
             git fetch origin main
             git reset --hard origin/main
-            # Restore preserved data files
-            cp /tmp/data_backup/plans_*.json data/ 2>/dev/null || true
-            cp /tmp/data_backup/projects.json data/ 2>/dev/null || true
+            for f in plans_status.json plans_parties.json projects.json; do
+              cp "/tmp/data_backup/$f" data/ 2>/dev/null || true
+            done
             # Write env file with secrets
             sudo mkdir -p /opt/env
             sudo tee /opt/env/.env > /dev/null <<EOF

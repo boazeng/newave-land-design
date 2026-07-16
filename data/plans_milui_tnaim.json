@@ -25968,7 +25968,48 @@
       "district": null,
       "planning_area": null,
       "municipality": null,
-      "gushim": [],
+      "gushim": [
+        {
+          "gush": 8138,
+          "helkot_full": "5, 15, 18, 31, 35, 37, 40, 53-62, 64-77, 79-87, 90-92, 113-114, 116-117",
+          "helkot_partial": "42, 44, 46, 93, 110, 120, 122, 124, 128"
+        },
+        {
+          "gush": 8139,
+          "helkot_full": "",
+          "helkot_partial": "9, 18-20"
+        },
+        {
+          "gush": 8142,
+          "helkot_full": "48, 65-66, 68-69, 83",
+          "helkot_partial": "23, 25-26, 29, 41, 50-51, 62, 67, 71, 78, 81"
+        },
+        {
+          "gush": 8144,
+          "helkot_full": "",
+          "helkot_partial": "25-26, 33, 52"
+        },
+        {
+          "gush": 8146,
+          "helkot_full": "15-16",
+          "helkot_partial": "1-2, 12, 17"
+        },
+        {
+          "gush": 8219,
+          "helkot_full": "",
+          "helkot_partial": "27, 29, 31, 33, 35"
+        },
+        {
+          "gush": 8220,
+          "helkot_full": "",
+          "helkot_partial": "77"
+        },
+        {
+          "gush": 9249,
+          "helkot_full": "112",
+          "helkot_partial": "89"
+        }
+      ],
       "processing_stages": [],
       "committee_decisions": []
     },

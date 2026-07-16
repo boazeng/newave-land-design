@@ -4,6 +4,16 @@ import axios from 'axios'
 
 const STATUSES = ['פעיל', 'בהמתנה', 'הושלם']
 
+/** Count parcels in a helkot string, expanding ranges: "5, 53-62" is 11, not 2. */
+function countHelkot(spec) {
+  if (!spec) return 0
+  return spec.split(',').reduce((sum, part) => {
+    const range = part.match(/^\s*(\d+)\s*-\s*(\d+)\s*$/)
+    if (range) return sum + (Number(range[2]) - Number(range[1]) + 1)
+    return /\d/.test(part) ? sum + 1 : sum
+  }, 0)
+}
+
 /** Plan fields worth showing on a project page, in display order. */
 const PLAN_FIELDS = [
   ['status', 'סטטוס תוכנית'],
@@ -54,6 +64,9 @@ function ProjectPage() {
 
   const plan = project.plan || {}
   const fields = PLAN_FIELDS.filter(([key]) => plan[key] !== null && plan[key] !== undefined && plan[key] !== '')
+  const gushim = plan.gushim || []
+  const totalHelkot = gushim.reduce(
+    (sum, g) => sum + countHelkot(g.helkot_full) + countHelkot(g.helkot_partial), 0)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-sky-50 via-white to-blue-50 flex flex-col">
@@ -129,6 +142,46 @@ function ProjectPage() {
             </ul>
           ) : (
             <p className="text-blue-800/60 text-sm">אין מסמכים שהורדו לתוכנית זו</p>
+          )}
+        </section>
+
+        {/* Gushim & helkot */}
+        <section className="bg-white rounded-2xl shadow-md border border-sky-100 p-6">
+          <div className="flex items-baseline justify-between gap-3 mb-4">
+            <h2 className="text-xl font-bold text-blue-900">גושים וחלקות</h2>
+            {gushim.length > 0 && (
+              <span className="text-sm text-blue-800/60">
+                {gushim.length} גושים · {totalHelkot} חלקות
+              </span>
+            )}
+          </div>
+          {gushim.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="border-b-2 border-sky-100">
+                    <th className="text-right py-2 px-3 font-bold text-blue-900 whitespace-nowrap">גוש</th>
+                    <th className="text-right py-2 px-3 font-bold text-blue-900">חלקות בשלמותן</th>
+                    <th className="text-right py-2 px-3 font-bold text-blue-900">חלקות בחלקן</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {gushim.map(g => (
+                    <tr key={g.gush} className="border-b border-sky-50 hover:bg-sky-50/50 align-top">
+                      <td className="py-2 px-3 font-mono font-bold text-blue-900 whitespace-nowrap">{g.gush}</td>
+                      <td className="py-2 px-3 text-blue-800" dir="ltr" style={{ textAlign: 'right' }}>
+                        {g.helkot_full || <span className="text-blue-800/30">—</span>}
+                      </td>
+                      <td className="py-2 px-3 text-blue-800" dir="ltr" style={{ textAlign: 'right' }}>
+                        {g.helkot_partial || <span className="text-blue-800/30">—</span>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <p className="text-blue-800/60 text-sm">אין נתוני גושים וחלקות לתוכנית זו</p>
           )}
         </section>
 
