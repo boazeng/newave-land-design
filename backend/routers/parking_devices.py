@@ -2,6 +2,7 @@
 from fastapi import APIRouter, BackgroundTasks
 from fastapi.responses import FileResponse, JSONResponse
 from pydantic import BaseModel
+from typing import Optional
 import json
 import os
 import glob
@@ -170,9 +171,10 @@ class BuildingUpdate(BaseModel):
     city_key: str
     file: str
     row: int
-    address: str | None = None
-    lat: float | None = None
-    lng: float | None = None
+    # Optional[...] rather than `str | None`: the server runs Python 3.9
+    address: Optional[str] = None
+    lat: Optional[float] = None
+    lng: Optional[float] = None
 
 
 @router.post("/update")
