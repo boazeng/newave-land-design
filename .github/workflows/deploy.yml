@@ -16,12 +16,15 @@ jobs:
           SHAREPOINT_TENANT_ID: ${{ secrets.SHAREPOINT_TENANT_ID }}
           SHAREPOINT_CLIENT_ID: ${{ secrets.SHAREPOINT_CLIENT_ID }}
           SHAREPOINT_CLIENT_SECRET: ${{ secrets.SHAREPOINT_CLIENT_SECRET }}
+          GOOGLE_OAUTH_CLIENT_ID: ${{ secrets.GOOGLE_OAUTH_CLIENT_ID }}
+          NEWAVE_SESSION_SECRET: ${{ secrets.NEWAVE_SESSION_SECRET }}
+          NEWAVE_ALLOWED_EMAILS: ${{ secrets.NEWAVE_ALLOWED_EMAILS }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          envs: SHAREPOINT_TENANT_ID,SHAREPOINT_CLIENT_ID,SHAREPOINT_CLIENT_SECRET
+          envs: SHAREPOINT_TENANT_ID,SHAREPOINT_CLIENT_ID,SHAREPOINT_CLIENT_SECRET,GOOGLE_OAUTH_CLIENT_ID,NEWAVE_SESSION_SECRET,NEWAVE_ALLOWED_EMAILS
           script: |
             set -e
             cd /opt/newave-land-design
@@ -45,6 +48,9 @@ jobs:
             SHAREPOINT_TENANT_ID=${SHAREPOINT_TENANT_ID}
             SHAREPOINT_CLIENT_ID=${SHAREPOINT_CLIENT_ID}
             SHAREPOINT_CLIENT_SECRET=${SHAREPOINT_CLIENT_SECRET}
+            GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID}
+            NEWAVE_SESSION_SECRET=${NEWAVE_SESSION_SECRET}
+            NEWAVE_ALLOWED_EMAILS=${NEWAVE_ALLOWED_EMAILS}
             EOF
             sudo chmod 600 /opt/env/.env
             sudo chown ec2-user:ec2-user /opt/env/.env

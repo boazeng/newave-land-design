@@ -1,9 +1,10 @@
 import os
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
-from routers import cadastre, search, autocomplete, parking, chargers, committees, energy_companies, parking_devices, parking_protocols, charging_stations, plans, projects
+from fastapi.responses import FileResponse, JSONResponse
+from routers import cadastre, search, autocomplete, parking, chargers, committees, energy_companies, parking_devices, parking_protocols, charging_stations, plans, projects, auth
+from services import auth_service
 
 app = FastAPI(title="Newave Land Design API")
 
@@ -17,7 +18,26 @@ app.add_middleware(
     ],
     allow_methods=["*"],
     allow_headers=["*"],
+    allow_credentials=True,
 )
+
+# Every /api route needs a signed-in user, except sign-in itself and the health
+# check the deploy workflow polls.
+PUBLIC_API_PREFIXES = ("/api/auth/", "/api/health")
+
+
+@app.middleware("http")
+async def require_login(request: Request, call_next):
+    path = request.url.path
+    if (path.startswith("/api/") and request.method != "OPTIONS"
+            and not path.startswith(PUBLIC_API_PREFIXES)):
+        token = request.cookies.get(auth_service.COOKIE_NAME)
+        if not auth_service.read_session(token):
+            return JSONResponse({"detail": "לא מחובר"}, status_code=401)
+    return await call_next(request)
+
+
+app.include_router(auth.router, prefix="/api/auth")
 
 app.include_router(cadastre.router, prefix="/api/cadastre")
 app.include_router(search.router, prefix="/api/search")

@@ -209,3 +209,26 @@ cd backend && pip install -r requirements.txt && cd ..
 | Backend (FastAPI) | 8001 |
 
 הגדרת הפורט של ה-Backend נמצאת ב-`frontend/vite.config.js` (proxy).
+
+---
+
+## כניסה עם גוגל
+
+כל המערכת (כל העמודים וכל `/api`, חוץ מ-`/api/health` ו-`/api/auth/*`) דורשת התחברות עם חשבון גוגל שנמצא ברשימה המאושרת.
+
+| משתנה | תפקיד | בכספת |
+|---|---|---|
+| `GOOGLE_OAUTH_CLIENT_ID` | ה-OAuth Client המשותף לכל המערכות | `prod/google` |
+| `NEWAVE_SESSION_SECRET` | חתימה של עוגיית ההתחברות (30 יום) | `prod/apps/newave` |
+| `NEWAVE_ALLOWED_EMAILS` | מיילים מורשים, מופרדים בפסיק | `prod/apps/newave` |
+
+בשרת הם נכתבים ל-`/opt/env/.env` מתוך GitHub Secrets בכל deploy.
+
+**הוספת משתמש:** לעדכן את `NEWAVE_ALLOWED_EMAILS` ב-`.env`, ואז:
+```powershell
+python C:\Users\User\Aiprojects\tact-secrets\tools\upload.py prod/apps/newave NEWAVE_ALLOWED_EMAILS --description "Newave Land Design — prod · רשימת המיילים המורשים להיכנס (מופרדים בפסיק)" --overwrite --apply
+gh secret set NEWAVE_ALLOWED_EMAILS   # להדביק את הרשימה
+```
+ולהריץ מחדש את ה-workflow **Deploy to EC2**. משתמש שהוסר מהרשימה ננעל מיד, גם אם העוגייה שלו עדיין בתוקף.
+
+**Google Cloud Console:** בתוך ה-OAuth Client, תחת *Authorized JavaScript origins*, צריכים להופיע `https://land.newavera.co.il`, `http://localhost:3000` ו-`http://localhost`.

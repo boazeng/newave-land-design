@@ -11,9 +11,11 @@ import ParkingMapPage from './pages/ParkingMapPage'
 import PlansPage from './pages/PlansPage'
 import ProjectsPage from './pages/ProjectsPage'
 import ProjectPage from './pages/ProjectPage'
+import AuthGate from './auth/AuthGate'
 
 function App() {
   return (
+    <AuthGate>
     <BrowserRouter>
       <div className="w-full h-full">
         <Routes>
@@ -32,6 +34,7 @@ function App() {
         </Routes>
       </div>
     </BrowserRouter>
+    </AuthGate>
   )
 }
 
